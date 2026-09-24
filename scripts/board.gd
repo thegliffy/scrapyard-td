@@ -4,72 +4,88 @@ extends RefCounted
 ## 24×11 yard. One tile is one cell. Lanes are orthogonal cell sequences.
 ## Build slots are exact cells. Nothing places off the grid.
 
-const COLS := 24
-const ROWS := 11
 const TILE := 48
-const ORIGIN := Vector2(64, 80)
-const CORE := Vector2i(22, 5)
 
-## Top-left cell of each 2×2 hardpoint pod. Four marked cells, no freeplace.
-const POD_ORIGINS: Array[Vector2i] = [
-	Vector2i(1, 2),
-	Vector2i(8, 2),
-	Vector2i(14, 0),
-	Vector2i(14, 4),
-	Vector2i(20, 3),
-	Vector2i(1, 7),
-	Vector2i(7, 7),
-	Vector2i(14, 8),
-	Vector2i(20, 6),
-]
-
+static var COLS := 24
+static var ROWS := 11
+static var ORIGIN := Vector2(64, 80)
+static var CORE := Vector2i(22, 5)
+static var active: MapData
 static var SLOTS: Array[Vector2i] = []
-
+static var lanes: Array = []
+static var lane_ids: PackedStringArray = PackedStringArray()
 static var lane_a: Array[Vector2i] = []
 static var lane_b: Array[Vector2i] = []
 static var path_info: Dictionary = {}
 static var spawn_a: Vector2i = Vector2i.ZERO
 static var spawn_b: Vector2i = Vector2i.ZERO
 static var _ready_paths := false
+static var _styles := {}
 
 
 static func ensure() -> void:
-	if SLOTS.is_empty():
-		for origin in POD_ORIGINS:
-			for dy in 2:
-				for dx in 2:
-					SLOTS.append(origin + Vector2i(dx, dy))
-	if _ready_paths:
+	if _ready_paths and active != null:
 		return
-	_ready_paths = true
-	lane_a = _walk([
-		Vector2i(0, 1), Vector2i(12, 1), Vector2i(12, 3),
-		Vector2i(19, 3), Vector2i(19, 5), Vector2i(22, 5),
-	])
-	lane_b = _walk([
-		Vector2i(0, 9), Vector2i(11, 9), Vector2i(11, 7),
-		Vector2i(19, 7), Vector2i(19, 5), Vector2i(22, 5),
-	])
-	spawn_a = lane_a[0]
-	spawn_b = lane_b[0]
+	var data := MapLibrary.load_builtin("yard_approach")
+	if data == null:
+		push_error("Yard Approach failed to load")
+		return
+	apply(data)
+
+
+static func apply(data: MapData) -> void:
+	active = data
+	COLS = data.cols
+	ROWS = data.rows
+	ORIGIN = data.origin
+	CORE = data.core
+	lanes = []
+	lane_ids = PackedStringArray()
+	for lane in data.lanes:
+		var cells: Array[Vector2i] = []
+		for cell in lane["cells"]:
+			cells.append(cell)
+		lanes.append(cells)
+		lane_ids.append(str(lane.get("id", "a")))
+	lane_a = lanes[0] if not lanes.is_empty() else []
+	lane_b = lanes[1] if lanes.size() > 1 else lane_a
+	spawn_a = lane_a[0] if not lane_a.is_empty() else CORE
+	spawn_b = lane_b[0] if not lane_b.is_empty() else spawn_a
 	path_info = {}
-	for i in range(lane_a.size() - 1):
-		var cell := lane_a[i]
-		path_info[cell] = {"lane": "a", "dir": lane_a[i + 1] - cell}
-	for i in range(lane_b.size() - 1):
-		var cell := lane_b[i]
-		var dir := lane_b[i + 1] - cell
-		if path_info.has(cell):
-			path_info[cell]["lane"] = "both"
-			path_info[cell]["dir"] = dir
-		else:
-			path_info[cell] = {"lane": "b", "dir": dir}
+	for lane_index in lanes.size():
+		var cells: Array = lanes[lane_index]
+		var lane_name := "a" if lane_index == 0 else ("b" if lane_index == 1 else str(lane_ids[lane_index]))
+		for i in range(cells.size() - 1):
+			var cell: Vector2i = cells[i]
+			var dir: Vector2i = cells[i + 1] - cell
+			if path_info.has(cell):
+				path_info[cell]["lane"] = "both"
+				path_info[cell]["dir"] = dir
+			else:
+				path_info[cell] = {"lane": lane_name, "dir": dir}
 	path_info[CORE] = {"lane": "core", "dir": Vector2i.ZERO}
+	SLOTS = data.all_slots()
+	_styles = {}
+	for cell in SLOTS:
+		_styles[cell] = data.style_at(cell)
+	_ready_paths = true
+
+
+static func style_at(cell: Vector2i) -> String:
+	ensure()
+	return str(_styles.get(cell, "pink"))
 
 
 static func lane(which: String) -> Array[Vector2i]:
 	ensure()
-	return lane_a if which == "a" else lane_b
+	if which == "a":
+		return lane_a
+	if which == "b":
+		return lane_b
+	for i in lane_ids.size():
+		if lane_ids[i] == which and i < lanes.size():
+			return lanes[i]
+	return lane_a
 
 
 static func is_slot(cell: Vector2i) -> bool:
@@ -79,7 +95,10 @@ static func is_slot(cell: Vector2i) -> bool:
 
 static func pod_origin(cell: Vector2i) -> Vector2i:
 	ensure()
-	for origin in POD_ORIGINS:
+	if active == null:
+		return Vector2i(-1, -1)
+	for pod in active.pods:
+		var origin: Vector2i = pod["origin"]
 		if cell.x >= origin.x and cell.x < origin.x + 2 and cell.y >= origin.y and cell.y < origin.y + 2:
 			return origin
 	return Vector2i(-1, -1)
@@ -118,41 +137,35 @@ static func cells_in_range(origin: Vector2i, radius: float) -> Array[Vector2i]:
 static func validate() -> PackedStringArray:
 	ensure()
 	var errs := PackedStringArray()
-	if SLOTS.size() != POD_ORIGINS.size() * 4:
-		errs.append("expected %d build slots in pods of 4" % (POD_ORIGINS.size() * 4))
-	for origin in POD_ORIGINS:
+	if active == null:
+		errs.append("no map loaded")
+		return errs
+	if SLOTS.size() != active.pods.size() * 4:
+		errs.append("expected %d build slots in pods of 4" % (active.pods.size() * 4))
+	for pod in active.pods:
+		var origin: Vector2i = pod["origin"]
 		for dy in 2:
 			for dx in 2:
 				if not ((origin + Vector2i(dx, dy)) in SLOTS):
 					errs.append("pod %s is not a full 2x2" % origin)
-	if lane_a.is_empty() or lane_b.is_empty():
+	if lanes.is_empty():
 		errs.append("lanes missing")
-	_check_lane(lane_a, "north", errs)
-	_check_lane(lane_b, "south", errs)
+	for i in lanes.size():
+		_check_lane(lanes[i], str(active.lanes[i].get("name", "lane")), errs)
 	var seen := {}
 	for cell in SLOTS:
 		if not is_inside(cell):
 			errs.append("slot out of bounds %s" % cell)
-		if path_info.has(cell):
+		if path_info.has(cell) and cell != CORE:
 			errs.append("slot sits on a lane %s" % cell)
 		if seen.has(cell):
 			errs.append("duplicate slot %s" % cell)
 		seen[cell] = true
-	# Shared tail must agree on direction.
-	for i in range(lane_a.size() - 1):
-		var cell: Vector2i = lane_a[i]
-		if not path_info.has(cell):
-			continue
-		if str(path_info[cell]["lane"]) == "both":
-			var dir_a: Vector2i = lane_a[i + 1] - cell
-			var dir_b: Vector2i = path_info[cell]["dir"]
-			if dir_a != dir_b:
-				errs.append("shared cell direction mismatch %s" % cell)
 	return errs
 
 
 static func _check_lane(cells: Array[Vector2i], name: String, errs: PackedStringArray) -> void:
-	if cells[-1] != CORE:
+	if cells.is_empty() or cells[-1] != CORE:
 		errs.append("%s lane must end on the core" % name)
 	for i in range(1, cells.size()):
 		var step: Vector2i = cells[i] - cells[i - 1]

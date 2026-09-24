@@ -22,5 +22,13 @@ func _initialize() -> void:
 			push_error("slot is not a free grid cell: %s" % cell)
 			quit(1)
 			return
+	if Board.CORE != Vector2i(22, 5) or Board.SLOTS.size() != 36:
+		push_error("yard grid drifted")
+		quit(1)
+		return
+	if Board.lane_a.size() != 27 or Board.lane_a[0] != Vector2i(0, 1) or Board.lane_b[0] != Vector2i(0, 9):
+		push_error("yard lanes drifted")
+		quit(1)
+		return
 	print("GRID_OK")
 	quit(0)

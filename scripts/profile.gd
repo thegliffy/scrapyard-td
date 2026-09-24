@@ -27,6 +27,8 @@ var scrap := 0
 var guns: PackedStringArray = PackedStringArray()
 var maps: PackedStringArray = PackedStringArray()
 var loadout: PackedStringArray = PackedStringArray()
+## Set only during a map-editor playtest. Never written to profile.cfg.
+var playtest_loadout: PackedStringArray = PackedStringArray()
 var open_slots := FREE_SLOTS
 var seen: PackedStringArray = PackedStringArray()
 var muted := false
@@ -150,7 +152,11 @@ func has_gun(id: String) -> bool:
 
 
 func is_equipped(id: String) -> bool:
-	return id != "" and loadout.has(id)
+	if id == "":
+		return false
+	if not playtest_loadout.is_empty():
+		return playtest_loadout.has(id)
+	return loadout.has(id)
 
 
 func slot_open(index: int) -> bool:
@@ -162,9 +168,19 @@ func slot_cost(index: int) -> int:
 
 
 func loadout_at(index: int) -> String:
-	if index < 0 or index >= loadout.size():
+	var source: PackedStringArray = playtest_loadout if not playtest_loadout.is_empty() else loadout
+	if index < 0 or index >= source.size():
 		return ""
-	return str(loadout[index])
+	return str(source[index])
+
+
+## Playtest shows the starter bar without writing the saved loadout.
+func use_starter_loadout() -> void:
+	playtest_loadout = _starter_loadout()
+
+
+func clear_starter_loadout() -> void:
+	playtest_loadout = PackedStringArray()
 
 
 func equipped_entries() -> Array:
@@ -273,25 +289,47 @@ func choose_map(id: String) -> void:
 
 
 func map_name() -> String:
-	var data: Dictionary = Balance.MAPS.get(battle_map, {})
-	return str(data.get("name", "Yard Approach"))
+	var data := _active_yard()
+	if data != null:
+		return data.map_name
+	return str(Balance.MAPS.get(battle_map, {}).get("name", "Yard Approach"))
 
 
 func map_hp_scale() -> float:
+	var data := _active_yard()
+	if data != null:
+		return data.hp_scale
 	return float(Balance.MAPS.get(battle_map, {}).get("hp_scale", 1.0))
 
 
 func map_speed_scale() -> float:
+	var data := _active_yard()
+	if data != null:
+		return data.speed_scale
 	return float(Balance.MAPS.get(battle_map, {}).get("speed_scale", 1.0))
 
 
 func map_tint() -> Color:
+	var data := _active_yard()
+	if data != null:
+		return Color(data.tint)
 	var hex := str(Balance.MAPS.get(battle_map, {}).get("tint", "#ffffff"))
 	return Color(hex)
 
 
 func map_tint_amount() -> float:
+	var data := _active_yard()
+	if data != null:
+		return data.tint_amount
 	return float(Balance.MAPS.get(battle_map, {}).get("tint_amount", 0.0))
+
+
+func _active_yard() -> MapData:
+	if Board.active != null:
+		return Board.active
+	if MapSession.override != null:
+		return MapSession.override
+	return MapLibrary.load_builtin(battle_map)
 
 
 func battle_scrap(won: bool, waves_cleared: int) -> int:

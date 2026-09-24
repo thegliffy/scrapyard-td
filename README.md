@@ -6,17 +6,17 @@ A cozy, **bright** cartoony **grid tower defense**. Cute eldritch horrors leak o
 
 ## Download
 
-**[v0.3.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.3.0)** is the current build. You do not need Godot.
+**[v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0)** is the current build. You do not need Godot.
 
 ### Windows
 
-1. Download [ScrapyardTD-v0.3.0-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.3.0/ScrapyardTD-v0.3.0-windows-x86_64.zip).
+1. Download [ScrapyardTD-v0.4.0-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.0/ScrapyardTD-v0.4.0-windows-x86_64.zip).
 2. Unzip it.
 3. Double-click `ScrapyardTD.exe`.
 
 ### Linux (x86_64)
 
-1. Download [ScrapyardTD-v0.3.0-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.3.0/ScrapyardTD-v0.3.0-linux-x86_64.zip).
+1. Download [ScrapyardTD-v0.4.0-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.0/ScrapyardTD-v0.4.0-linux-x86_64.zip).
 2. Unzip it.
 3. Make it executable and run it:
 
@@ -25,7 +25,7 @@ chmod +x ScrapyardTD.x86_64
 ./ScrapyardTD.x86_64
 ```
 
-Older cuts: [v0.2.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.2), [v0.2.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.1), [v0.2.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.0), [v0.1.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.2), [v0.1.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.1), [v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0).
+Older cuts: [v0.3.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.3.0), [v0.2.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.2), [v0.2.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.1), [v0.2.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.0), [v0.1.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.2), [v0.1.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.1), [v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0).
 
 ## Open in Godot
 
@@ -50,6 +50,7 @@ The executable opens a **main menu** on the bright splash of the cartoon guns fi
 | **Adventure** | Coming soon. It does not start a mode |
 | **Unlocks** | Spend scrap on guns, yards, and loadout slots |
 | **Bestiary** | Enemy notes. Unseen critters stay a silhouette until you meet them in Battle |
+| **Map Editor** | Beta yard tool. Paint lanes and hardpoints, save a copy, playtest it. See below |
 | **Settings** | Mute. The choice is saved |
 | **Quit** | Closes the desktop app |
 
@@ -67,7 +68,17 @@ You own **Pea Blaster**, **Glue Goo**, and the **Yard Approach** map from the st
 5. Click a built tower to inspect it. Tiles in range light up. Upgrade (`U`) up to 3 tiers, or sell (`Backspace`) for 60% of the gold you spent.
 6. You can build during a wave. `Space` calls the next wave early for a little bonus gold. `F` toggles 2× speed.
 
-Clear **100 waves** to win. The Big Cute Boss shows up at waves **21, 40, 60, 80, and 100**. Sky Nap, a flying boss, shows up at **50** and **90**. Later visits have more health. If the core hits 0, you lose. The end screen shows gold earned and scrap gained, and offers **Battle again** (or `R`) and **Main menu**.
+Clear **100 waves** to win. The Big Cute Boss shows up at waves **21, 40, 60, 80, and 100**. Sky Nap, a flying boss, shows up at **50** and **90**. Later visits have more health. If the core hits 0, you lose. The end screen shows gold earned and scrap gained, and offers **Battle again** (or `R`) and **Main menu**. A playtest's button says **Editor** instead, and returns to the draft.
+
+## Map editor
+
+**Map Editor** on the main menu is a beta tool. The yard description is a JSON file (`MapData`), not a scene baked into Battle. Built-in yards live in `res://maps/`. Custom yards save to `user://maps/` on this machine. The format and the pieces Adventure can keep are written up in `docs/MAP_FORMAT.md`.
+
+The editor can paint and erase a lane (the path stays orthogonal and draws the same turn joints as Battle), move that lane's spawn, set the Station Core, place or remove a 2×2 hardpoint, and paint each island pink, teal, or crystal. It can also pick the space backdrop and the Yard / Dock / Deep tint, resize the grid, undo, redo, and clear. Up to four lanes. Save and Playtest stay disabled until every lane reaches the core, nothing sits on the path, and there is at least one hardpoint.
+
+**New**, **Open**, **Save**, **Save As**, and **Delete** are on the top bar. A built-in yard can be opened and saved as a copy. It cannot be overwritten or deleted. **Playtest** starts a normal Battle on the draft with the starter loadout (Pea and Glue), then **Editor** on the end screen comes back. Playtests and custom yards award **no scrap**. Built-in yards still do. The saved profile is left alone either way.
+
+The Battle yard picker lists saved custom maps under the unlocked yards. Those runs use your real loadout and still award no scrap.
 
 Guns only hit the layer printed on them: **Ground**, **Air**, or **Both**. Scrap Magnet does not shoot. Pea Blaster and Spark Arc hit both. Glue and Boom stay on the ground. Flak, Needle, and Net are for flyers (Net's tier 3 also slows nearby ground critters). Dual Rail and Orbit Drone hit both.
 
@@ -160,6 +171,7 @@ Popping a splitter is not always safer than letting it walk. Swarmlings are fast
 - **0.2.1** — Battle selection icons actually fit in their boxes. The tower image was being left at its full pixel size, so the gun spilled out of the chip. Each icon is now inset inside the frame, aspect kept, with padding around the drawing. Unlocks tiles use the same fit.
 - **0.2.2** — Battles are 100 waves, with bosses at 21, 40, 60, 80, and 100. Health keeps scaling after the old finale. Chunky Tanks, Shielded, and Elite Tanks pop into weaker versions of themselves. A win pays 2 scrap per wave cleared. A loss pays 1 scrap.
 - **0.3.0** — Bestiary on the main menu, remembered per critter. Four flying kinds ride the lane a little above the tiles. Every gun has a layer: Ground, Air, or Both (Pea hits both). Five new unlocks: Flak Puff, Sky Needle, Dual Rail, Net Lob, and Orbit Drone. Flyers join from wave 14, and Sky Nap arrives at waves 50 and 90. The yard is a bright space scene: a neon road on the old lanes, and a floating island on every hardpoint.
+- **0.4.0** — Map editor (beta). Yards are JSON (`res://maps` for the built-ins, `user://maps` for yours). Battle loads those files and draws them with the same view the editor uses, so Yard Approach is unchanged. Custom yards and playtests do not award scrap. The Battle picker can start a saved custom yard.
 
 ## Art
 

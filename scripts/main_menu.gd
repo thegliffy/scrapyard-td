@@ -5,6 +5,7 @@ const UNLOCKS := "res://scenes/unlocks.tscn"
 const BESTIARY := "res://scenes/bestiary.tscn"
 const MAP_SELECT := "res://scenes/map_select.tscn"
 const SETTINGS := "res://scenes/settings.tscn"
+const EDITOR := "res://scenes/map_editor.tscn"
 const BRIGHT_SPLASH := "res://assets/ui/main_menu_splash.png"
 const DIM_SPLASH := "res://assets/ui/main_menu_splash_dim.png"
 const FADE_TIME := 0.8
@@ -79,17 +80,18 @@ func _build() -> void:
 		["Adventure\nComing Soon", Color("#ddd4ee"), _adventure],
 		["Unlocks", Color("#ffe9a8"), _unlocks],
 		["Bestiary", Color("#d8f4ff"), _bestiary],
+		["Map Editor\nbeta", Color("#c9f6ff"), _editor],
 		["Settings", Color("#efe4ff"), _settings],
 		["Quit", Color("#ffe0f0"), _quit_game],
 	]
-	var widths := [150, 210, 150, 160, 150, 120]
-	var gap := 14
+	var widths := [120, 168, 118, 128, 140, 118, 88]
+	var gap := 8
 	var total := gap * (widths.size() - 1)
 	for w in widths:
 		total += w
 	var x := (1280 - total) / 2.0
 	for i in specs.size():
-		var button := _button(font, specs[i][0], specs[i][1], 16 if i == 1 else 20)
+		var button := _button(font, specs[i][0], specs[i][1], 14 if i == 1 or i == 4 else 18)
 		button.position = Vector2(x, 624)
 		button.size = Vector2(widths[i], 72)
 		button.disabled = true
@@ -172,6 +174,14 @@ func _unlocks() -> void:
 func _bestiary() -> void:
 	Sfx.play("ui")
 	get_tree().change_scene_to_file(BESTIARY)
+
+
+func _editor() -> void:
+	Sfx.play("ui")
+	if MapSession.editor_json == "":
+		MapSession.clear_override()
+	Engine.time_scale = 1.0
+	get_tree().change_scene_to_file(EDITOR)
 
 
 func _settings() -> void:

@@ -104,7 +104,8 @@ func _process(delta: float) -> void:
 func _spawn_item(item: Dictionary) -> void:
 	var lane := str(item["lane"])
 	if lane == "alt":
-		lane = "a" if lane_flip % 2 == 0 else "b"
+		var count := maxi(1, Board.lane_ids.size())
+		lane = Board.lane_ids[lane_flip % count] if not Board.lane_ids.is_empty() else "a"
 		lane_flip += 1
 	get_parent().spawn_enemy(str(item["kind"]), lane)
 

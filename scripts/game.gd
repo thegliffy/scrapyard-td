@@ -102,7 +102,10 @@ func finish(won: bool) -> void:
 	Engine.time_scale = 1.0
 	if not autoplay:
 		var cleared := maxi(0, wave_index + 1) if won else 0
-		meta_awarded = Profile.award_battle(won, cleared)
+		if MapSession.blocks_scrap():
+			meta_awarded = 0
+		else:
+			meta_awarded = Profile.award_battle(won, cleared)
 	changed.emit()
 	game_over.emit(won)
 

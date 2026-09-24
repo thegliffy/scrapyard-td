@@ -4,6 +4,7 @@ var title_label: Label
 var body_label: Label
 var stats_label: Label
 var portrait: TextureRect
+var again_button: Button
 
 
 func _ready() -> void:
@@ -59,10 +60,10 @@ func _build() -> void:
 	stats_label.size = Vector2(520, 80)
 	card.add_child(stats_label)
 
-	var again := _action_button(font, "Battle again", Color("#b6f3c8"), Color("#d4ffe4"))
-	again.position = Vector2(36, 328)
-	again.pressed.connect(_restart)
-	card.add_child(again)
+	again_button = _action_button(font, "Battle again", Color("#b6f3c8"), Color("#d4ffe4"))
+	again_button.position = Vector2(36, 328)
+	again_button.pressed.connect(_restart)
+	card.add_child(again_button)
 
 	var menu := _action_button(font, "Main menu", Color("#ffe0f0"), Color("#fff0f8"))
 	menu.position = Vector2(314, 328)
@@ -91,13 +92,22 @@ func _show(won: bool) -> void:
 		body_label.text = "The soft things snuggled the reactor\na little too close."
 		portrait.texture = load("res://assets/sprites/map/core.png")
 		Sfx.play("lose")
-	stats_label.text = "Wave %d / %d\nPops %d    Leaks %d    Gold %d\nScrap +%d" % [
+	var note := ""
+	if MapSession.playtest:
+		again_button.text = "Editor"
+		note = "\nPlaytest. No scrap."
+	else:
+		again_button.text = "Battle again"
+		if MapSession.blocks_scrap():
+			note = "\nCustom yard. No scrap."
+	stats_label.text = "Wave %d / %d\nPops %d    Leaks %d    Gold %d\nScrap +%d%s" % [
 		clampi(Game.display_wave(), 1, Game.wave_total),
 		Game.wave_total,
 		Game.kills,
 		Game.leaks,
 		Game.earned,
 		Game.meta_awarded,
+		note,
 	]
 
 
@@ -125,6 +135,10 @@ func _action_button(font: Font, text: String, bg: Color, hover_bg: Color) -> But
 
 func _restart() -> void:
 	Sfx.play("ui")
+	if MapSession.playtest:
+		Engine.time_scale = 1.0
+		get_tree().change_scene_to_file("res://scenes/map_editor.tscn")
+		return
 	var root := get_tree().get_first_node_in_group("game_root")
 	if root and root.has_method("restart"):
 		root.restart()
@@ -135,5 +149,6 @@ func _restart() -> void:
 
 func _main_menu() -> void:
 	Sfx.play("ui")
+	MapSession.clear_override()
 	Engine.time_scale = 1.0
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

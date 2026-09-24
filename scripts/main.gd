@@ -37,7 +37,11 @@ var auto_clock := 0.0
 func _ready() -> void:
 	add_to_group("game_root")
 	projectiles.add_to_group("projectiles")
-	Board.ensure()
+	var yard := MapSession.battle_source()
+	if yard != null:
+		Board.apply(yard)
+	else:
+		Board.ensure()
 	for err in Board.validate():
 		push_error(err)
 	Game.autoplay = OS.get_environment("SCRAPYARD_AUTOPLAY") == "1"
@@ -507,6 +511,27 @@ func _run_smoke() -> void:
 		failed = true
 	if place_tower(Vector2i(1, 2), "spark"):
 		push_error("smoke: occupied cell accepted a tower")
+		failed = true
+	if Board.lane_a.size() != 27 or Board.lane_b.size() != 27 or Board.lane_a[0] != Vector2i(0, 1):
+		push_error("smoke: yard lanes drifted")
+		failed = true
+	if Board.CORE != Vector2i(22, 5) or Board.SLOTS.size() != 36 or Board.COLS != 24 or Board.ROWS != 11:
+		push_error("smoke: yard grid drifted")
+		failed = true
+	if Board.style_at(Vector2i(1, 2)) != "pink" or Board.style_at(Vector2i(8, 2)) != "teal":
+		push_error("smoke: island styles drifted")
+		failed = true
+	if not MapValidator.ok(Board.active):
+		push_error("smoke: built-in yard failed the map validator")
+		failed = true
+	if MapValidator.ok(MapData.blank("draft", "Draft")):
+		push_error("smoke: empty yard should not validate")
+		failed = true
+	if MapLibrary.save_custom(Board.active) == "":
+		push_error("smoke: built-in yard was saved over")
+		failed = true
+	if MapSession.blocks_scrap():
+		push_error("smoke: a normal yard blocked scrap")
 		failed = true
 	if failed or not Board.validate().is_empty():
 		print("SMOKE_FAIL")

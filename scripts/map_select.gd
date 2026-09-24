@@ -10,6 +10,7 @@ var _map_ids: Array[String] = []
 func _ready() -> void:
 	_font = Art.ui_font()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	MapSession.clear_override()
 	_build()
 
 
@@ -35,18 +36,38 @@ func _build() -> void:
 	scrap.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(scrap)
 
-	var hint := _label("Pick an unlocked yard. More yards are on the Unlocks screen.", 16, Color("#7a6494"))
+	var hint := _label("Pick an unlocked yard, or a custom one. Custom yards pay no scrap.", 16, Color("#7a6494"))
 	hint.position = Vector2(24, 78)
-	hint.size = Vector2(1000, 28)
+	hint.size = Vector2(1100, 28)
 	add_child(hint)
 
-	var y := 130.0
+	var scroll := ScrollContainer.new()
+	scroll.position = Vector2(200, 114)
+	scroll.size = Vector2(880, 590)
+	add_child(scroll)
+	var list := VBoxContainer.new()
+	list.add_theme_constant_override("separation", 12)
+	list.custom_minimum_size = Vector2(840, 0)
+	scroll.add_child(list)
+
 	for id in Profile.unlocked_maps():
 		_map_ids.append(id)
-		var card := _map_card(id)
-		card.position = Vector2(240, y)
-		add_child(card)
-		y += 150
+		list.add_child(_map_card(id))
+
+	var custom_title := _label("Custom maps", 22, Color("#6a3d88"))
+	custom_title.custom_minimum_size = Vector2(800, 36)
+	list.add_child(custom_title)
+	var any := false
+	for id in MapLibrary.list_custom():
+		var loaded := MapLibrary.load_custom(id)
+		if loaded == null or not MapValidator.ok(loaded):
+			continue
+		any = true
+		list.add_child(_custom_card(loaded, id))
+	if not any:
+		var empty := _label("None saved yet. Map Editor writes them on this machine.", 16, Color("#7a6494"))
+		empty.custom_minimum_size = Vector2(800, 28)
+		list.add_child(empty)
 
 
 func _map_card(id: String) -> Button:
@@ -71,8 +92,40 @@ func _map_card(id: String) -> Button:
 	return button
 
 
+func _custom_card(data: MapData, file_id: String) -> Button:
+	var button := _button("", Color("#f3ecff"), 800, 100)
+	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	var name := _label(data.map_name, 26, Color("#5a3d70"))
+	name.position = Vector2(24, 14)
+	name.size = Vector2(520, 36)
+	button.add_child(name)
+	var blurb := _label("Custom yard. No scrap.", 16, Color("#7a6494"))
+	blurb.position = Vector2(24, 52)
+	blurb.size = Vector2(520, 28)
+	button.add_child(blurb)
+	var go := _label("Battle", 20, Color("#2f6b45"))
+	go.position = Vector2(620, 32)
+	go.size = Vector2(150, 36)
+	go.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.add_child(go)
+	button.pressed.connect(_start_custom.bind(file_id))
+	return button
+
+
 func _start(id: String) -> void:
+	MapSession.clear_override()
 	Profile.choose_map(id)
+	Sfx.play("ui")
+	Engine.time_scale = 1.0
+	get_tree().change_scene_to_file(RUN)
+
+
+func _start_custom(id: String) -> void:
+	var loaded := MapLibrary.load_custom(id)
+	if loaded == null or not MapValidator.ok(loaded):
+		Sfx.play("error")
+		return
+	MapSession.begin_custom_battle(loaded)
 	Sfx.play("ui")
 	Engine.time_scale = 1.0
 	get_tree().change_scene_to_file(RUN)
@@ -96,6 +149,7 @@ func _label(text: String, size: int, color: Color) -> Label:
 func _button(text: String, bg: Color, width: int, height: int) -> Button:
 	var button := Button.new()
 	button.text = text
+	button.custom_minimum_size = Vector2(width, height)
 	button.size = Vector2(width, height)
 	button.focus_mode = Control.FOCUS_NONE
 	button.add_theme_font_override("font", _font)
