@@ -76,6 +76,8 @@ static func style_at(cell: Vector2i) -> String:
 	return str(_styles.get(cell, "pink"))
 
 
+## "a" is the first lane. "b" is the second, or the first again when
+## the yard has only one. Any other id, such as Deep Yard's "c", is looked up.
 static func lane(which: String) -> Array[Vector2i]:
 	ensure()
 	if which == "a":

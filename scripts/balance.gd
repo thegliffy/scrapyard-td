@@ -7,7 +7,7 @@ extends RefCounted
 const START_GOLD := 170
 const CORE_HP := 22
 
-## Same lane layout. Tint and a light stat tweak tell the yards apart.
+## Each yard has its own lanes. Tint and a light stat tweak sit on top.
 const MAPS := {
 	"yard_approach": {
 		"name": "Yard Approach",
@@ -19,7 +19,7 @@ const MAPS := {
 	},
 	"side_dock": {
 		"name": "Side Dock",
-		"blurb": "Same lanes, cooler light. A little tougher.",
+		"blurb": "A long pier and a short slip share a dock.",
 		"tint": "#7eb6ff",
 		"tint_amount": 0.22,
 		"hp_scale": 1.1,
@@ -27,7 +27,7 @@ const MAPS := {
 	},
 	"deep_yard": {
 		"name": "Deep Yard",
-		"blurb": "Same lanes, deeper dusk. A harder crawl.",
+		"blurb": "Three rifts merge late. Open ground between.",
 		"tint": "#6a62d8",
 		"tint_amount": 0.3,
 		"hp_scale": 1.18,

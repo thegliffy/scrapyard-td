@@ -647,6 +647,55 @@ func _run_smoke() -> void:
 	if dock_yard.tint_amount > 0.25 or deep_yard.tint_amount > 0.35 or deep_yard.tint == "#b794f0":
 		push_error("smoke: dock or deep tint would wash the dark plate")
 		failed = true
+	if not MapValidator.ok(dock_yard) or not MapValidator.ok(deep_yard):
+		push_error("smoke: redesigned yard failed validation")
+		failed = true
+	if dock_yard.lanes.size() != 2 or deep_yard.lanes.size() != 3:
+		push_error("smoke: dock or deep lane count")
+		failed = true
+	if dock_yard.lanes[0]["cells"].size() != 42 or dock_yard.lanes[1]["cells"].size() != 28:
+		push_error("smoke: side dock lanes drifted")
+		failed = true
+	if deep_yard.lanes[0]["cells"].size() != 32 or deep_yard.lanes[1]["cells"].size() != 32 or deep_yard.lanes[2]["cells"].size() != 27:
+		push_error("smoke: deep yard lanes drifted")
+		failed = true
+	if dock_yard.pods.size() != 8 or deep_yard.pods.size() != 7:
+		push_error("smoke: dock or deep pod count")
+		failed = true
+	var home_pods := {}
+	for pod in Board.active.pods:
+		home_pods[pod["origin"]] = true
+	for yard in [dock_yard, deep_yard]:
+		if yard.lanes[0]["cells"] == Board.active.lanes[0]["cells"]:
+			push_error("smoke: %s still copies Yard Approach" % yard.id)
+			failed = true
+		for pod in yard.pods:
+			if home_pods.has(pod["origin"]):
+				push_error("smoke: %s reused a Yard Approach pod" % yard.id)
+				failed = true
+	if "Same lanes" in dock_yard.blurb or "Same lanes" in deep_yard.blurb:
+		push_error("smoke: yard blurb still says same lanes")
+		failed = true
+	if absf(dock_yard.hp_scale - 1.1) > 0.001 or absf(deep_yard.hp_scale - 1.18) > 0.001 or absf(deep_yard.speed_scale - 1.06) > 0.001:
+		push_error("smoke: yard difficulty scales drifted")
+		failed = true
+	Board.apply(deep_yard)
+	if Board.lane_ids.size() != 3 or Board.lane("c").is_empty() or Board.lane("c")[0] != Vector2i(0, 5):
+		push_error("smoke: deep yard did not map lane c")
+		failed = true
+	if Board.lane("a")[0] != Vector2i(0, 0) or Board.lane("b")[0] != Vector2i(0, 10):
+		push_error("smoke: deep yard a/b did not stay on the first two lanes")
+		failed = true
+	var solo := deep_yard.duplicate_map()
+	solo.lanes = [solo.lanes[0]]
+	Board.apply(solo)
+	if Board.lane("b").is_empty() or Board.lane("b")[0] != Board.lane("a")[0]:
+		push_error("smoke: one-lane yard did not reuse lane a for b")
+		failed = true
+	Board.apply(MapLibrary.load_builtin("yard_approach"))
+	if Board.lane_a.size() != 27 or Board.CORE != Vector2i(22, 5) or Board.SLOTS.size() != 36:
+		push_error("smoke: yard approach was not restored")
+		failed = true
 	if MapValidator.ok(MapData.blank("draft", "Draft")):
 		push_error("smoke: empty yard should not validate")
 		failed = true

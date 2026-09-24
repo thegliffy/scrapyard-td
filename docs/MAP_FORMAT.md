@@ -9,7 +9,13 @@ Yards are JSON files. Battle, the map editor, and later Adventure all read the s
 | `res://maps/<id>.json` | Built-in yards. Shipped with the game. Read-only. |
 | `user://maps/<id>.json` | Custom yards saved on this machine. |
 
-Built-ins today: `yard_approach`, `side_dock`, `deep_yard`. Side Dock and Deep Yard use the same lanes and hardpoints as Yard Approach. Only the name, blurb, tint, and health / speed scales differ.
+Built-ins today: `yard_approach`, `side_dock`, `deep_yard`. They do not share a layout.
+
+| Yard | Lanes | Shape |
+| --- | --- | --- |
+| Yard Approach | 2 | North and south ribbons. They meet at `(19, 5)` and share the walk into the core at `(22, 5)`. Nine pods. |
+| Side Dock | 2 | Pier is a long S from the north-west (42 cells). Slip is a short spur from the south (28 cells) that joins Pier's last run. Eight pods sit on the bends and that shared dock. Core `(22, 5)`. Cooler tint, 1.1× health. |
+| Deep Yard | 3 | High and Low coil the long way (32 cells each). Cut is a shorter middle rift (27 cells) and joins the tail late. Seven pods: a few at the openings, one pocket, and a pair at the merge, with open ground between. Core `(22, 5)`. Deeper tint, 1.18× health, 1.06× speed. |
 
 ## JSON (version 1)
 
@@ -73,7 +79,9 @@ Built-ins today: `yard_approach`, `side_dock`, `deep_yard`. Side Dock and Deep Y
 
 `MapLibrary.load_builtin` / `load_custom` parse JSON into `MapData`. `Board.apply` copies that into the runtime cache the rest of the fight already uses: `lane_a`, `lane_b`, `SLOTS`, `path_info`, `CORE`, and cell size. Enemy hops, towers, and the wave director did not grow their own map format.
 
-Waves still name lanes `a`, `b`, or `alt`. `a` and `b` are the first two lanes (a one-lane yard uses that lane for both). `alt` cycles every lane on the map, so a third and fourth lane do get spawns. On the two-lane built-in yards this is the same north / south flip as before.
+Waves still name lanes `a`, `b`, or `alt`. `a` is always the first lane in the file. `b` is the second lane, or that same first lane when the yard has only one. `alt` cycles every lane id in order, so a third or fourth lane does get spawns.
+
+On Yard Approach, `alt` flips North and South. On Side Dock it flips Pier and Slip. On Deep Yard it rotates High, Low, then Cut, so Cut is every third alternating spawn. Bosses marked `a` still walk the first lane (High, in Deep Yard). Escorts marked `b` walk the second (Low). Cut has no dedicated boss entry.
 
 `MapView` draws the backdrop, one continuous neon line per lane (rounded corners, pink and cyan), islands, the core island, and rifts. Battle's `scripts/map.gd` is that view plus in-run stains. A segment a later lane shares with an earlier one is drawn once, so a merge is not a double-bright overlap.
 

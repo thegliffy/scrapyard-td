@@ -110,6 +110,8 @@ func _process(delta: float) -> void:
 
 func _spawn_item(item: Dictionary) -> void:
 	var lane := str(item["lane"])
+	# alt walks every lane id in order. A third lane is every third spawn.
+	# A one-lane yard only has one id, so alt stays on that lane.
 	if lane == "alt":
 		var count := maxi(1, Board.lane_ids.size())
 		lane = Board.lane_ids[lane_flip % count] if not Board.lane_ids.is_empty() else "a"

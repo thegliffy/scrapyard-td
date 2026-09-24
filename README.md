@@ -8,14 +8,14 @@ Desktop only, true top-down. **Battle** is the mode you can play. **Adventure** 
 
 ## Download
 
-**[v0.4.4](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.4)** is the current build. You do not need Godot.
+**[v0.4.5](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.5)** is the current build. You do not need Godot.
 
-- Windows: [ScrapyardTD-v0.4.4-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.4/ScrapyardTD-v0.4.4-windows-x86_64.zip). Unzip it and double-click `ScrapyardTD.exe`.
-- Linux x86_64: [ScrapyardTD-v0.4.4-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.4/ScrapyardTD-v0.4.4-linux-x86_64.zip). Unzip, then `chmod +x ScrapyardTD.x86_64` and `./ScrapyardTD.x86_64`.
+- Windows: [ScrapyardTD-v0.4.5-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.5/ScrapyardTD-v0.4.5-windows-x86_64.zip). Unzip it and double-click `ScrapyardTD.exe`.
+- Linux x86_64: [ScrapyardTD-v0.4.5-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.5/ScrapyardTD-v0.4.5-linux-x86_64.zip). Unzip, then `chmod +x ScrapyardTD.x86_64` and `./ScrapyardTD.x86_64`.
 
-**v0.4.4** — A loss pays 1 scrap for each wave cleared. A win is still 2.
+**v0.4.5** — Side Dock and Deep Yard have their own lanes and islands.
 
-Older builds stay up: [v0.4.3](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.3), [v0.4.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.2), [v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1), [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0).
+Older builds stay up: [v0.4.4](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.4), [v0.4.3](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.3), [v0.4.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.2), [v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1), [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0).
 
 ## How to play
 
@@ -111,15 +111,21 @@ A run is **100 waves**. The first 21 are hand-built, including the first flight 
 
 Ground bosses are at **21, 40, 60, 80, and 100**. Sky Nap is at **50 and 90**.
 
-Three yards share the same lanes and islands. The tint and a light stat bump tell them apart.
+Three yards, three layouts. Waves still say `a`, `b`, or `alt`. `a` is the first lane, `b` is the second (or the only lane, on a one-lane yard), and `alt` cycles every lane. On Deep Yard that third lane, Cut, takes every third alternating spawn. Bosses still walk the first lane.
 
-| Yard | Scrap | Difference |
-| --- | --- | --- |
-| Yard Approach | Starter | The home yard. Health and speed at their base. |
-| Side Dock | 50 | Same lanes, cooler light. Critters have **1.1×** health. |
-| Deep Yard | 100 | Same lanes, deeper dusk. Critters have **1.18×** health and **1.06×** speed. |
+| Yard | Scrap | Lanes | Difference |
+| --- | --- | --- | --- |
+| Yard Approach | Starter | 2 | North and south ribbons, nine pods, merge beside the core. Health and speed at their base. |
+| Side Dock | 50 | 2 | Pier is a long S. Slip is a short spur that joins it. Eight pods on the bends and the shared dock. Cooler light. Critters have **1.1×** health. |
+| Deep Yard | 100 | 3 | High and Low coil the long way. Cut is shorter and merges late. Seven pods, with open ground between them. Deeper dusk. Critters have **1.18×** health and **1.06×** speed. |
 
-The picture at the top is Yard Approach: the deep-space plate, the smooth neon road, and the island pods.
+<img src="docs/images/yard_approach.webp" alt="Yard Approach at wave 1. Two neon ribbons, north and south, meet beside the core." width="880">
+
+<img src="docs/images/side_dock.webp" alt="Side Dock at wave 1. The pier snakes in an S, and a short slip joins the last run." width="880">
+
+<img src="docs/images/deep_yard.webp" alt="Deep Yard at wave 1. Three lanes coil and merge late, with open ground between the islands." width="880">
+
+The picture at the top is a fight on Yard Approach: the deep-space plate, the smooth neon road, and the island pods.
 
 ## Map Editor
 
