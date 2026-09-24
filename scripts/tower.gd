@@ -84,7 +84,7 @@ func _pick_target():
 	var boss = null
 	var reach := range_tiles()
 	for enemy in get_tree().get_nodes_in_group("enemies"):
-		if not _living(enemy):
+		if not _living(enemy) or not _can_hit(enemy):
 			continue
 		var dist: float = global_position.distance_to(enemy.global_position) / float(Board.TILE)
 		if dist > reach + 0.05:
@@ -116,15 +116,23 @@ func _shoot(target) -> void:
 	var slow_radius := 0.0
 	var splash := 0.0
 	var color := Color("#b6e86a")
-	if kind == "glue":
+	var layer := Balance.tower_target(kind)
+	var slow_layer := layer
+	if kind == "glue" or kind == "net":
 		slow = Balance.tier_value(kind, "slow", tier)
 		slow_for = Balance.tier_value(kind, "slow_time", tier)
 		slow_radius = Balance.tier_value(kind, "slow_splash", tier)
-		color = Color("#5ee0d4")
+		color = Color("#5ee0d4") if kind == "glue" else Color("#b6f0c0")
+		if kind == "net" and tier >= 3:
+			slow_layer = "both"
 		Sfx.play("glue", randf_range(0.94, 1.06))
-	elif kind == "boom":
+	elif kind == "boom" or kind == "flak" or kind == "orbit":
 		splash = Balance.tier_value(kind, "splash", tier)
-		color = Color("#ff9848")
+		color = Color("#ff9848") if kind != "orbit" else Color("#ffe08a")
+		Sfx.play("boom", randf_range(0.92, 1.05))
+	elif kind == "dual":
+		color = Color("#ffd0ea")
+		Sfx.play("spark", randf_range(0.96, 1.08))
 	else:
 		Sfx.play("pea", randf_range(0.94, 1.08))
 	shot.launch({
@@ -138,6 +146,8 @@ func _shoot(target) -> void:
 		"slow_splash": slow_radius,
 		"speed": Balance.tier_value(kind, "shot_speed", tier) if kind != "spark" else 10.0,
 		"color": color,
+		"layer": layer,
+		"slow_layer": slow_layer,
 	})
 
 
@@ -173,7 +183,7 @@ func _nearest(from_enemy, excluded: Array, reach: float):
 	var best = null
 	var best_dist := reach
 	for enemy in get_tree().get_nodes_in_group("enemies"):
-		if enemy in excluded or not _living(enemy):
+		if enemy in excluded or not _living(enemy) or not _can_hit(enemy):
 			continue
 		var dist: float = from_enemy.global_position.distance_to(enemy.global_position) / float(Board.TILE)
 		if dist <= best_dist and dist > 0.05:
@@ -184,6 +194,10 @@ func _nearest(from_enemy, excluded: Array, reach: float):
 
 func _living(enemy) -> bool:
 	return is_instance_valid(enemy) and not enemy.is_queued_for_deletion() and enemy.alive
+
+
+func _can_hit(enemy) -> bool:
+	return Balance.can_hit(kind, str(enemy.kind))
 
 
 func _draw() -> void:

@@ -3,11 +3,20 @@ extends Node
 ## Persistent meta profile. Gold is not stored here — it resets every Battle.
 
 const SAVE_PATH := "user://profile.cfg"
-const GUN_ORDER := ["pea", "spark", "glue", "boom", "magnet"]
+const GUN_ORDER := ["pea", "glue", "spark", "flak", "needle", "boom", "net", "dual", "magnet", "orbit"]
 const MAP_ORDER := ["yard_approach", "side_dock", "deep_yard"]
 const STARTER_GUNS := ["pea", "glue"]
 const STARTER_MAPS := ["yard_approach"]
-const GUN_COST := {"spark": 40, "boom": 60, "magnet": 80}
+const GUN_COST := {
+	"spark": 40,
+	"flak": 45,
+	"needle": 55,
+	"boom": 60,
+	"net": 65,
+	"dual": 70,
+	"magnet": 80,
+	"orbit": 90,
+}
 const MAP_COST := {"side_dock": 50, "deep_yard": 100}
 const LOSE_SCRAP := 1
 const LOADOUT_SIZE := 5
@@ -19,6 +28,7 @@ var guns: PackedStringArray = PackedStringArray()
 var maps: PackedStringArray = PackedStringArray()
 var loadout: PackedStringArray = PackedStringArray()
 var open_slots := FREE_SLOTS
+var seen: PackedStringArray = PackedStringArray()
 var muted := false
 var battle_map := "yard_approach"
 
@@ -55,6 +65,7 @@ func load_profile() -> void:
 	if not has_map(battle_map):
 		battle_map = "yard_approach"
 	open_slots = clampi(int(cfg.get_value("profile", "open_slots", FREE_SLOTS)), FREE_SLOTS, LOADOUT_SIZE)
+	seen = _kept(cfg.get_value("profile", "seen", []), Balance.BESTIARY)
 	if cfg.has_section_key("profile", "loadout"):
 		loadout = _sanitize_loadout(cfg.get_value("profile", "loadout", _starter_loadout()))
 	else:
@@ -70,6 +81,7 @@ func save_profile() -> void:
 	cfg.set_value("profile", "loadout", loadout)
 	cfg.set_value("profile", "open_slots", open_slots)
 	cfg.set_value("profile", "battle_map", battle_map)
+	cfg.set_value("profile", "seen", seen)
 	cfg.save(SAVE_PATH)
 
 
@@ -85,6 +97,7 @@ func _apply_defaults() -> void:
 	maps = PackedStringArray(STARTER_MAPS)
 	loadout = _starter_loadout()
 	open_slots = FREE_SLOTS
+	seen = PackedStringArray()
 	battle_map = "yard_approach"
 
 
@@ -119,6 +132,17 @@ func _sanitize_loadout(raw) -> PackedStringArray:
 		out[i] = id
 		used[id] = true
 	return out
+
+
+func mark_seen(id: String) -> void:
+	if id == "" or not Balance.ENEMIES.has(id) or seen.has(id):
+		return
+	seen.append(id)
+	save_profile()
+
+
+func has_seen(id: String) -> bool:
+	return seen.has(id)
 
 
 func has_gun(id: String) -> bool:

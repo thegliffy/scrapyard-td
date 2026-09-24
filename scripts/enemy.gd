@@ -30,7 +30,10 @@ var tint := Color.WHITE
 var body_color := Color.WHITE
 var texture: Texture2D
 var is_boss := false
+var flying := false
 var minion_kind := ""
+
+const FLY_LIFT := 28.0
 
 
 func setup(kind_id: String, path_cells: Array, start_index: int = 0, hop: float = 0.0, tint_color: Color = Color.WHITE) -> void:
@@ -59,6 +62,7 @@ func setup(kind_id: String, path_cells: Array, start_index: int = 0, hop: float 
 	baby_count = int(data["babies"])
 	baby_timer = baby_every
 	is_boss = bool(data.get("boss", false))
+	flying = bool(data.get("flying", false))
 	minion_kind = str(data.get("minion_kind", ""))
 	tint = tint_color
 	body_color = Color(str(data["color"]))
@@ -75,8 +79,9 @@ func setup(kind_id: String, path_cells: Array, start_index: int = 0, hop: float 
 	step_index = index + 1
 	to_cell = path[step_index]
 	hop_t = clampf(hop, 0.0, 0.95)
-	global_position = Board.cell_center(from_cell).lerp(Board.cell_center(to_cell), _step_curve(hop_t))
-	z_index = 120 + from_cell.y + (40 if is_boss else 0)
+	_place_on_path()
+	z_index = _z_for(from_cell)
+	Profile.mark_seen(kind)
 	queue_redraw()
 
 
@@ -175,15 +180,31 @@ func _process(delta: float) -> void:
 			leak()
 			return
 		to_cell = path[step_index]
-	var visual := _step_curve(hop_t)
-	global_position = Board.cell_center(from_cell).lerp(Board.cell_center(to_cell), visual)
-	z_index = 120 + current_cell().y + (40 if is_boss else 0)
+	_place_on_path()
+	z_index = _z_for(current_cell())
 	if baby_every > 0.0:
 		baby_timer -= delta
 		if baby_timer <= 0.0:
 			baby_timer = baby_every
 			_spawn_minions()
 	queue_redraw()
+
+
+func _place_on_path() -> void:
+	var visual := _step_curve(hop_t)
+	var pos := Board.cell_center(from_cell).lerp(Board.cell_center(to_cell), visual)
+	if flying:
+		pos.y -= FLY_LIFT
+	global_position = pos
+
+
+func _z_for(cell: Vector2i) -> int:
+	var z := 120 + cell.y
+	if flying:
+		z += 30
+	if is_boss:
+		z += 40
+	return z
 
 
 func _step_curve(t: float) -> float:
@@ -241,8 +262,13 @@ func _fx():
 
 
 func _draw() -> void:
-	draw_set_transform(Vector2(0, 10), 0, Vector2(1.2, 0.42))
-	draw_circle(Vector2.ZERO, 14 if not is_boss else 26, Color(0, 0, 0, 0.28))
+	if flying:
+		draw_set_transform(Vector2(0, FLY_LIFT), 0, Vector2(1.25, 0.42))
+		draw_circle(Vector2.ZERO, 12 if not is_boss else 22, Color(0, 0, 0, 0.2))
+		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+	else:
+		draw_set_transform(Vector2(0, 10), 0, Vector2(1.2, 0.42))
+		draw_circle(Vector2.ZERO, 14 if not is_boss else 26, Color(0, 0, 0, 0.28))
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 	var spin := sin(anim * (15.0 if skitter else 2.4)) * (0.2 if skitter else 0.045)
 	var squash_y := 0.82 if hop_t > 0.82 else 1.0

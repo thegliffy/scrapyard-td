@@ -10,6 +10,8 @@ var slow_splash := 0.0
 var target = null
 var life := 2.4
 var kind := "pea"
+var layer := "both"
+var slow_layer := "both"
 var color := Color.WHITE
 var texture: Texture2D
 var impacted := false
@@ -24,6 +26,8 @@ func launch(data: Dictionary) -> void:
 	slow_factor = float(data.get("slow_factor", 1))
 	slow_time = float(data.get("slow_time", 0))
 	slow_splash = float(data.get("slow_splash", 0))
+	layer = str(data.get("layer", "both"))
+	slow_layer = str(data.get("slow_layer", layer))
 	speed_px = float(data.get("speed", 10)) * float(Board.TILE)
 	color = data.get("color", Color.WHITE)
 	texture = Art.projectile_tex(kind)
@@ -68,7 +72,7 @@ func _impact() -> void:
 		hit_pos = target.global_position
 	if splash > 0.0:
 		for enemy in get_tree().get_nodes_in_group("enemies"):
-			if not _living(enemy):
+			if not _matches(enemy, layer):
 				continue
 			var dist: float = hit_pos.distance_to(enemy.global_position) / float(Board.TILE)
 			if dist <= splash:
@@ -79,7 +83,7 @@ func _impact() -> void:
 				fx.stain(cell, Color(color.r, color.g, color.b, 0.45), 0.28)
 		Sfx.play("boom", randf_range(0.92, 1.05))
 	else:
-		if _living(target):
+		if _matches(target, layer):
 			target.take_damage(damage)
 			if slow_factor < 0.99:
 				target.apply_slow(slow_factor, slow_time)
@@ -88,7 +92,7 @@ func _impact() -> void:
 				fx.stain(target.current_cell(), Color(color.r, color.g, color.b, 0.4), slow_time if slow_time > 0.0 else 0.18)
 		if slow_splash > 0.05:
 			for enemy in get_tree().get_nodes_in_group("enemies"):
-				if enemy == target or not _living(enemy):
+				if enemy == target or not _matches(enemy, slow_layer):
 					continue
 				var dist: float = hit_pos.distance_to(enemy.global_position) / float(Board.TILE)
 				if dist <= slow_splash:
@@ -98,6 +102,12 @@ func _impact() -> void:
 
 func _living(enemy) -> bool:
 	return is_instance_valid(enemy) and not enemy.is_queued_for_deletion() and enemy.alive
+
+
+func _matches(enemy, which: String) -> bool:
+	if not _living(enemy):
+		return false
+	return Balance.layer_matches(which, bool(enemy.flying))
 
 
 func _draw() -> void:

@@ -53,14 +53,16 @@ func _build() -> void:
 	maps_h.size = Vector2(200, 30)
 	add_child(maps_h)
 
-	var y := 146
+	var gun_i := 0
 	for id in Profile.GUN_ORDER:
 		var row := _gun_row(id)
-		row.position = Vector2(24, y)
+		var col := gun_i % 2
+		var line := int(float(gun_i) / 2.0)
+		row.position = Vector2(24 + col * 412, 146 + line * 64)
 		add_child(row)
-		y += 68
+		gun_i += 1
 
-	y = 146
+	var y := 146
 	for id in Profile.MAP_ORDER:
 		var row := _map_row(id)
 		row.position = Vector2(860, y)
@@ -92,18 +94,22 @@ func _build() -> void:
 
 func _gun_row(id: String) -> Control:
 	var row := Panel.new()
-	row.size = Vector2(800, 62)
+	row.size = Vector2(400, 62)
 	row.add_theme_stylebox_override("panel", _card_style(Color("#fffaf4")))
 	var icon := Art.make_tower_icon(Rect2(8, 8, 46, 46), id)
 	row.add_child(icon)
 	Art.show_tower_icon(icon, id)
 	row.clip_contents = true
-	var name := _label(str(Balance.TOWERS[id]["name"]), 18, Color("#5a3d70"))
-	name.position = Vector2(68, 16)
-	name.size = Vector2(280, 30)
+	var name := _label(str(Balance.TOWERS[id]["name"]), 16, Color("#5a3d70"))
+	name.position = Vector2(62, 16)
+	name.size = Vector2(148, 30)
 	row.add_child(name)
-	var action := _button("", Color("#ffe9a8"), 180, 40)
-	action.position = Vector2(600, 11)
+	var layer := _label(Balance.target_label(id), 14, Color("#7a6494"))
+	layer.position = Vector2(214, 18)
+	layer.size = Vector2(64, 24)
+	row.add_child(layer)
+	var action := _button("", Color("#ffe9a8"), 108, 40)
+	action.position = Vector2(282, 11)
 	action.pressed.connect(_on_gun.bind(id))
 	row.add_child(action)
 	_gun_buttons[id] = action

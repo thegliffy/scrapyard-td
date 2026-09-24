@@ -39,7 +39,8 @@ const TOWERS := {
 	"pea": {
 		"name": "Pea Blaster",
 		"short": "Pea",
-		"blurb": "Cheap, peppy, one critter at a time.",
+		"target": "both",
+		"blurb": "Cheap and peppy. Hits ground and air.",
 		"cost": 50,
 		"upgrade": [45, 80],
 		"range": [3.5, 3.9, 4.3],
@@ -50,7 +51,8 @@ const TOWERS := {
 	"spark": {
 		"name": "Spark Arc",
 		"short": "Spark",
-		"blurb": "Zaps a critter, then jumps to its friends.",
+		"target": "both",
+		"blurb": "Zaps a critter, then jumps. Hits ground and air.",
 		"cost": 100,
 		"upgrade": [75, 120],
 		"range": [3.2, 3.5, 3.9],
@@ -63,7 +65,8 @@ const TOWERS := {
 	"glue": {
 		"name": "Glue Goo",
 		"short": "Glue",
-		"blurb": "Slows the soft things down.",
+		"target": "ground",
+		"blurb": "Slows critters on the ground.",
 		"cost": 75,
 		"upgrade": [60, 95],
 		"range": [3.0, 3.3, 3.6],
@@ -77,7 +80,8 @@ const TOWERS := {
 	"boom": {
 		"name": "Boom Barrel",
 		"short": "Boom",
-		"blurb": "Lobs a bomb. Splashes a tile or two.",
+		"target": "ground",
+		"blurb": "Lobs a bomb. Splash hits the ground only.",
 		"cost": 125,
 		"upgrade": [95, 150],
 		"range": [3.6, 4.0, 4.4],
@@ -89,6 +93,7 @@ const TOWERS := {
 	"magnet": {
 		"name": "Scrap Magnet",
 		"short": "Magnet",
+		"target": "none",
 		"blurb": "No shooting. Pulls extra gold out of the yard.",
 		"cost": 80,
 		"upgrade": [65, 110],
@@ -96,6 +101,71 @@ const TOWERS := {
 		"income": [5, 8, 12],
 		"income_every": [4.0, 3.3, 2.6],
 		"bonus": [2, 4, 6],
+	},
+	"flak": {
+		"name": "Flak Puff",
+		"short": "Flak",
+		"target": "air",
+		"blurb": "A cheap puff of flak. Splash hits air only.",
+		"cost": 70,
+		"upgrade": [55, 90],
+		"range": [3.2, 3.5, 3.8],
+		"damage": [10.0, 16.0, 26.0],
+		"rate": [0.7, 0.85, 1.0],
+		"shot_speed": 9.0,
+		"splash": [1.2, 1.4, 1.6],
+	},
+	"needle": {
+		"name": "Sky Needle",
+		"short": "Needle",
+		"target": "air",
+		"blurb": "A fast stitch of light. One flyer at a time.",
+		"cost": 60,
+		"upgrade": [50, 85],
+		"range": [4.0, 4.4, 4.8],
+		"damage": [9.0, 15.0, 24.0],
+		"rate": [2.2, 2.6, 3.1],
+		"shot_speed": 16.0,
+	},
+	"dual": {
+		"name": "Dual Rail",
+		"short": "Dual",
+		"target": "both",
+		"blurb": "Two little rails. Hits ground and air.",
+		"cost": 110,
+		"upgrade": [80, 120],
+		"range": [3.6, 4.0, 4.3],
+		"damage": [11.0, 18.0, 28.0],
+		"rate": [1.3, 1.5, 1.75],
+		"shot_speed": 14.0,
+	},
+	"net": {
+		"name": "Net Lob",
+		"short": "Net",
+		"target": "air",
+		"blurb": "Slows flyers. Tier 3 also gums nearby ground critters.",
+		"cost": 85,
+		"upgrade": [65, 100],
+		"range": [3.4, 3.7, 4.0],
+		"damage": [3.0, 5.0, 8.0],
+		"rate": [1.0, 1.15, 1.3],
+		"shot_speed": 10.0,
+		"slow": [0.5, 0.38, 0.28],
+		"slow_time": [1.8, 2.3, 2.8],
+		"slow_splash": [0.0, 0.0, 1.3],
+	},
+	"orbit": {
+		"name": "Orbit Drone",
+		"short": "Orbit",
+		"target": "both",
+		"blurb": "Slow, heavy, and a little splash. Hits ground and air.",
+		"cost": 140,
+		"upgrade": [100, 150],
+		"range": [3.8, 4.2, 4.6],
+		"damage": [28.0, 42.0, 64.0],
+		"rate": [0.45, 0.55, 0.65],
+		"shot_speed": 7.0,
+		"splash": [1.1, 1.25, 1.4],
 	},
 }
 
@@ -116,6 +186,7 @@ const ENEMIES := {
 		"baby_every": 0.0,
 		"babies": 0,
 		"boss": false,
+		"flying": false,
 		"minion_kind": "",
 	},
 	"chunky_tank": {
@@ -134,6 +205,7 @@ const ENEMIES := {
 		"baby_every": 0.0,
 		"babies": 0,
 		"boss": false,
+		"flying": false,
 		"minion_kind": "",
 	},
 	"shielded": {
@@ -152,6 +224,7 @@ const ENEMIES := {
 		"baby_every": 0.0,
 		"babies": 0,
 		"boss": false,
+		"flying": false,
 		"minion_kind": "",
 	},
 	"swarm_splitter": {
@@ -170,6 +243,7 @@ const ENEMIES := {
 		"baby_every": 0.0,
 		"babies": 0,
 		"boss": false,
+		"flying": false,
 		"minion_kind": "",
 	},
 	"tanklet": {
@@ -188,6 +262,7 @@ const ENEMIES := {
 		"baby_every": 0.0,
 		"babies": 0,
 		"boss": false,
+		"flying": false,
 		"minion_kind": "",
 	},
 	"open_shell": {
@@ -206,6 +281,7 @@ const ENEMIES := {
 		"baby_every": 0.0,
 		"babies": 0,
 		"boss": false,
+		"flying": false,
 		"minion_kind": "",
 	},
 	"elite_tank": {
@@ -224,6 +300,7 @@ const ENEMIES := {
 		"baby_every": 0.0,
 		"babies": 0,
 		"boss": false,
+		"flying": false,
 		"minion_kind": "",
 	},
 	"swarmling": {
@@ -242,6 +319,7 @@ const ENEMIES := {
 		"baby_every": 0.0,
 		"babies": 0,
 		"boss": false,
+		"flying": false,
 		"minion_kind": "",
 	},
 	"big_cute_boss": {
@@ -260,8 +338,107 @@ const ENEMIES := {
 		"baby_every": 6.5,
 		"babies": 2,
 		"boss": true,
+		"flying": false,
 		"minion_kind": "swarmling",
 	},
+	"small_flyer": {
+		"name": "Small Flyer",
+		"hp": 22,
+		"shield": 0,
+		"speed": 2.55,
+		"gold": 5,
+		"leak": 1,
+		"display": 26.0,
+		"tex": 128.0,
+		"color": "#ffd0ea",
+		"split": 0,
+		"split_kind": "",
+		"skitter": true,
+		"baby_every": 0.0,
+		"babies": 0,
+		"boss": false,
+		"flying": true,
+		"minion_kind": "",
+	},
+	"flyer": {
+		"name": "Flyer",
+		"hp": 64,
+		"shield": 0,
+		"speed": 1.75,
+		"gold": 9,
+		"leak": 2,
+		"display": 40.0,
+		"tex": 128.0,
+		"color": "#9ad7ff",
+		"split": 0,
+		"split_kind": "",
+		"skitter": false,
+		"baby_every": 0.0,
+		"babies": 0,
+		"boss": false,
+		"flying": true,
+		"minion_kind": "",
+	},
+	"shielded_flyer": {
+		"name": "Shielded Flyer",
+		"hp": 48,
+		"shield": 44,
+		"speed": 1.4,
+		"gold": 12,
+		"leak": 2,
+		"display": 42.0,
+		"tex": 128.0,
+		"color": "#7ee0c8",
+		"split": 2,
+		"split_kind": "small_flyer",
+		"skitter": false,
+		"baby_every": 0.0,
+		"babies": 0,
+		"boss": false,
+		"flying": true,
+		"minion_kind": "",
+	},
+	"flying_boss": {
+		"name": "Sky Nap",
+		"hp": 2000,
+		"shield": 140,
+		"speed": 0.58,
+		"gold": 110,
+		"leak": 8,
+		"display": 84.0,
+		"tex": 192.0,
+		"color": "#c9a0ff",
+		"split": 0,
+		"split_kind": "",
+		"skitter": false,
+		"baby_every": 7.0,
+		"babies": 2,
+		"boss": true,
+		"flying": true,
+		"minion_kind": "small_flyer",
+	},
+}
+
+const BESTIARY := [
+	"fast_skitter", "chunky_tank", "tanklet", "shielded", "open_shell",
+	"swarm_splitter", "swarmling", "elite_tank", "big_cute_boss",
+	"small_flyer", "flyer", "shielded_flyer", "flying_boss",
+]
+
+const BLURBS := {
+	"fast_skitter": "A tiny pink spider. Quick, and it stays on the tiles.",
+	"chunky_tank": "A heavy purple shell. Pops into three smaller Tanklets.",
+	"tanklet": "What is left of a Chunky Tank. It does not split again.",
+	"shielded": "A shy mint creature in a glass bubble. The pop drops two Open Shells.",
+	"open_shell": "The creature after the bubble breaks. Softer, and done splitting.",
+	"swarm_splitter": "An orange blob. Pops into three quick Swarmlings.",
+	"swarmling": "A little piece of the swarm. Fast, and it does not split.",
+	"elite_tank": "A darker, heavier tank. Pops into two Chunky Tanks.",
+	"big_cute_boss": "The ground boss. Many eyes, slow crawl, burps Swarmlings.",
+	"small_flyer": "A tiny moth above the lane. Fast, and easy to pop.",
+	"flyer": "A medium flyer. It follows the lane, one tile up in the air.",
+	"shielded_flyer": "A flyer in a bubble. Pop it and two Small Flyers fall out.",
+	"flying_boss": "Sky Nap. An aerial boss that sheds Small Flyers as it drifts.",
 }
 
 ## First 21 waves are handcrafted (20 build-up waves, then the first boss).
@@ -372,11 +549,10 @@ const WAVES: Array = [
 		],
 	},
 	{
-		"title": "Soft Crowd",
-		"preview": "4 Swarm-Splitters, 4 Shielded, 4 Skitters",
+		"title": "First Flight",
+		"preview": "8 Small Flyers & 4 Fast Skitters",
 		"entries": [
-			{"kind": "swarm_splitter", "count": 4, "gap": 0.9, "lane": "alt"},
-			{"kind": "shielded", "count": 4, "gap": 0.7, "lane": "alt"},
+			{"kind": "small_flyer", "count": 8, "gap": 0.7, "lane": "alt"},
 			{"kind": "fast_skitter", "count": 4, "gap": 0.55, "lane": "alt"},
 		],
 	},
@@ -399,10 +575,10 @@ const WAVES: Array = [
 	},
 	{
 		"title": "Bubble Swarm",
-		"preview": "6 Shielded, 4 Swarm-Splitters, 6 Skitters",
+		"preview": "6 Shielded, 4 Flyers, 6 Skitters",
 		"entries": [
 			{"kind": "shielded", "count": 6, "gap": 0.65, "lane": "alt"},
-			{"kind": "swarm_splitter", "count": 4, "gap": 0.8, "lane": "alt"},
+			{"kind": "flyer", "count": 4, "gap": 0.75, "lane": "alt"},
 			{"kind": "fast_skitter", "count": 6, "gap": 0.48, "lane": "alt"},
 		],
 	},
@@ -482,6 +658,8 @@ static func boss_hp_scale(wave_number: int) -> float:
 
 
 static func _generated_wave(wave_number: int) -> Dictionary:
+	if wave_number == 50 or wave_number == 90:
+		return _flying_boss_wave(wave_number)
 	if is_boss_wave(wave_number):
 		return _boss_wave(wave_number)
 	var t := clampf(float(wave_number - 22) / 77.0, 0.0, 1.0)
@@ -532,7 +710,21 @@ static func _generated_wave(wave_number: int) -> Dictionary:
 			]
 			if wave_number >= 55:
 				entries.append({"kind": "elite_tank", "count": 1, "gap": 1.4, "lane": "a"})
+	for extra in _air_pack(wave_number, t, gap):
+		entries.append(extra)
 	return {"title": title, "preview": _preview_from(entries), "entries": entries}
+
+
+static func _air_pack(wave_number: int, t: float, gap: float) -> Array:
+	var pack: Array = []
+	if wave_number < 22:
+		return pack
+	pack.append({"kind": "small_flyer", "count": 4 + int(t * 8), "gap": gap, "lane": "alt"})
+	if wave_number >= 28:
+		pack.append({"kind": "flyer", "count": 2 + int(t * 4), "gap": gap + 0.06, "lane": "alt"})
+	if wave_number >= 42:
+		pack.append({"kind": "shielded_flyer", "count": 1 + int(t * 3), "gap": gap + 0.1, "lane": "alt"})
+	return pack
 
 
 static func _boss_wave(wave_number: int) -> Dictionary:
@@ -547,12 +739,26 @@ static func _boss_wave(wave_number: int) -> Dictionary:
 		entries.append({"kind": "chunky_tank", "count": 2 + int(t * 3), "gap": 0.8, "lane": "alt"})
 	if wave_number >= 80:
 		entries.append({"kind": "shielded", "count": 3, "gap": 0.7, "lane": "alt"})
+	if wave_number >= 40:
+		entries.append({"kind": "small_flyer", "count": 4 + int(t * 4), "gap": 0.55, "lane": "alt"})
 	if wave_number >= 100:
 		entries.append({"kind": "elite_tank", "count": 1, "gap": 1.5, "lane": "b"})
 	var preview := "Big Cute Boss, plus a deeper escort"
 	if wave_number >= 100:
 		preview = "The last Big Cute Boss"
 	return {"title": title, "preview": preview, "boss": true, "entries": entries}
+
+
+static func _flying_boss_wave(wave_number: int) -> Dictionary:
+	var late := wave_number >= 90
+	var entries: Array = [
+		{"kind": "flying_boss", "count": 1, "gap": 1.2, "lane": "a"},
+		{"kind": "small_flyer", "count": 6 if not late else 10, "gap": 0.45, "lane": "alt"},
+		{"kind": "flyer", "count": 3 if not late else 5, "gap": 0.7, "lane": "alt"},
+		{"kind": "shielded_flyer", "count": 2 if not late else 4, "gap": 0.85, "lane": "b"},
+	]
+	var title := "Sky Nap" if not late else "High Nap"
+	return {"title": title, "preview": "Sky Nap and a cloud of flyers", "boss": true, "entries": entries}
 
 
 static func _preview_from(entries: Array) -> String:
@@ -565,6 +771,42 @@ static func _preview_from(entries: Array) -> String:
 
 static func cost(id: String) -> int:
 	return int(TOWERS[id]["cost"])
+
+
+static func tower_target(id: String) -> String:
+	return str(TOWERS[id].get("target", "ground"))
+
+
+static func target_label(id: String) -> String:
+	match tower_target(id):
+		"air":
+			return "Air"
+		"both":
+			return "Both"
+		"none":
+			return "Yard"
+		_:
+			return "Ground"
+
+
+static func layer_matches(layer: String, flying: bool) -> bool:
+	if layer == "both":
+		return true
+	if layer == "air":
+		return flying
+	if layer == "ground":
+		return not flying
+	return false
+
+
+static func can_hit(tower_id: String, enemy_id: String) -> bool:
+	if not TOWERS.has(tower_id) or not ENEMIES.has(enemy_id):
+		return false
+	return layer_matches(tower_target(tower_id), bool(ENEMIES[enemy_id].get("flying", false)))
+
+
+static func blurb(enemy_id: String) -> String:
+	return str(BLURBS.get(enemy_id, ""))
 
 
 static func tier_value(id: String, key: String, tier: int) -> float:

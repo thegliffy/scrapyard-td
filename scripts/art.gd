@@ -13,6 +13,10 @@ const ENEMY := {
 	"open_shell": "res://assets/sprites/enemies/shielded.png",
 	"elite_tank": "res://assets/sprites/enemies/chunky_tank.png",
 	"big_cute_boss": "res://assets/sprites/enemies/big_cute_boss.png",
+	"small_flyer": "res://assets/sprites/enemies/small_flyer.png",
+	"flyer": "res://assets/sprites/enemies/flyer.png",
+	"shielded_flyer": "res://assets/sprites/enemies/shielded_flyer.png",
+	"flying_boss": "res://assets/sprites/enemies/flying_boss.png",
 }
 
 const TOWER := {
@@ -21,6 +25,11 @@ const TOWER := {
 	"glue": "res://assets/sprites/towers/glue.png",
 	"boom": "res://assets/sprites/towers/boom.png",
 	"magnet": "res://assets/sprites/towers/magnet.png",
+	"flak": "res://assets/sprites/towers/flak.png",
+	"needle": "res://assets/sprites/towers/needle.png",
+	"dual": "res://assets/sprites/towers/dual.png",
+	"net": "res://assets/sprites/towers/net.png",
+	"orbit": "res://assets/sprites/towers/orbit.png",
 }
 
 const PROJECTILE := {
@@ -99,4 +108,11 @@ static func show_tower_icon(icon: TextureRect, kind: String) -> void:
 
 
 static func projectile_tex(kind: String) -> Texture2D:
-	return load(PROJECTILE.get(kind, PROJECTILE["pea"]))
+	var shot := kind
+	if kind == "flak" or kind == "orbit":
+		shot = "boom"
+	elif kind == "net":
+		shot = "glue"
+	elif kind == "needle" or kind == "dual":
+		shot = "pea"
+	return load(PROJECTILE.get(shot, PROJECTILE["pea"]))

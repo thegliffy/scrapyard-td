@@ -27,6 +27,11 @@ const CHIP_COLORS := {
 	"glue": Color("#9af0ea"),
 	"boom": Color("#ffc09a"),
 	"magnet": Color("#f3b4ea"),
+	"flak": Color("#c9e8ff"),
+	"needle": Color("#e8d4ff"),
+	"dual": Color("#ffd0ea"),
+	"net": Color("#b8f0c8"),
+	"orbit": Color("#ffe0a8"),
 }
 
 
@@ -363,8 +368,8 @@ func _fill_info() -> void:
 	if main.build_kind != "":
 		var id: String = main.build_kind
 		var data: Dictionary = Balance.TOWERS[id]
-		info_label.text = "Placing %s · %d\nRange %.1f tiles" % [
-			data["name"], Balance.cost(id), Balance.tier_value(id, "range", 1)
+		info_label.text = "Placing %s · %s · %d\n%s" % [
+			data["name"], Balance.target_label(id), Balance.cost(id), data["blurb"]
 		]
 	else:
 		info_label.text = "Gold pads only. Cover both rifts.\n1–5 build, U upgrade, Space call."
@@ -398,7 +403,7 @@ func _tower_blurb(tower) -> String:
 				Balance.tier_value(tower.kind, "damage", tower.tier),
 				Balance.tier_value(tower.kind, "rate", tower.tier),
 			]
-	return "%s  T%d/3\n%s · %.1f tiles" % [data["name"], tower.tier, detail, tower.range_tiles()]
+	return "%s  %s  T%d/3\n%s · %.1f tiles" % [data["name"], Balance.target_label(tower.kind), tower.tier, detail, tower.range_tiles()]
 
 
 func _text(value: String, size: int, color: Color) -> Label:

@@ -2,6 +2,7 @@ extends Control
 
 const RUN := "res://scenes/main.tscn"
 const UNLOCKS := "res://scenes/unlocks.tscn"
+const BESTIARY := "res://scenes/bestiary.tscn"
 const MAP_SELECT := "res://scenes/map_select.tscn"
 const SETTINGS := "res://scenes/settings.tscn"
 const BRIGHT_SPLASH := "res://assets/ui/main_menu_splash.png"
@@ -77,17 +78,18 @@ func _build() -> void:
 		["Battle", Color("#b6f3c8"), _battle],
 		["Adventure\nComing Soon", Color("#ddd4ee"), _adventure],
 		["Unlocks", Color("#ffe9a8"), _unlocks],
+		["Bestiary", Color("#d8f4ff"), _bestiary],
 		["Settings", Color("#efe4ff"), _settings],
 		["Quit", Color("#ffe0f0"), _quit_game],
 	]
-	var widths := [180, 250, 180, 180, 140]
+	var widths := [150, 210, 150, 160, 150, 120]
 	var gap := 14
 	var total := gap * (widths.size() - 1)
 	for w in widths:
 		total += w
 	var x := (1280 - total) / 2.0
 	for i in specs.size():
-		var button := _button(font, specs[i][0], specs[i][1], 18 if i == 1 else 22)
+		var button := _button(font, specs[i][0], specs[i][1], 16 if i == 1 else 20)
 		button.position = Vector2(x, 624)
 		button.size = Vector2(widths[i], 72)
 		button.disabled = true
@@ -165,6 +167,11 @@ func _adventure() -> void:
 func _unlocks() -> void:
 	Sfx.play("ui")
 	get_tree().change_scene_to_file(UNLOCKS)
+
+
+func _bestiary() -> void:
+	Sfx.play("ui")
+	get_tree().change_scene_to_file(BESTIARY)
 
 
 func _settings() -> void:

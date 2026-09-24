@@ -431,6 +431,40 @@ func _run_smoke() -> void:
 	if str(Balance.enemy("elite_tank")["split_kind"]) != "chunky_tank" or int(Balance.enemy("swarmling")["split"]) != 0:
 		push_error("smoke: elite chain or swarmling recursion")
 		failed = true
+	if not Balance.can_hit("pea", "small_flyer") or not Balance.can_hit("pea", "fast_skitter"):
+		push_error("smoke: pea should hit ground and air")
+		failed = true
+	if Balance.can_hit("glue", "flyer") or Balance.can_hit("boom", "small_flyer") or Balance.can_hit("flak", "fast_skitter"):
+		push_error("smoke: layer targeting leaked")
+		failed = true
+	if not Balance.can_hit("needle", "flyer") or not Balance.can_hit("dual", "chunky_tank") or not Balance.can_hit("orbit", "flying_boss"):
+		push_error("smoke: new guns cannot hit their layers")
+		failed = true
+	if Balance.can_hit("magnet", "flyer") or Balance.can_hit("net", "fast_skitter") or not Balance.can_hit("spark", "flying_boss"):
+		push_error("smoke: magnet, net, or spark layer")
+		failed = true
+	if not bool(Balance.enemy("small_flyer")["flying"]) or bool(Balance.enemy("fast_skitter")["flying"]):
+		push_error("smoke: flying flags")
+		failed = true
+	if str(Balance.wave_at(13)["title"]) != "First Flight" or str(Balance.wave_at(49)["entries"][0]["kind"]) != "flying_boss":
+		push_error("smoke: air intro or wave 50 flying boss")
+		failed = true
+	if str(Balance.wave_at(89)["entries"][0]["kind"]) != "flying_boss" or str(Balance.wave_at(20)["entries"][0]["kind"]) != "big_cute_boss":
+		push_error("smoke: wave 90 flyer or ground finale")
+		failed = true
+	if Profile.GUN_ORDER.size() != 10 or int(Profile.GUN_COST["flak"]) != 45 or int(Profile.GUN_COST["orbit"]) != 90:
+		push_error("smoke: gun roster or scrap costs")
+		failed = true
+	var bird = spawn_enemy("small_flyer", "a")
+	var ground_y := Board.cell_center(bird.current_cell()).y
+	if not bird.flying or bird.global_position.y >= ground_y - 10.0 or not Profile.has_seen("small_flyer"):
+		push_error("smoke: flyer lift or bestiary seen flag")
+		failed = true
+	if Profile.has_seen("flying_boss"):
+		push_error("smoke: unseen boss was marked seen")
+		failed = true
+	bird.alive = false
+	bird.queue_free()
 	Game.wave_index = 3
 	var mom = spawn_enemy("chunky_tank", "a")
 	var mom_hp: float = mom.max_hp
