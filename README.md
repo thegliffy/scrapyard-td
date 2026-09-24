@@ -104,15 +104,15 @@ Popping a Swarm-Splitter is not always safer than letting it walk: the Swarmling
 
 - **0.1.0** — First playable cut. Top-down grid, fixed slots, cute eldritch roster, scrapyard towers, one map, win/lose. Windows and Linux builds.
 - **0.1.1** — Hardpoints expanded to nine 2×2 pods (36 slots). Bottom bar shows each tower's sprite. Fast Skitters slowed 20%.
-- **0.1.2** — Weapon icons fit their squares. 20 waves plus the boss, with a gentler ramp, and starting scrap 170. The yard and UI are bright. Guns are chunky cartoons. A main menu opens on the bright splash and crossfades to the dimmer one as Play and Quit appear. Win or lose returns to Play again or the menu.
+- **0.1.2** — Weapon icons fit their squares. 20 waves plus the boss, with a gentler ramp, and starting scrap 170. The yard and UI are candy-bright. Guns are the art-director cartoons (tower sheet), including on the bottom bar. A main menu opens on the bright splash and crossfades to the dimmer one as Play and Quit appear. Win or lose returns to Play again or the menu.
 
 ## Art
 
-`assets/concept/` holds the art-direction boards. The menu background is the art-director splash: `assets/ui/main_menu_splash.png` (full color) crossfades to `assets/ui/main_menu_splash_dim.png` as the title and buttons appear. In-game tower sprites are chunky cartoons with faces, drawn to read on a single tile and inside the bottom-bar squares.
+`assets/concept/` holds the art-direction boards. In-game guns and the bottom-bar icons are cut from `02_towers_sheet.png` (Pea Blaster, Spark Arc, Glue Goo, Boom Barrel, Scrap Magnet) and scaled to fit each square. The menu background is the art-director splash: `assets/ui/main_menu_splash.png` (full color) crossfades to `assets/ui/main_menu_splash_dim.png` as the title and buttons appear.
 
 ```bash
+python3 tools/slice_towers.py
 python3 tools/make_art.py
-python3 tools/make_splash.py
 python3 tools/make_sfx.py
 ```
 

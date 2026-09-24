@@ -120,7 +120,7 @@ func _shoot(target) -> void:
 		slow = Balance.tier_value(kind, "slow", tier)
 		slow_for = Balance.tier_value(kind, "slow_time", tier)
 		slow_radius = Balance.tier_value(kind, "slow_splash", tier)
-		color = Color("#ff8ec4")
+		color = Color("#5ee0d4")
 		Sfx.play("glue", randf_range(0.94, 1.06))
 	elif kind == "boom":
 		splash = Balance.tier_value(kind, "splash", tier)

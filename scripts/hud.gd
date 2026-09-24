@@ -24,9 +24,9 @@ const CHIP_KINDS := ["pea", "spark", "glue", "boom", "magnet"]
 const CHIP_COLORS := {
 	"pea": Color("#c6ee9a"),
 	"spark": Color("#ffe58a"),
-	"glue": Color("#ffc0de"),
+	"glue": Color("#9af0ea"),
 	"boom": Color("#ffc09a"),
-	"magnet": Color("#ffb4bc"),
+	"magnet": Color("#f3b4ea"),
 }
 
 

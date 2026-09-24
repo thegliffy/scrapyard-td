@@ -481,11 +481,8 @@ def main() -> None:
         (swarm_splitter, os.path.join(ENEMY, "swarm_splitter.png")),
         (swarmling, os.path.join(ENEMY, "swarmling.png")),
         (big_cute_boss, os.path.join(ENEMY, "big_cute_boss.png")),
-        (pea_blaster, os.path.join(TOWER, "pea.png")),
-        (spark_arc, os.path.join(TOWER, "spark.png")),
-        (glue_goo, os.path.join(TOWER, "glue.png")),
-        (boom_barrel, os.path.join(TOWER, "boom.png")),
-        (scrap_magnet, os.path.join(TOWER, "magnet.png")),
+        # Tower PNGs are cut from assets/concept/02_towers_sheet.png.
+        # tools/slice_towers.py owns them; do not redraw over the art-director guns.
         (station_core, os.path.join(MAP, "core.png")),
         (rift, os.path.join(MAP, "rift.png")),
         (icon, os.path.join(UI, "icon.png")),
@@ -496,7 +493,7 @@ def main() -> None:
         files.append(path)
         print("wrote", path)
     projectile(os.path.join(PROJ, "pea.png"), (170, 230, 96, 255), "pea")
-    projectile(os.path.join(PROJ, "glue.png"), (255, 140, 190, 255), "glue")
+    projectile(os.path.join(PROJ, "glue.png"), (90, 220, 210, 255), "glue")
     projectile(os.path.join(PROJ, "boom.png"), (255, 140, 64, 255), "boom")
     files += [
         os.path.join(PROJ, "pea.png"),
