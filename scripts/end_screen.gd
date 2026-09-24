@@ -94,8 +94,8 @@ func _show(won: bool) -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	if won:
 		title_label.text = "Yard's quiet"
-		body_label.text = "Grand Nibbler curled up and drifted off.\nThe Station Core is still humming."
-		portrait.texture = load("res://assets/sprites/enemies/grand_nibbler.png")
+		body_label.text = "Big Cute Boss curled up and drifted off.\nThe Station Core is still humming."
+		portrait.texture = Art.enemy_tex("big_cute_boss")
 		Sfx.play("win")
 	else:
 		title_label.text = "Core went dark"

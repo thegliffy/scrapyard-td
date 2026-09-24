@@ -29,6 +29,8 @@ var baby_timer := 0.0
 var tint := Color.WHITE
 var body_color := Color.WHITE
 var texture: Texture2D
+var is_boss := false
+var minion_kind := ""
 
 
 func setup(kind_id: String, path_cells: Array, start_index: int = 0, hop: float = 0.0, tint_color: Color = Color.WHITE) -> void:
@@ -50,11 +52,13 @@ func setup(kind_id: String, path_cells: Array, start_index: int = 0, hop: float 
 	baby_every = float(data["baby_every"])
 	baby_count = int(data["babies"])
 	baby_timer = baby_every
+	is_boss = bool(data.get("boss", false))
+	minion_kind = str(data.get("minion_kind", ""))
 	tint = tint_color
 	body_color = Color(str(data["color"]))
 	texture = Art.enemy_tex(kind)
 	add_to_group("enemies")
-	if kind == "grand_nibbler":
+	if is_boss:
 		add_to_group("boss")
 	if path.size() < 2:
 		global_position = Board.cell_center(Board.CORE)
@@ -66,7 +70,7 @@ func setup(kind_id: String, path_cells: Array, start_index: int = 0, hop: float 
 	to_cell = path[step_index]
 	hop_t = clampf(hop, 0.0, 0.95)
 	global_position = Board.cell_center(from_cell).lerp(Board.cell_center(to_cell), _step_curve(hop_t))
-	z_index = 120 + from_cell.y + (40 if kind == "grand_nibbler" else 0)
+	z_index = 120 + from_cell.y + (40 if is_boss else 0)
 	queue_redraw()
 
 
@@ -117,10 +121,10 @@ func die() -> void:
 	Game.register_kill(scrap)
 	var fx = _fx()
 	if fx:
-		fx.burst(global_position, body_color, 12 if kind != "grand_nibbler" else 24)
+		fx.burst(global_position, body_color, 12 if not is_boss else 24)
 		fx.float_text(global_position + Vector2(0, -20), "+%d" % scrap, Color("#ffe08a"))
 		fx.stain(current_cell(), Color(body_color.r, body_color.g, body_color.b, 0.45), 0.25)
-	Sfx.play("pop", randf_range(0.9, 1.15) if kind != "grand_nibbler" else 0.75)
+	Sfx.play("pop", randf_range(0.9, 1.15) if not is_boss else 0.75)
 	for tower in get_tree().get_nodes_in_group("towers"):
 		if is_instance_valid(tower) and tower.has_method("notify_kill"):
 			tower.notify_kill(global_position)
@@ -167,7 +171,7 @@ func _process(delta: float) -> void:
 		to_cell = path[step_index]
 	var visual := _step_curve(hop_t)
 	global_position = Board.cell_center(from_cell).lerp(Board.cell_center(to_cell), visual)
-	z_index = 120 + current_cell().y + (40 if kind == "grand_nibbler" else 0)
+	z_index = 120 + current_cell().y + (40 if is_boss else 0)
 	if baby_every > 0.0:
 		baby_timer -= delta
 		if baby_timer <= 0.0:
@@ -197,7 +201,7 @@ func _spawn_splits() -> void:
 	if root == null:
 		return
 	var origin := _cell_index()
-	var tints := [Color("#ffffff"), Color("#ffe0f6"), Color("#e5fff6")]
+	var tints := [Color("#ffffff"), Color("#ffe7b0"), Color("#fff4d0")]
 	for i in split_into:
 		var back := maxi(0, origin - i)
 		if back >= path.size() - 1:
@@ -206,6 +210,8 @@ func _spawn_splits() -> void:
 
 
 func _spawn_minions() -> void:
+	if minion_kind == "":
+		return
 	var root := get_tree().get_first_node_in_group("game_root")
 	if root == null:
 		return
@@ -214,7 +220,7 @@ func _spawn_minions() -> void:
 		var back := maxi(0, origin - 1 - i)
 		if back >= path.size() - 1:
 			continue
-		root.spawn_enemy("fractal_baby", "", path, back, 0.0, Color("#ffe9c2"))
+		root.spawn_enemy(minion_kind, "", path, back, 0.0, Color("#ffe7b0"))
 
 
 func _break_shield() -> void:
@@ -230,7 +236,7 @@ func _fx():
 
 func _draw() -> void:
 	draw_set_transform(Vector2(0, 10), 0, Vector2(1.2, 0.42))
-	draw_circle(Vector2.ZERO, 14 if kind != "grand_nibbler" else 26, Color(0, 0, 0, 0.28))
+	draw_circle(Vector2.ZERO, 14 if not is_boss else 26, Color(0, 0, 0, 0.28))
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 	var spin := sin(anim * (15.0 if skitter else 2.4)) * (0.2 if skitter else 0.045)
 	var squash_y := 0.82 if hop_t > 0.82 else 1.0
@@ -246,19 +252,22 @@ func _draw() -> void:
 			mod = mod.lerp(Color(1.6, 0.85, 0.9), clampf(hit_flash * 5.0, 0.0, 1.0))
 		draw_texture_rect(texture, Rect2(-w * 0.5, -h * 0.5, w, h), false, mod)
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-	if shield > 0.0 and max_shield > 0.0:
-		var radius := (22.0 if kind != "grand_nibbler" else 40.0) * (1.0 + sin(anim * 4.0) * 0.04)
-		draw_arc(Vector2.ZERO, radius, 0, TAU, 28, Color("#9aefff"), 3.0, true)
-		for i in 4:
-			var angle := anim * 0.7 + float(i) * TAU / 4.0
-			draw_circle(Vector2(cos(angle), sin(angle)) * radius, 2.4, Color("#ffe08a"))
+	# Glass bubble from the roster sheet. Boss shield stays a bar, not a second bubble.
+	if shield > 0.0 and max_shield > 0.0 and not is_boss:
+		var radius := 24.0 * (1.0 + sin(anim * 3.2) * 0.035)
+		draw_circle(Vector2.ZERO, radius, Color(0.62, 0.93, 1.0, 0.2))
+		draw_arc(Vector2.ZERO, radius, 0, TAU, 36, Color("#d7f7ff"), 2.8, true)
+		draw_arc(Vector2.ZERO, radius * 0.92, -0.9, 0.85, 12, Color(1, 1, 1, 0.9), 2.0, true)
+		for i in 5:
+			var angle := anim * 0.6 + float(i) * TAU / 5.0
+			draw_circle(Vector2(cos(angle), sin(angle)) * radius, 2.1, Color("#fff6c8"))
 	_draw_bar()
 
 
 func _draw_bar() -> void:
-	var width := 34.0 if kind != "grand_nibbler" else 56.0
-	var y := -28.0 if kind != "grand_nibbler" else -48.0
-	if hp >= max_hp and shield >= max_shield and kind != "grand_nibbler" and kind != "star_toad":
+	var width := 34.0 if not is_boss else 56.0
+	var y := -28.0 if not is_boss else -48.0
+	if hp >= max_hp and shield >= max_shield and not is_boss and kind != "chunky_tank":
 		return
 	draw_rect(Rect2(-width * 0.5, y, width, 4), Color(0, 0, 0, 0.55))
 	draw_rect(Rect2(-width * 0.5, y, width * clampf(hp / max_hp, 0, 1), 4), Color("#7dffb0"))

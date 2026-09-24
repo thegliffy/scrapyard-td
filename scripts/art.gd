@@ -4,12 +4,12 @@ extends RefCounted
 static var _font: Font
 
 const ENEMY := {
-	"eye_squid": "res://assets/sprites/enemies/eye_squid.png",
-	"star_toad": "res://assets/sprites/enemies/star_toad.png",
-	"halo_wisp": "res://assets/sprites/enemies/halo_wisp.png",
-	"egg_sac": "res://assets/sprites/enemies/egg_sac.png",
-	"fractal_baby": "res://assets/sprites/enemies/fractal_baby.png",
-	"grand_nibbler": "res://assets/sprites/enemies/grand_nibbler.png",
+	"fast_skitter": "res://assets/sprites/enemies/fast_skitter.png",
+	"chunky_tank": "res://assets/sprites/enemies/chunky_tank.png",
+	"shielded": "res://assets/sprites/enemies/shielded.png",
+	"swarm_splitter": "res://assets/sprites/enemies/swarm_splitter.png",
+	"swarmling": "res://assets/sprites/enemies/swarmling.png",
+	"big_cute_boss": "res://assets/sprites/enemies/big_cute_boss.png",
 }
 
 const TOWER := {

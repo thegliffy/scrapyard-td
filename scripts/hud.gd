@@ -94,7 +94,7 @@ func _refresh_live() -> void:
 	boss_label.visible = show_boss
 	boss_track.visible = show_boss
 	if show_boss:
-		boss_label.text = "Grand Nibbler"
+		boss_label.text = str(boss.display_name)
 		var hp_ratio := clampf(boss.hp / boss.max_hp, 0.0, 1.0)
 		boss_fill.size = Vector2(180.0 * hp_ratio, 12)
 
@@ -125,10 +125,11 @@ func _build() -> void:
 	wave_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	top.add_child(wave_label)
 
-	status_label = _text("", 14, Color("#efe4ff"))
-	status_label.position = Vector2(400, 44)
-	status_label.size = Vector2(420, 28)
+	status_label = _text("", 13, Color("#efe4ff"))
+	status_label.position = Vector2(390, 40)
+	status_label.size = Vector2(420, 36)
 	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	status_label.clip_text = true
 	top.add_child(status_label)
 
@@ -166,9 +167,9 @@ func _build() -> void:
 	core_label.size = Vector2(90, 22)
 	top.add_child(core_label)
 
-	boss_label = _text("Grand Nibbler", 14, Color("#e6d4ff"))
-	boss_label.position = Vector2(840, 44)
-	boss_label.size = Vector2(150, 22)
+	boss_label = _text("Big Cute Boss", 14, Color("#e6d4ff"))
+	boss_label.position = Vector2(820, 44)
+	boss_label.size = Vector2(160, 22)
 	boss_label.visible = false
 	top.add_child(boss_label)
 	boss_track = ColorRect.new()

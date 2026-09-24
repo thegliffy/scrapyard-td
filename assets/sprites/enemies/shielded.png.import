@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl42o17uux5vp"
-path="res://.godot/imported/star_toad.png-e6ba22da330d82932b59249dd40c8ae2.ctex"
+uid="uid://bxk73lq7562r"
+path="res://.godot/imported/shielded.png-7f23fdf7ba56bb5833582f64ca69cda7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/enemies/star_toad.png"
-dest_files=["res://.godot/imported/star_toad.png-e6ba22da330d82932b59249dd40c8ae2.ctex"]
+source_file="res://assets/sprites/enemies/shielded.png"
+dest_files=["res://.godot/imported/shielded.png-7f23fdf7ba56bb5833582f64ca69cda7.ctex"]
 
 [params]
 

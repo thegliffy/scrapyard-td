@@ -326,22 +326,22 @@ func _run_smoke() -> void:
 	elif Game.scrap != Balance.START_SCRAP - Balance.cost("pea"):
 		push_error("smoke: scrap did not drop")
 		failed = true
-	var squid = spawn_enemy("eye_squid", "a")
+	var squid = spawn_enemy("fast_skitter", "a")
 	var start_cell: Vector2i = squid.from_cell
 	squid._process(0.5)
 	if squid.from_cell == start_cell:
-		push_error("smoke: Eye-Squid did not hop a cell")
+		push_error("smoke: Fast Skitter did not hop a cell")
 		failed = true
 	var before: int = Game.scrap
 	squid.take_damage(9999)
 	if Game.kills != 1 or Game.scrap <= before:
 		push_error("smoke: pop did not pay scrap")
 		failed = true
-	var toad = spawn_enemy("star_toad", "b")
+	var toad = spawn_enemy("chunky_tank", "b")
 	var hp_before: int = Game.core_hp
 	toad.leak()
 	if Game.core_hp != hp_before - 3:
-		push_error("smoke: Star-Toad leak damage")
+		push_error("smoke: Chunky Tank leak damage")
 		failed = true
 	if place_tower(Vector2i(2, 0), "spark"):
 		push_error("smoke: occupied cell accepted a tower")

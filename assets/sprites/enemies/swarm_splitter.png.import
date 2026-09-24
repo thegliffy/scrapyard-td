@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://benyt81g1ddpv"
-path="res://.godot/imported/egg_sac.png-739c2202d4a81b66765234e4e776cc5d.ctex"
+uid="uid://cx5yaqyr1hd3y"
+path="res://.godot/imported/swarm_splitter.png-56826125611c42dec800042934e4b285.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/enemies/egg_sac.png"
-dest_files=["res://.godot/imported/egg_sac.png-739c2202d4a81b66765234e4e776cc5d.ctex"]
+source_file="res://assets/sprites/enemies/swarm_splitter.png"
+dest_files=["res://.godot/imported/swarm_splitter.png-56826125611c42dec800042934e4b285.ctex"]
 
 [params]
 

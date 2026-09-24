@@ -95,7 +95,7 @@ func _pick_target():
 		if left < best_left:
 			best_left = left
 			best = enemy
-	# Focus Grand Nibbler unless something else is about to cuddle the core.
+	# Focus Big Cute Boss unless something else is about to cuddle the core.
 	if boss != null and best != null and boss.tiles_remaining() < best_left + 3.5:
 		return boss
 	return best

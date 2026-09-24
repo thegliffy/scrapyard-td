@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ctwyp34ktud73"
-path="res://.godot/imported/fractal_baby.png-b3878c988d5e26eff7245198b32eeee7.ctex"
+uid="uid://dq3c1mcy56cgl"
+path="res://.godot/imported/chunky_tank.png-c7d18206d996b01fd46a4370911adee5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/enemies/fractal_baby.png"
-dest_files=["res://.godot/imported/fractal_baby.png-b3878c988d5e26eff7245198b32eeee7.ctex"]
+source_file="res://assets/sprites/enemies/chunky_tank.png"
+dest_files=["res://.godot/imported/chunky_tank.png-c7d18206d996b01fd46a4370911adee5.ctex"]
 
 [params]
 

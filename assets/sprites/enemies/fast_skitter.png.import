@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqi5i5h1b14ss"
-path="res://.godot/imported/grand_nibbler.png-4e781c51181b3793f7fad0c832751aa4.ctex"
+uid="uid://c1lcjlt83gfiq"
+path="res://.godot/imported/fast_skitter.png-fa921c678a599a5a17e6e0754e773a13.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/enemies/grand_nibbler.png"
-dest_files=["res://.godot/imported/grand_nibbler.png-4e781c51181b3793f7fad0c832751aa4.ctex"]
+source_file="res://assets/sprites/enemies/fast_skitter.png"
+dest_files=["res://.godot/imported/fast_skitter.png-fa921c678a599a5a17e6e0754e773a13.ctex"]
 
 [params]
 

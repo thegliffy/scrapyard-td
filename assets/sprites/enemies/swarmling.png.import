@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckg6bkdw5kv42"
-path="res://.godot/imported/eye_squid.png-31aeaab55a18ed5ae110d68f80c23240.ctex"
+uid="uid://dwl16172fc4bc"
+path="res://.godot/imported/swarmling.png-832d269b4c5c0dfaed651e41173fc15a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/enemies/eye_squid.png"
-dest_files=["res://.godot/imported/eye_squid.png-31aeaab55a18ed5ae110d68f80c23240.ctex"]
+source_file="res://assets/sprites/enemies/swarmling.png"
+dest_files=["res://.godot/imported/swarmling.png-832d269b4c5c0dfaed651e41173fc15a.ctex"]
 
 [params]
 

@@ -12,7 +12,7 @@ Godot 4 · desktop · one mission. Not a web game.
 
 You have a few seconds before the first leak. Cover **both** rifts. The north lane is blue, the south lane is pink, and they merge on the lilac tiles into the core. Gold squares with a plus are the only build spots.
 
-Clear all 12 waves and pop **Grand Nibbler** to win. If the core hits 0, the yard goes dark. **Try again** is on the end screen (or press `R`).
+Clear all 12 waves and pop the **Big Cute Boss** to win. If the core hits 0, the yard goes dark. **Try again** is on the end screen (or press `R`).
 
 ## Controls
 
@@ -48,7 +48,7 @@ Range, chain jumps, glue, and bomb splash are all measured in **tiles**. Selecti
 | Boom Barrel | Splash on a cluster of tiles |
 | Scrap Magnet | No gun. Drips scrap, and a little extra when something pops nearby |
 
-Towers shoot whatever is closest to the core. If Grand Nibbler is in range and nobody is about to leak, they focus the boss instead.
+Towers shoot whatever is closest to the core. If the Big Cute Boss is in range and nobody is about to leak, they focus the boss instead.
 
 ## The leaks
 
@@ -56,18 +56,18 @@ These are cute cosmic weirdos, not ships. Cozy first, uncanny second. No gore.
 
 | Critter | Role |
 | --- | --- |
-| Eye-Squid | Fast little skitterer |
-| Star-Toad | Plump tank |
-| Halo Wisp | A bubble shield. Pop the halo, then the wisp |
-| Egg Sac | On pop, splits into three Fractal Babies |
-| Fractal Baby | Tiny and quick |
-| Grand Nibbler | The final boss. Slow, huge, and very huggable. Burps babies. Do not let it reach the core |
+| Fast Skitter | Tiny pink spider. Fast, and it scurries |
+| Chunky Tank | Purple turtle. Heavy shell, slow |
+| Shielded | Shy mint creature in a glass bubble. Pop the bubble, then the critter |
+| Swarm-Splitter | Orange blob. On pop, splits into three Swarmlings |
+| Swarmling | A little piece of the swarm. Tiny and quick |
+| Big Cute Boss | The final boss. Purple, horned, many eyes, very huggable. Burps swarmlings. Do not let it reach the core |
 
 Killing a sac is not always safer than letting it walk: the babies are faster than the sac was.
 
 ## Art
 
-`assets/concept/` holds the art-direction boards: a 3/4 mood vignette (mood only — gameplay is true top-down), tower sheet, cute-eldritch enemy sheet, and UI chip style. In-game sprites are original flat cartoons in that same bold-outline language, drawn to read on a single tile.
+`assets/concept/` holds the art-direction boards. Gameplay is true top-down on the grid; the 3/4 mood vignette is mood only. Enemy sprites follow the latest roster sheet: a pink Fast Skitter, a purple Chunky Tank, a shy mint Shielded inside a glass bubble, an orange Swarm-Splitter, and a horned many-eyed Big Cute Boss. In-game sprites are original flat cartoons in that same bold-outline language, drawn to read on a single tile.
 
 Sprites and blips can be regenerated with:
 

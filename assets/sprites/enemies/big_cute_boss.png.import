@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://u5dkjlkih5fc"
-path="res://.godot/imported/halo_wisp.png-193f7e42ce52b1627872d174f8932773.ctex"
+uid="uid://b7f3h34jalm23"
+path="res://.godot/imported/big_cute_boss.png-9ebe342ea092eddc02aef90214f69fc3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/enemies/halo_wisp.png"
-dest_files=["res://.godot/imported/halo_wisp.png-193f7e42ce52b1627872d174f8932773.ctex"]
+source_file="res://assets/sprites/enemies/big_cute_boss.png"
+dest_files=["res://.godot/imported/big_cute_boss.png-9ebe342ea092eddc02aef90214f69fc3.ctex"]
 
 [params]
 
