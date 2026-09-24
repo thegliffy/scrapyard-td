@@ -188,7 +188,7 @@ func _living(enemy) -> bool:
 
 func _draw() -> void:
 	draw_set_transform(Vector2(0, 12), 0, Vector2(1.1, 0.4))
-	draw_circle(Vector2.ZERO, 12, Color(0, 0, 0, 0.25))
+	draw_circle(Vector2.ZERO, 12, Color(0.55, 0.35, 0.7, 0.16))
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 	var squash := 1.0 - recoil * 1.4
 	var widen := 1.0 + recoil
@@ -202,5 +202,5 @@ func _draw() -> void:
 	for i in 3:
 		var pip := Vector2(-10 + i * 10, 18)
 		var on := i < tier
-		draw_circle(pip, 3.2, Color("#ffe08a") if on else Color(0, 0, 0, 0.35))
-		draw_arc(pip, 3.2, 0, TAU, 10, Color("#2a2048"), 1.2, true)
+		draw_circle(pip, 3.2, Color("#ffe08a") if on else Color(1, 1, 1, 0.55))
+		draw_arc(pip, 3.2, 0, TAU, 10, Color("#c9844a"), 1.2, true)

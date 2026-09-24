@@ -15,11 +15,11 @@ func _ready() -> void:
 	_rift_tex = load("res://assets/sprites/map/rift.png")
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 11
-	for _i in 90:
+	for _i in 36:
 		_stars.append({
 			"p": Vector2(rng.randf_range(0, 1280), rng.randf_range(0, 720)),
-			"r": rng.randf_range(1.0, 2.4),
-			"c": Color(1, 0.95, 0.8, rng.randf_range(0.25, 0.85)) if rng.randf() > 0.5 else Color(0.75, 0.9, 1, rng.randf_range(0.25, 0.7)),
+			"r": rng.randf_range(1.4, 3.2),
+			"c": Color(1, 0.98, 0.9, rng.randf_range(0.35, 0.7)) if rng.randf() > 0.5 else Color(1, 0.86, 0.95, rng.randf_range(0.3, 0.6)),
 		})
 	if Game.has_signal("core_hit"):
 		Game.core_hit.connect(func(_amount): hurt = 0.4)
@@ -52,15 +52,15 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	Board.ensure()
-	draw_rect(Rect2(-80, -80, 1440, 900), Color("#140c28"))
+	draw_rect(Rect2(-80, -80, 1440, 900), Color("#f6ecff"))
 	var pulse := 0.65 + 0.35 * sin(Time.get_ticks_msec() * 0.003)
 	for star in _stars:
 		var color: Color = star["c"]
 		color.a *= 0.75 + 0.25 * pulse
 		draw_circle(star["p"], star["r"], color)
 	var board := Rect2(Board.ORIGIN, Vector2(Board.COLS * Board.TILE, Board.ROWS * Board.TILE))
-	draw_rect(Rect2(board.position.x - 10, board.position.y, 10, board.size.y), Color("#1a1436"))
-	draw_rect(Rect2(board.position.x + board.size.x, board.position.y, 10, board.size.y), Color("#1a1436"))
+	draw_rect(Rect2(board.position.x - 10, board.position.y, 10, board.size.y), Color("#eadcff"))
+	draw_rect(Rect2(board.position.x + board.size.x, board.position.y, 10, board.size.y), Color("#eadcff"))
 	for y in Board.ROWS:
 		for x in Board.COLS:
 			_draw_cell(Vector2i(x, y))
@@ -72,18 +72,18 @@ func _draw_cell(cell: Vector2i) -> void:
 	var rect := Board.cell_rect(cell)
 	var info: Dictionary = Board.path_info.get(cell, {})
 	var lane := str(info.get("lane", ""))
-	var fill := Color("#3d528c") if (cell.x + cell.y) % 2 == 0 else Color("#354878")
+	var fill := Color("#fff6e8") if (cell.x + cell.y) % 2 == 0 else Color("#f3e4ff")
 	match lane:
 		"a":
-			fill = Color("#79d0f2")
+			fill = Color("#8fd4ff")
 		"b":
-			fill = Color("#f2a8d6")
+			fill = Color("#ffb7dc")
 		"both":
-			fill = Color("#cbb6ff")
+			fill = Color("#dcc8ff")
 		"core":
-			fill = Color("#1d4a3e")
+			fill = Color("#ffe08a")
 	if cell == Board.spawn_a or cell == Board.spawn_b:
-		fill = fill.lerp(Color("#b07cff"), 0.45)
+		fill = fill.lerp(Color("#e4b0ff"), 0.35)
 	draw_rect(rect, fill)
 	for stain in stains:
 		if stain["cell"] == cell:
@@ -95,7 +95,7 @@ func _draw_cell(cell: Vector2i) -> void:
 	if highlight_set.has(cell):
 		var tint := Color(1, 0.86, 0.35, 0.38 if lane != "" else 0.22)
 		draw_rect(rect, tint)
-	var border := Color("#1a1433") if lane != "" else Color("#d7e0fb")
+	var border := Color("#ffffff") if lane != "" else Color("#eadcff")
 	draw_rect(rect, border, false, 2.0)
 	if lane != "" and lane != "core":
 		_draw_arrow(cell, info.get("dir", Vector2i.ZERO))
@@ -110,7 +110,7 @@ func _draw_arrow(cell: Vector2i, dir: Vector2i) -> void:
 	var tip := center + forward * 11.0
 	var left := center - forward * 4.0 + side * 6.0
 	var right := center - forward * 4.0 - side * 6.0
-	draw_colored_polygon(PackedVector2Array([tip, left, right]), Color("#241536"))
+	draw_colored_polygon(PackedVector2Array([tip, left, right]), Color("#7a5a98"))
 
 
 func _draw_core() -> void:

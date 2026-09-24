@@ -293,79 +293,108 @@ def big_cute_boss(path: str) -> None:
     c.save(path)
 
 
-def _base(c: Canvas, accent: tuple) -> None:
-    metal = (214, 220, 230, 255)
-    dark = (120, 132, 156, 255)
-    c.round_rect((22, 78, 106, 116), 16, metal, True, 5)
-    c.circle(34, 90, 3, dark, False)
-    c.circle(94, 90, 3, dark, False)
-    c.circle(34, 106, 3, dark, False)
-    c.circle(94, 106, 3, dark, False)
-    c.round_rect((40, 88, 88, 108), 8, accent, True, 3)
+def _feet(c: Canvas) -> None:
+    foot = (255, 214, 186, 255)
+    c.ellipse((24, 98, 54, 122), foot, True, 4)
+    c.ellipse((74, 98, 104, 122), foot, True, 4)
+
+
+def _cute_face(c: Canvas, x, y, scale=1.0, pupil=(88, 48, 120, 255)) -> None:
+    er = 8.0 * scale
+    c.eye(x - 14 * scale, y, er, pupil)
+    c.eye(x + 14 * scale, y, er, pupil)
+    c.blush(x - 28 * scale, y + 12 * scale, 7 * scale, 4 * scale)
+    c.blush(x + 28 * scale, y + 12 * scale, 7 * scale, 4 * scale)
+    c.smile(x, y + 16 * scale, 9 * scale, 4 * scale)
+
+
+def _star(c: Canvas, x, y, r, fill) -> None:
+    pts = []
+    for i in range(8):
+        ang = math.radians(-90 + i * 45)
+        rad = r if i % 2 == 0 else r * 0.42
+        pts.append((x + math.cos(ang) * rad, y + math.sin(ang) * rad))
+    c.polygon(pts, fill, True, 3)
 
 
 def pea_blaster(path: str) -> None:
+    """Chubby lime pea-popper. Round body, fat snout, a face. No metal plate."""
     c = Canvas(128)
-    _base(c, (126, 200, 96, 255))
-    c.round_rect((48, 22, 80, 70), 14, (78, 170, 72, 255), True, 4)
-    c.circle(64, 48, 16, (150, 220, 110, 255), True, 4)
-    c.circle(64, 48, 7, (40, 90, 48, 255), False)
-    c.circle(64, 16, 9, (176, 230, 96, 255), True, 3)
-    c.shine(56, 40, 5, 3, 140)
+    _feet(c)
+    c.circle(64, 74, 38, (154, 224, 96, 255), True, 5)
+    c.ellipse((40, 82, 88, 108), (206, 244, 150, 255), True, 3)
+    c.round_rect((46, 8, 82, 50), 18, (92, 196, 78, 255), True, 5)
+    c.circle(64, 16, 15, (198, 244, 130, 255), True, 4)
+    c.circle(64, 16, 6, (72, 160, 78, 255), False)
+    c.shine(48, 52, 12, 7, 140)
+    _cute_face(c, 64, 78, 0.82, (48, 120, 56, 255))
     c.save(path)
 
 
 def spark_arc(path: str) -> None:
+    """Butter-yellow spark buddy. Soft coil, rounded whiskers, not a rod."""
     c = Canvas(128)
-    _base(c, (255, 196, 90, 255))
-    c.circle(64, 52, 24, (214, 140, 70, 255), True, 4)
-    c.circle(64, 52, 12, (120, 220, 255, 255), True, 3)
-    c.circle(64, 52, 5, WHITE, False)
-    # Lightning rod.
-    c.polygon([(64, 8), (74, 28), (66, 28), (76, 46), (54, 26), (62, 26), (52, 12)], (255, 226, 90, 255), True, 3)
+    _feet(c)
+    c.capsule(16, 36, 38, 58, 5, (255, 236, 120, 255), True, 3)
+    c.capsule(112, 36, 90, 58, 5, (255, 236, 120, 255), True, 3)
+    c.circle(64, 76, 36, (255, 210, 78, 255), True, 5)
+    c.circle(64, 44, 16, (255, 244, 168, 255), True, 4)
+    c.circle(64, 26, 9, (255, 252, 220, 255), True, 3)
+    _star(c, 64, 12, 9, (255, 250, 210, 255))
+    c.shine(48, 64, 10, 6, 150)
+    _cute_face(c, 64, 80, 0.86, (186, 110, 28, 255))
     c.save(path)
 
 
 def glue_goo(path: str) -> None:
+    """Squishy pink gumdrop with a drip spout."""
     c = Canvas(128)
-    _base(c, (255, 150, 196, 255))
-    c.round_rect((42, 28, 86, 78), 16, (255, 156, 200, 255), True, 4)
-    c.ellipse((50, 34, 78, 52), (255, 210, 230, 255), False)
-    c.circle(64, 22, 8, (255, 120, 180, 255), True, 3)
-    c.circle(78, 66, 7, (255, 120, 186, 255), True, 3)
-    c.circle(86, 78, 5, (255, 150, 200, 255), True, 2)
+    _feet(c)
+    c.circle(90, 96, 9, (255, 140, 186, 255), True, 3)
+    c.circle(64, 72, 38, (255, 156, 198, 255), True, 5)
+    c.ellipse((42, 78, 86, 106), (255, 214, 230, 255), True, 3)
+    c.circle(64, 30, 13, (255, 112, 170, 255), True, 4)
+    c.circle(64, 14, 8, (255, 196, 220, 255), True, 3)
+    c.shine(46, 54, 12, 7, 130)
+    _cute_face(c, 64, 76, 0.82, (168, 48, 110, 255))
     c.save(path)
 
 
 def boom_barrel(path: str) -> None:
+    """Round candy cannon. Cream stripe, curly fuse, smiling face."""
     c = Canvas(128)
-    _base(c, (255, 150, 70, 255))
-    c.circle(64, 50, 26, (255, 138, 64, 255), True, 5)
-    c.round_rect((40, 42, 88, 58), 4, (255, 214, 80, 255), True, 3)
-    c.round_rect((40, 42, 88, 50), 3, (42, 32, 72, 255), False)
-    c.line((64, 24), (64, 12), INK, 3)
-    c.circle(64, 10, 4, (255, 230, 120, 255), True, 2)
-    c.circle(52, 46, 3, (255, 220, 200, 180), False)
+    _feet(c)
+    c.circle(64, 76, 36, (255, 154, 78, 255), True, 5)
+    c.ellipse((32, 66, 96, 88), (255, 228, 150, 255), True, 4)
+    s = c.s
+    c.d.arc([44 * s, 6 * s, 86 * s, 48 * s], 210, 10, fill=INK, width=int(8 * s))
+    c.d.arc([48 * s, 10 * s, 82 * s, 44 * s], 210, 10, fill=(255, 214, 110, 255), width=int(4 * s))
+    _star(c, 80, 16, 7, (255, 244, 170, 255))
+    c.shine(46, 60, 10, 6, 120)
+    _cute_face(c, 64, 90, 0.72, (150, 64, 24, 255))
     c.save(path)
 
 
 def scrap_magnet(path: str) -> None:
+    """Chunky candy horseshoe with a face in the crook. No bolts."""
     c = Canvas(128)
-    _base(c, (240, 160, 170, 255))
-    # Horseshoe from above: a thick U.
-    c.capsule(46, 36, 46, 70, 12, (220, 70, 86, 255), True, 4)
-    c.capsule(82, 36, 82, 70, 12, (236, 236, 242, 255), True, 4)
-    c.capsule(46, 36, 82, 36, 12, (220, 70, 86, 255), True, 4)
-    # Orbiting bolts.
-    c.round_rect((18, 40, 30, 52), 3, (255, 214, 120, 255), True, 2)
-    c.round_rect((98, 28, 112, 40), 3, (180, 220, 255, 255), True, 2)
-    c.circle(100, 68, 5, (255, 214, 120, 255), True, 2)
+    _feet(c)
+    red = (255, 102, 128, 255)
+    cream = (255, 246, 236, 255)
+    c.capsule(40, 34, 40, 82, 15, red, True, 4)
+    c.capsule(88, 34, 88, 82, 15, cream, True, 4)
+    c.capsule(40, 34, 88, 34, 15, red, True, 4)
+    _star(c, 20, 36, 8, (255, 214, 96, 255))
+    _star(c, 108, 48, 7, (176, 226, 255, 255))
+    c.circle(104, 90, 6, (255, 170, 196, 255), True, 3)
+    c.shine(52, 28, 8, 4, 120)
+    _cute_face(c, 64, 64, 0.62, (150, 40, 70, 255))
     c.save(path)
 
 
 def station_core(path: str) -> None:
     c = Canvas(128)
-    c.round_rect((16, 16, 112, 112), 22, (186, 198, 214, 255), True, 5)
+    c.round_rect((16, 16, 112, 112), 22, (255, 236, 214, 255), True, 5)
     c.circle(64, 64, 34, (255, 214, 110, 255), True, 4)
     c.circle(64, 64, 22, (140, 255, 196, 255), True, 3)
     c.shine(52, 50, 8, 5, 130)
@@ -399,15 +428,15 @@ def projectile(path: str, fill, kind: str) -> None:
         c.ellipse((10, 8, 38, 40), fill, True, 3)
         c.circle(24, 14, 6, (255, 230, 240, 255), False)
     else:
-        c.circle(24, 26, 12, fill, True, 3)
-        c.round_rect((8, 18, 40, 26), 2, (42, 32, 72, 255), False)
-        c.circle(24, 8, 3, (255, 230, 120, 255), True, 2)
+        c.circle(24, 24, 13, fill, True, 3)
+        c.ellipse((10, 16, 38, 28), (255, 230, 160, 255), False)
+        c.circle(24, 8, 4, (255, 244, 180, 255), True, 2)
     c.save(path)
 
 
 def icon(path: str) -> None:
     c = Canvas(128)
-    c.round_rect((4, 4, 124, 124), 28, (28, 18, 58, 255), False)
+    c.round_rect((4, 4, 124, 124), 28, (255, 214, 232, 255), False)
     c.horn(64, 40, 22, 10, -90, (198, 132, 220, 255))
     c.circle(64, 74, 34, (128, 82, 198, 255), True, 5)
     c.eye(50, 68, 8, (64, 36, 110, 255))

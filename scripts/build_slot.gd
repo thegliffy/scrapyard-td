@@ -11,7 +11,7 @@ func _draw_pod_frame(half: float) -> void:
 	var origin := Board.pod_origin(cell)
 	if origin.x < 0:
 		return
-	var ink := Color("#6b4310")
+	var ink := Color("#e8a04a")
 	var top_left := Vector2(-half, -half)
 	var bottom_right := Vector2(half, half)
 	if cell.x == origin.x:
@@ -40,10 +40,10 @@ func _draw() -> void:
 	elif hovered:
 		fill = Color("#ffe7a8")
 	draw_rect(pad, fill)
-	draw_rect(pad, Color("#2a2048"), false, 3.0)
+	draw_rect(pad, Color("#c9844a"), false, 3.0)
 	if tower == null:
-		draw_line(Vector2(-7, 0), Vector2(7, 0), Color("#2a2048"), 3.0)
-		draw_line(Vector2(0, -7), Vector2(0, 7), Color("#2a2048"), 3.0)
+		draw_line(Vector2(-7, 0), Vector2(7, 0), Color("#fffaf2"), 3.0)
+		draw_line(Vector2(0, -7), Vector2(0, 7), Color("#fffaf2"), 3.0)
 		if ghost:
 			draw_texture_rect(ghost, Rect2(-18, -20, 36, 36), false, Color(1, 1, 1, 0.6))
 	var full := Rect2(-half, -half, float(Board.TILE), float(Board.TILE))

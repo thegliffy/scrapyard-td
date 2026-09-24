@@ -7,7 +7,7 @@ config_version=5
 
 config/name="Scrapyard TD"
 config/description="Cozy top-down scrapyard tower defense. Cute eldritch things leak along a grid toward the Station Core."
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.7")
 config/icon="res://icon.png"
 
@@ -27,4 +27,4 @@ window/stretch/aspect="keep"
 
 renderer/rendering_method="gl_compatibility"
 textures/canvas_textures/default_texture_filter=1
-environment/defaults/default_clear_color=Color(0.0784314, 0.0470588, 0.156863, 1)
+environment/defaults/default_clear_color=Color(0.956863, 0.913725, 1, 1)

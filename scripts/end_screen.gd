@@ -17,18 +17,18 @@ func _ready() -> void:
 func _build() -> void:
 	var font := Art.ui_font()
 	var dim := ColorRect.new()
-	dim.color = Color(0.05, 0.03, 0.12, 0.62)
+	dim.color = Color(1, 0.94, 0.98, 0.45)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dim)
 
 	var card := Panel.new()
-	card.position = Vector2(340, 150)
-	card.size = Vector2(600, 400)
+	card.position = Vector2(340, 140)
+	card.size = Vector2(600, 430)
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#2a2154")
-	style.border_color = Color("#120e22")
+	style.bg_color = Color("#fff6ee")
+	style.border_color = Color("#f0b6d4")
 	style.set_border_width_all(6)
 	style.set_corner_radius_all(28)
 	style.shadow_color = Color(0, 0, 0, 0.35)
@@ -43,42 +43,31 @@ func _build() -> void:
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	card.add_child(portrait)
 
-	title_label = _label(font, 40, Color("#fff6e4"))
+	title_label = _label(font, 40, Color("#6a3d88"))
 	title_label.position = Vector2(148, 36)
 	title_label.size = Vector2(420, 52)
 	card.add_child(title_label)
 
-	body_label = _label(font, 18, Color("#f0e4ff"))
+	body_label = _label(font, 18, Color("#7a6494"))
 	body_label.position = Vector2(40, 140)
 	body_label.size = Vector2(520, 80)
 	body_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	card.add_child(body_label)
 
-	stats_label = _label(font, 18, Color("#ffe08a"))
+	stats_label = _label(font, 18, Color("#c47a20"))
 	stats_label.position = Vector2(40, 230)
 	stats_label.size = Vector2(520, 80)
 	card.add_child(stats_label)
 
-	var button := Button.new()
-	button.text = "Try again"
-	button.position = Vector2(180, 320)
-	button.size = Vector2(240, 52)
-	button.add_theme_font_override("font", font)
-	button.add_theme_font_size_override("font_size", 22)
-	button.add_theme_color_override("font_color", Color("#2a2048"))
-	button.add_theme_color_override("font_hover_color", Color("#1a1430"))
-	var bstyle := StyleBoxFlat.new()
-	bstyle.bg_color = Color("#b6f3c8")
-	bstyle.border_color = Color("#2a2048")
-	bstyle.set_border_width_all(4)
-	bstyle.set_corner_radius_all(16)
-	button.add_theme_stylebox_override("normal", bstyle)
-	var hover := bstyle.duplicate()
-	hover.bg_color = Color("#d4ffe4")
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", hover)
-	button.pressed.connect(_restart)
-	card.add_child(button)
+	var again := _action_button(font, "Play again", Color("#b6f3c8"), Color("#d4ffe4"))
+	again.position = Vector2(36, 328)
+	again.pressed.connect(_restart)
+	card.add_child(again)
+
+	var menu := _action_button(font, "Main menu", Color("#ffe0f0"), Color("#fff0f8"))
+	menu.position = Vector2(314, 328)
+	menu.pressed.connect(_main_menu)
+	card.add_child(menu)
 
 
 func _label(font: Font, size: int, color: Color) -> Label:
@@ -111,6 +100,28 @@ func _show(won: bool) -> void:
 	]
 
 
+func _action_button(font: Font, text: String, bg: Color, hover_bg: Color) -> Button:
+	var button := Button.new()
+	button.text = text
+	button.size = Vector2(250, 52)
+	button.focus_mode = Control.FOCUS_NONE
+	button.add_theme_font_override("font", font)
+	button.add_theme_font_size_override("font_size", 22)
+	button.add_theme_color_override("font_color", Color("#5a3d70"))
+	button.add_theme_color_override("font_hover_color", Color("#3d2858"))
+	var bstyle := StyleBoxFlat.new()
+	bstyle.bg_color = bg
+	bstyle.border_color = Color("#e7b4d0")
+	bstyle.set_border_width_all(4)
+	bstyle.set_corner_radius_all(16)
+	button.add_theme_stylebox_override("normal", bstyle)
+	var hover := bstyle.duplicate()
+	hover.bg_color = hover_bg
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", hover)
+	return button
+
+
 func _restart() -> void:
 	Sfx.play("ui")
 	var root := get_tree().get_first_node_in_group("game_root")
@@ -119,3 +130,9 @@ func _restart() -> void:
 	else:
 		Engine.time_scale = 1.0
 		get_tree().reload_current_scene()
+
+
+func _main_menu() -> void:
+	Sfx.play("ui")
+	Engine.time_scale = 1.0
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

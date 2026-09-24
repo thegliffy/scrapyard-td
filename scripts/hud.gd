@@ -115,17 +115,17 @@ func _build() -> void:
 	top.add_theme_stylebox_override("panel", _panel_style(true))
 	add_child(top)
 
-	var title := _text("SCRAPYARD", 22, Color("#fff6e4"))
+	var title := _text("SCRAPYARD", 22, Color("#6a3d88"))
 	title.position = Vector2(18, 8)
 	title.size = Vector2(220, 30)
 	top.add_child(title)
-	wave_label = _text("WAVE  1 / 21", 26, Color("#fff6e4"))
+	wave_label = _text("WAVE  1 / 21", 26, Color("#5c3d78"))
 	wave_label.position = Vector2(280, 6)
 	wave_label.size = Vector2(560, 34)
 	wave_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	top.add_child(wave_label)
 
-	status_label = _text("", 13, Color("#efe4ff"))
+	status_label = _text("", 13, Color("#7a6494"))
 	status_label.position = Vector2(390, 40)
 	status_label.size = Vector2(420, 36)
 	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -141,19 +141,19 @@ func _build() -> void:
 	scrap_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	scrap_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(scrap_icon)
-	scrap_label = _text("SCRAP  %d" % Balance.START_SCRAP, 24, Color("#ffe08a"))
+	scrap_label = _text("SCRAP  %d" % Balance.START_SCRAP, 24, Color("#c47a20"))
 	scrap_label.position = Vector2(944, 16)
 	scrap_label.size = Vector2(320, 40)
 	top.add_child(scrap_label)
 
-	var core_name := _text("CORE", 14, Color("#d8ffe8"))
+	var core_name := _text("CORE", 14, Color("#2f8a62"))
 	core_name.position = Vector2(18, 46)
 	core_name.size = Vector2(52, 20)
 	top.add_child(core_name)
 	var track := ColorRect.new()
 	track.position = Vector2(70, 48)
 	track.size = Vector2(220, 14)
-	track.color = Color("#120e22")
+	track.color = Color("#efe0ff")
 	track.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(track)
 	core_fill = ColorRect.new()
@@ -162,12 +162,12 @@ func _build() -> void:
 	core_fill.color = Color("#7dffc0")
 	core_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	track.add_child(core_fill)
-	core_label = _text("22 / 22", 14, Color("#fff6e4"))
+	core_label = _text("22 / 22", 14, Color("#4a3568"))
 	core_label.position = Vector2(296, 44)
 	core_label.size = Vector2(90, 22)
 	top.add_child(core_label)
 
-	boss_label = _text("Big Cute Boss", 14, Color("#e6d4ff"))
+	boss_label = _text("Big Cute Boss", 14, Color("#7a5aaa"))
 	boss_label.position = Vector2(820, 44)
 	boss_label.size = Vector2(160, 22)
 	boss_label.visible = false
@@ -175,7 +175,7 @@ func _build() -> void:
 	boss_track = ColorRect.new()
 	boss_track.position = Vector2(990, 48)
 	boss_track.size = Vector2(180, 12)
-	boss_track.color = Color("#120e22")
+	boss_track.color = Color("#efe0ff")
 	boss_track.visible = false
 	boss_track.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(boss_track)
@@ -232,14 +232,14 @@ func _build() -> void:
 	info.size = Vector2(250, 88)
 	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var info_style := StyleBoxFlat.new()
-	info_style.bg_color = Color("#1b1538")
-	info_style.border_color = Color("#120e22")
+	info_style.bg_color = Color("#fffaf4")
+	info_style.border_color = Color("#f0c4de")
 	info_style.set_border_width_all(3)
 	info_style.set_corner_radius_all(14)
 	info.add_theme_stylebox_override("panel", info_style)
 	bottom.add_child(info)
 
-	info_label = _text("", 14, Color("#fff6e4"))
+	info_label = _text("", 14, Color("#4a3568"))
 	info_label.position = Vector2(10, 6)
 	info_label.size = Vector2(230, 44)
 	info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -293,13 +293,13 @@ func _build() -> void:
 	)
 	bottom.add_child(mute_button)
 
-	banner_label = _text("", 42, Color("#fff6e4"))
+	banner_label = _text("", 42, Color("#6a3d88"))
 	banner_label.position = Vector2(200, 250)
 	banner_label.size = Vector2(880, 70)
 	banner_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	banner_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	banner_label.visible = false
-	banner_label.add_theme_color_override("font_outline_color", Color("#1a1430"))
+	banner_label.add_theme_color_override("font_outline_color", Color("#fffaf4"))
 	banner_label.add_theme_constant_override("outline_size", 10)
 	add_child(banner_label)
 
@@ -319,7 +319,7 @@ func _on_chip(kind: String) -> void:
 func _style_chips() -> void:
 	for kind in chips.keys():
 		var button: Button = chips[kind]
-		var border := Color("#ffe08a") if main and main.build_kind == kind else Color("#2a2048")
+		var border := Color("#e8a04a") if main and main.build_kind == kind else Color("#f0c4de")
 		var width := 5 if main and main.build_kind == kind else 3
 		var style := _chip_style(CHIP_COLORS[kind], border, width)
 		button.add_theme_stylebox_override("normal", style)
@@ -402,8 +402,8 @@ func _text(value: String, size: int, color: Color) -> Label:
 
 func _panel_style(top_bar: bool) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#241b4a")
-	style.border_color = Color("#120e22")
+	style.bg_color = Color("#fff6ee")
+	style.border_color = Color("#f0c4de")
 	if top_bar:
 		style.border_width_bottom = 4
 	else:
@@ -434,11 +434,11 @@ func _small_button(value: String) -> Button:
 	button.add_theme_color_override("font_color", Color("#2a2048"))
 	button.add_theme_color_override("font_hover_color", Color("#1a1430"))
 	button.add_theme_color_override("font_disabled_color", Color("#6a6280"))
-	var style := _chip_style(Color("#efe4ff"), Color("#2a2048"), 3)
+	var style := _chip_style(Color("#fff0f8"), Color("#e7b4d0"), 3)
 	button.add_theme_stylebox_override("normal", style)
 	button.add_theme_stylebox_override("hover", style)
 	button.add_theme_stylebox_override("pressed", style)
 	var disabled := style.duplicate()
-	disabled.bg_color = Color("#8d86a8")
+	disabled.bg_color = Color("#f0e4ee")
 	button.add_theme_stylebox_override("disabled", disabled)
 	return button
