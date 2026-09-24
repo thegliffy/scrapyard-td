@@ -4,11 +4,41 @@ A cozy top-down tower defense. You are the dock boss of a tiny scrap yard. Cute 
 
 Godot 4 · desktop · one mission. Not a web game.
 
-## Play
+## Download
+
+**[v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0)** is a playable build. You do not need the Godot editor.
+
+### Windows
+
+1. Download [ScrapyardTD-v0.1.0-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.1.0/ScrapyardTD-v0.1.0-windows-x86_64.zip).
+2. Unzip it.
+3. Double-click `ScrapyardTD.exe`.
+
+### Linux (x86_64)
+
+1. Download [ScrapyardTD-v0.1.0-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.1.0/ScrapyardTD-v0.1.0-linux-x86_64.zip).
+2. Unzip it.
+3. Make it executable and run it:
+
+```bash
+chmod +x ScrapyardTD.x86_64
+./ScrapyardTD.x86_64
+```
+
+## Play from source
 
 1. Install [Godot 4.3 or newer](https://godotengine.org/download) (developed on 4.7).
 2. Open this folder as a project (`project.godot`).
 3. Press **Play**.
+
+To rebuild the executables (Godot 4.7, with the matching export templates installed):
+
+```bash
+godot --headless --path . --export-release "Linux" export/linux/ScrapyardTD.x86_64
+godot --headless --path . --export-release "Windows Desktop" export/windows/ScrapyardTD.exe
+```
+
+Presets live in `export_presets.cfg`. Each build is one file with the game packed inside.
 
 You have a few seconds before the first leak. Cover **both** rifts. The north lane is blue, the south lane is pink, and they merge on the lilac tiles into the core. Gold squares with a plus are the only build spots.
 
