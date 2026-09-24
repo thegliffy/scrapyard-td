@@ -10,7 +10,7 @@ var core_hp: int = Balance.CORE_HP
 var core_max: int = Balance.CORE_HP
 var wave_index: int = -1
 var upcoming: int = 0
-var wave_total: int = 21
+var wave_total: int = Balance.WAVE_COUNT
 var phase: String = "boot"
 var prep_left: float = 0.0
 var preview: String = ""
@@ -32,7 +32,7 @@ func boot() -> void:
 	core_hp = core_max
 	wave_index = -1
 	upcoming = 0
-	wave_total = Balance.WAVES.size()
+	wave_total = Balance.WAVE_COUNT
 	phase = "boot"
 	prep_left = 0.0
 	preview = ""

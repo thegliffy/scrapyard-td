@@ -25,7 +25,7 @@ func call_early() -> void:
 func _begin_prep(index: int) -> void:
 	Game.phase = "prep"
 	Game.upcoming = index
-	Game.preview = str(Balance.WAVES[index]["preview"])
+	Game.preview = str(Balance.wave_at(index)["preview"])
 	Game.prep_left = 16.0 if index == 0 else 9.0
 	Game.combat_label = ""
 	Game.changed.emit()
@@ -33,7 +33,7 @@ func _begin_prep(index: int) -> void:
 
 func _begin_combat() -> void:
 	var index := Game.upcoming
-	var wave: Dictionary = Balance.WAVES[index]
+	var wave: Dictionary = Balance.wave_at(index)
 	Game.wave_index = index
 	Game.phase = "combat"
 	Game.combat_label = str(wave["title"])
@@ -120,7 +120,7 @@ func _living() -> int:
 func _on_clear() -> void:
 	if Game.ended:
 		return
-	if Game.wave_index >= Balance.WAVES.size() - 1:
+	if Game.wave_index >= Balance.WAVE_COUNT - 1:
 		Game.win()
 	else:
 		_begin_prep(Game.wave_index + 1)

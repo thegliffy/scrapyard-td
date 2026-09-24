@@ -38,7 +38,12 @@ func setup(kind_id: String, path_cells: Array, start_index: int = 0, hop: float 
 	var data := Balance.enemy(kind_id)
 	display_name = str(data["name"])
 	path = path_cells
-	var hp_scale := Profile.map_hp_scale()
+	var wave_n := 1
+	if Game.wave_index >= 0:
+		wave_n = Game.wave_index + 1
+	var hp_scale := Profile.map_hp_scale() * Balance.wave_hp_scale(wave_n)
+	if bool(data.get("boss", false)):
+		hp_scale *= Balance.boss_hp_scale(wave_n)
 	max_hp = float(data["hp"]) * hp_scale
 	hp = max_hp
 	max_shield = float(data["shield"]) * hp_scale

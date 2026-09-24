@@ -9,6 +9,9 @@ const ENEMY := {
 	"shielded": "res://assets/sprites/enemies/shielded.png",
 	"swarm_splitter": "res://assets/sprites/enemies/swarm_splitter.png",
 	"swarmling": "res://assets/sprites/enemies/swarmling.png",
+	"tanklet": "res://assets/sprites/enemies/chunky_tank.png",
+	"open_shell": "res://assets/sprites/enemies/shielded.png",
+	"elite_tank": "res://assets/sprites/enemies/chunky_tank.png",
 	"big_cute_boss": "res://assets/sprites/enemies/big_cute_boss.png",
 }
 

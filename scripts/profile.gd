@@ -9,8 +9,7 @@ const STARTER_GUNS := ["pea", "glue"]
 const STARTER_MAPS := ["yard_approach"]
 const GUN_COST := {"spark": 40, "boom": 60, "magnet": 80}
 const MAP_COST := {"side_dock": 50, "deep_yard": 100}
-const WIN_SCRAP := 18
-const LOSE_SCRAP := 8
+const LOSE_SCRAP := 1
 const LOADOUT_SIZE := 5
 const FREE_SLOTS := 3
 const SLOT_COST := {3: 30, 4: 50}
@@ -274,8 +273,7 @@ func map_tint_amount() -> float:
 func battle_scrap(won: bool, waves_cleared: int) -> int:
 	if not won:
 		return LOSE_SCRAP
-	var bonus := maxi(0, waves_cleared) / 5
-	return mini(25, WIN_SCRAP + bonus)
+	return maxi(0, waves_cleared) * 2
 
 
 func award_battle(won: bool, waves_cleared: int) -> int:

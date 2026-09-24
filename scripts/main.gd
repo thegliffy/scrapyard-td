@@ -396,13 +396,75 @@ func _run_smoke() -> void:
 	if Profile.open_slots != 5 or Profile.scrap != 0 or Profile.loadout_at(3) != "glue":
 		push_error("smoke: slot unlock did not persist")
 		failed = true
-	if Profile.battle_scrap(false, 21) != Profile.LOSE_SCRAP:
-		push_error("smoke: loss scrap is not flat")
+	if Profile.battle_scrap(false, 99) != 1 or Profile.battle_scrap(false, 0) != 1:
+		push_error("smoke: loss scrap is not flat 1")
 		failed = true
-	var win_pay := Profile.battle_scrap(true, 21)
-	if win_pay < 15 or win_pay > 25 or win_pay <= Profile.LOSE_SCRAP:
-		push_error("smoke: win scrap out of range")
+	if Profile.battle_scrap(true, 21) != 42 or Profile.battle_scrap(true, 100) != 200 or Profile.battle_scrap(true, 0) != 0:
+		push_error("smoke: win scrap is not 2 per wave cleared")
 		failed = true
+	if Balance.WAVE_COUNT != 100 or Game.wave_total != 100 or Balance.WAVES.size() != 21:
+		push_error("smoke: expected 100 waves with 21 handcrafted")
+		failed = true
+	if not Balance.wave_at(20).get("boss", false) or not Balance.wave_at(39).get("boss", false):
+		push_error("smoke: missing boss at wave 21 or 40")
+		failed = true
+	if not Balance.wave_at(59).get("boss", false) or not Balance.wave_at(79).get("boss", false) or not Balance.wave_at(99).get("boss", false):
+		push_error("smoke: missing later boss")
+		failed = true
+	if Balance.wave_at(21).get("boss", false) or str(Balance.wave_at(0)["title"]) != "Fast Skitters":
+		push_error("smoke: intro or post-boss wave shape")
+		failed = true
+	var late_scale := Balance.wave_hp_scale(100)
+	var mid_scale := Balance.wave_hp_scale(21)
+	if late_scale <= mid_scale or mid_scale < Balance.wave_hp_scale(1):
+		push_error("smoke: hp scale flattened")
+		failed = true
+	if int(Balance.enemy("chunky_tank")["split"]) != 3 or str(Balance.enemy("chunky_tank")["split_kind"]) != "tanklet":
+		push_error("smoke: tank does not split")
+		failed = true
+	if int(Balance.enemy("tanklet")["split"]) != 0 or float(Balance.enemy("tanklet")["hp"]) >= float(Balance.enemy("chunky_tank")["hp"]):
+		push_error("smoke: tanklet still splits or is not weaker")
+		failed = true
+	if int(Balance.enemy("shielded")["split"]) != 2 or int(Balance.enemy("open_shell")["split"]) != 0:
+		push_error("smoke: shielded split")
+		failed = true
+	if str(Balance.enemy("elite_tank")["split_kind"]) != "chunky_tank" or int(Balance.enemy("swarmling")["split"]) != 0:
+		push_error("smoke: elite chain or swarmling recursion")
+		failed = true
+	Game.wave_index = 3
+	var mom = spawn_enemy("chunky_tank", "a")
+	var mom_hp: float = mom.max_hp
+	mom.take_damage(99999)
+	var kids: Array = []
+	for critter in get_tree().get_nodes_in_group("enemies"):
+		if is_instance_valid(critter) and critter.alive and str(critter.kind) == "tanklet":
+			kids.append(critter)
+	if kids.size() != 3 or float(kids[0].max_hp) >= mom_hp or int(kids[0].split_into) != 0:
+		push_error("smoke: tank did not drop 3 weaker tanklets")
+		failed = true
+	Game.wave_index = 0
+	var early = spawn_enemy("fast_skitter", "a")
+	var early_hp: float = early.max_hp
+	early.alive = false
+	early.queue_free()
+	Game.wave_index = 99
+	var late = spawn_enemy("fast_skitter", "a")
+	if late.max_hp <= early_hp * 3.0:
+		push_error("smoke: wave 100 hp did not scale")
+		failed = true
+	var boss_late = spawn_enemy("big_cute_boss", "a")
+	var boss_late_hp: float = boss_late.max_hp
+	boss_late.alive = false
+	boss_late.queue_free()
+	late.alive = false
+	late.queue_free()
+	Game.wave_index = 20
+	var boss_early = spawn_enemy("big_cute_boss", "a")
+	if boss_late_hp <= boss_early.max_hp * 2.0:
+		push_error("smoke: finale boss is not tougher than wave 21")
+		failed = true
+	boss_early.alive = false
+	boss_early.queue_free()
 	var toad = spawn_enemy("chunky_tank", "b")
 	var hp_before: int = Game.core_hp
 	toad.leak()

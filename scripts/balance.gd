@@ -102,7 +102,7 @@ const TOWERS := {
 const ENEMIES := {
 	"fast_skitter": {
 		"name": "Fast Skitter",
-		"hp": 30,
+		"hp": 38,
 		"shield": 0,
 		"speed": 2.28,
 		"gold": 7,
@@ -120,7 +120,7 @@ const ENEMIES := {
 	},
 	"chunky_tank": {
 		"name": "Chunky Tank",
-		"hp": 170,
+		"hp": 210,
 		"shield": 0,
 		"speed": 1.05,
 		"gold": 16,
@@ -128,8 +128,8 @@ const ENEMIES := {
 		"display": 50.0,
 		"tex": 128.0,
 		"color": "#b48ae0",
-		"split": 0,
-		"split_kind": "",
+		"split": 3,
+		"split_kind": "tanklet",
 		"skitter": false,
 		"baby_every": 0.0,
 		"babies": 0,
@@ -138,16 +138,16 @@ const ENEMIES := {
 	},
 	"shielded": {
 		"name": "Shielded",
-		"hp": 55,
-		"shield": 48,
+		"hp": 70,
+		"shield": 56,
 		"speed": 1.5,
 		"gold": 13,
 		"leak": 2,
 		"display": 36.0,
 		"tex": 128.0,
 		"color": "#7ed6ba",
-		"split": 0,
-		"split_kind": "",
+		"split": 2,
+		"split_kind": "open_shell",
 		"skitter": false,
 		"baby_every": 0.0,
 		"babies": 0,
@@ -156,7 +156,7 @@ const ENEMIES := {
 	},
 	"swarm_splitter": {
 		"name": "Swarm-Splitter",
-		"hp": 62,
+		"hp": 78,
 		"shield": 0,
 		"speed": 1.15,
 		"gold": 9,
@@ -172,9 +172,63 @@ const ENEMIES := {
 		"boss": false,
 		"minion_kind": "",
 	},
+	"tanklet": {
+		"name": "Tanklet",
+		"hp": 58,
+		"shield": 0,
+		"speed": 1.22,
+		"gold": 4,
+		"leak": 1,
+		"display": 34.0,
+		"tex": 128.0,
+		"color": "#d2b4f0",
+		"split": 0,
+		"split_kind": "",
+		"skitter": false,
+		"baby_every": 0.0,
+		"babies": 0,
+		"boss": false,
+		"minion_kind": "",
+	},
+	"open_shell": {
+		"name": "Open Shell",
+		"hp": 36,
+		"shield": 0,
+		"speed": 1.65,
+		"gold": 4,
+		"leak": 1,
+		"display": 30.0,
+		"tex": 128.0,
+		"color": "#b6ead8",
+		"split": 0,
+		"split_kind": "",
+		"skitter": false,
+		"baby_every": 0.0,
+		"babies": 0,
+		"boss": false,
+		"minion_kind": "",
+	},
+	"elite_tank": {
+		"name": "Elite Tank",
+		"hp": 480,
+		"shield": 0,
+		"speed": 0.92,
+		"gold": 24,
+		"leak": 4,
+		"display": 60.0,
+		"tex": 128.0,
+		"color": "#6a3d99",
+		"split": 2,
+		"split_kind": "chunky_tank",
+		"skitter": false,
+		"baby_every": 0.0,
+		"babies": 0,
+		"boss": false,
+		"minion_kind": "",
+	},
 	"swarmling": {
 		"name": "Swarmling",
-		"hp": 16,
+		"hp": 18,
 		"shield": 0,
 		"speed": 2.35,
 		"gold": 3,
@@ -192,8 +246,8 @@ const ENEMIES := {
 	},
 	"big_cute_boss": {
 		"name": "Big Cute Boss",
-		"hp": 1900,
-		"shield": 160,
+		"hp": 2400,
+		"shield": 200,
 		"speed": 0.62,
 		"gold": 120,
 		"leak": 10,
@@ -210,7 +264,10 @@ const ENEMIES := {
 	},
 }
 
-## 20 build-up waves, then the boss. New kinds arrive a few at a time.
+## First 21 waves are handcrafted (20 build-up waves, then the first boss).
+## Waves 22–100 are generated. Boss milestones: 21, 40, 60, 80, and 100.
+const WAVE_COUNT := 100
+const BOSS_WAVES := [21, 40, 60, 80, 100]
 const WAVES: Array = [
 	{
 		"title": "Fast Skitters",
@@ -388,6 +445,122 @@ const WAVES: Array = [
 		],
 	},
 ]
+
+
+static func wave_at(index: int) -> Dictionary:
+	if index < 0 or index >= WAVE_COUNT:
+		return {}
+	if index < WAVES.size():
+		return WAVES[index]
+	return _generated_wave(index + 1)
+
+
+static func is_boss_wave(wave_number: int) -> bool:
+	return wave_number in BOSS_WAVES
+
+
+## Gentle through the curated intro, then a steady climb. Does not flatten after 21.
+static func wave_hp_scale(wave_number: int) -> float:
+	var n := maxi(1, wave_number)
+	if n <= 20:
+		return 1.0 + float(n - 1) * 0.012
+	return 1.228 + float(n - 20) * 0.042
+
+
+## Extra boss health on later milestones. Wave 21 stays near the old finale.
+static func boss_hp_scale(wave_number: int) -> float:
+	var steps := 0
+	if wave_number >= 100:
+		steps = 4
+	elif wave_number >= 80:
+		steps = 3
+	elif wave_number >= 60:
+		steps = 2
+	elif wave_number >= 40:
+		steps = 1
+	return 1.0 + float(steps) * 0.35
+
+
+static func _generated_wave(wave_number: int) -> Dictionary:
+	if is_boss_wave(wave_number):
+		return _boss_wave(wave_number)
+	var t := clampf(float(wave_number - 22) / 77.0, 0.0, 1.0)
+	var gap := maxf(0.34, 0.72 - t * 0.38)
+	var entries: Array = []
+	var title := "Deeper Yard"
+	match wave_number % 5:
+		0:
+			title = "Skitter Rush"
+			entries = [
+				{"kind": "fast_skitter", "count": 8 + int(t * 8), "gap": gap, "lane": "alt"},
+				{"kind": "chunky_tank", "count": 2 + int(t * 3), "gap": gap + 0.15, "lane": "alt"},
+			]
+		1:
+			title = "Bubble Line"
+			entries = [
+				{"kind": "shielded", "count": 4 + int(t * 5), "gap": gap + 0.05, "lane": "alt"},
+				{"kind": "swarm_splitter", "count": 2 + int(t * 3), "gap": gap + 0.1, "lane": "alt"},
+			]
+		2:
+			title = "Shell March"
+			entries = [
+				{"kind": "chunky_tank", "count": 3 + int(t * 5), "gap": gap + 0.08, "lane": "alt"},
+				{"kind": "fast_skitter", "count": 4 + int(t * 4), "gap": gap, "lane": "alt"},
+			]
+			if wave_number >= 36:
+				entries.append({
+					"kind": "elite_tank",
+					"count": 1 if wave_number < 70 else 2,
+					"gap": 1.3,
+					"lane": "alt",
+				})
+				title = "Elite Shells"
+		3:
+			title = "Soft Split"
+			entries = [
+				{"kind": "swarm_splitter", "count": 3 + int(t * 4), "gap": gap + 0.08, "lane": "alt"},
+				{"kind": "shielded", "count": 3 + int(t * 3), "gap": gap, "lane": "alt"},
+				{"kind": "fast_skitter", "count": 4 + int(t * 3), "gap": gap, "lane": "alt"},
+			]
+		_:
+			title = "Full Yard"
+			entries = [
+				{"kind": "chunky_tank", "count": 3 + int(t * 4), "gap": gap + 0.05, "lane": "alt"},
+				{"kind": "shielded", "count": 3 + int(t * 3), "gap": gap, "lane": "alt"},
+				{"kind": "swarm_splitter", "count": 2 + int(t * 3), "gap": gap + 0.08, "lane": "alt"},
+				{"kind": "fast_skitter", "count": 5 + int(t * 4), "gap": gap, "lane": "alt"},
+			]
+			if wave_number >= 55:
+				entries.append({"kind": "elite_tank", "count": 1, "gap": 1.4, "lane": "a"})
+	return {"title": title, "preview": _preview_from(entries), "entries": entries}
+
+
+static func _boss_wave(wave_number: int) -> Dictionary:
+	var t := clampf(float(wave_number - 21) / 79.0, 0.0, 1.0)
+	var title := "Big Cute Boss" if wave_number < 100 else "Final Nap"
+	var entries: Array = [
+		{"kind": "big_cute_boss", "count": 1, "gap": 1.2, "lane": "a"},
+		{"kind": "fast_skitter", "count": 4 + int(t * 8), "gap": 0.5, "lane": "alt"},
+		{"kind": "swarm_splitter", "count": 2 + int(t * 3), "gap": 0.9, "lane": "b"},
+	]
+	if wave_number >= 60:
+		entries.append({"kind": "chunky_tank", "count": 2 + int(t * 3), "gap": 0.8, "lane": "alt"})
+	if wave_number >= 80:
+		entries.append({"kind": "shielded", "count": 3, "gap": 0.7, "lane": "alt"})
+	if wave_number >= 100:
+		entries.append({"kind": "elite_tank", "count": 1, "gap": 1.5, "lane": "b"})
+	var preview := "Big Cute Boss, plus a deeper escort"
+	if wave_number >= 100:
+		preview = "The last Big Cute Boss"
+	return {"title": title, "preview": preview, "boss": true, "entries": entries}
+
+
+static func _preview_from(entries: Array) -> String:
+	var bits := PackedStringArray()
+	for entry in entries:
+		var data: Dictionary = ENEMIES[str(entry["kind"])]
+		bits.append("%d %s" % [int(entry["count"]), str(data["name"])])
+	return ", ".join(bits)
 
 
 static func cost(id: String) -> int:
