@@ -134,6 +134,7 @@ func _action_button(font: Font, text: String, bg: Color, hover_bg: Color) -> But
 
 
 func _restart() -> void:
+	get_tree().paused = false
 	Sfx.play("ui")
 	if MapSession.playtest:
 		Engine.time_scale = 1.0
@@ -148,6 +149,7 @@ func _restart() -> void:
 
 
 func _main_menu() -> void:
+	get_tree().paused = false
 	Sfx.play("ui")
 	MapSession.clear_override()
 	Engine.time_scale = 1.0

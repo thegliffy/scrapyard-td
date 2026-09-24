@@ -36,6 +36,9 @@ var auto_clock := 0.0
 
 func _ready() -> void:
 	add_to_group("game_root")
+	get_tree().paused = false
+	if hud.has_method("install_pause_overlay"):
+		hud.install_pause_overlay()
 	projectiles.add_to_group("projectiles")
 	var yard := MapSession.battle_source()
 	if yard != null:
@@ -99,19 +102,32 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_F:
 				Game.toggle_speed()
 				hud.refresh_all()
-			KEY_ESCAPE:
-				build_kind = ""
-				selected_cell = null
-				_refresh_hover_visuals()
-				hud.refresh_all()
+			KEY_ESCAPE, KEY_P:
+				toggle_pause()
 			KEY_R:
 				if Game.ended:
 					restart()
 
 
 func restart() -> void:
+	get_tree().paused = false
 	Engine.time_scale = 1.0
 	get_tree().reload_current_scene()
+
+
+func toggle_pause() -> void:
+	if Game.autoplay:
+		return
+	var tree := get_tree()
+	if tree.paused:
+		tree.paused = false
+		if hud.has_method("set_pause_visible"):
+			hud.set_pause_visible(false)
+		Sfx.play("ui")
+		return
+	if hud.has_method("set_pause_visible"):
+		hud.set_pause_visible(true)
+	tree.paused = true
 
 
 func call_early() -> void:
@@ -542,6 +558,44 @@ func _run_smoke() -> void:
 	if MapSession.blocks_scrap():
 		push_error("smoke: a normal yard blocked scrap")
 		failed = true
+	var prep_before: float = Game.prep_left
+	var scale_before := Engine.time_scale
+	var speed_before: float = Game.speed
+	var paused_critter = spawn_enemy("fast_skitter", "a")
+	var paused_spot: Vector2 = paused_critter.global_position
+	toggle_pause()
+	var overlay: Control = hud.get("pause_overlay")
+	if not get_tree().paused or overlay == null or not overlay.visible:
+		push_error("smoke: pause did not freeze the tree")
+		failed = true
+	if Engine.time_scale != scale_before or Game.speed != speed_before or Game.prep_left != prep_before:
+		push_error("smoke: pause changed speed or the prep clock")
+		failed = true
+	if paused_critter.global_position != paused_spot:
+		push_error("smoke: pause moved a critter")
+		failed = true
+	if overlay == null or overlay.process_mode != Node.PROCESS_MODE_WHEN_PAUSED or overlay.mouse_filter != Control.MOUSE_FILTER_STOP:
+		push_error("smoke: pause overlay is not a blocking when-paused layer")
+		failed = true
+	elif paused_critter.can_process() or wave.can_process() or can_process() or hud.can_process() or not overlay.can_process():
+		push_error("smoke: pause left the battle running or slept the overlay")
+		failed = true
+	var resume := overlay.find_child("Resume", true, false) if overlay else null
+	if resume == null or not resume.can_process():
+		push_error("smoke: resume control is asleep while paused")
+		failed = true
+	toggle_pause()
+	if get_tree().paused or overlay.visible or not paused_critter.can_process() or not wave.can_process():
+		push_error("smoke: resume did not restore the battle")
+		failed = true
+	if Game.prep_left != prep_before or paused_critter.global_position != paused_spot:
+		push_error("smoke: resume did not keep the same moment")
+		failed = true
+	if Engine.time_scale != scale_before or Game.speed != speed_before:
+		push_error("smoke: resume changed the speed")
+		failed = true
+	paused_critter.alive = false
+	paused_critter.queue_free()
 	if failed or not Board.validate().is_empty():
 		print("SMOKE_FAIL")
 		get_tree().quit(1)

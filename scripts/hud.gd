@@ -19,6 +19,7 @@ var core_fill: ColorRect
 var boss_fill: ColorRect
 var boss_track: ColorRect
 var flash: ColorRect
+var pause_overlay: Control
 var chips := {}
 
 const CHIP_KINDS := ["pea", "spark", "glue", "boom", "magnet"]
@@ -142,9 +143,17 @@ func _build() -> void:
 	top.add_child(status_label)
 
 	gold_label = _text("Gold %d" % Balance.START_GOLD, 24, Color("#c47a20"))
-	gold_label.position = Vector2(900, 16)
-	gold_label.size = Vector2(360, 40)
+	gold_label.position = Vector2(860, 16)
+	gold_label.size = Vector2(300, 40)
 	top.add_child(gold_label)
+	var pause_button := _small_button("Pause")
+	pause_button.position = Vector2(1176, 22)
+	pause_button.size = Vector2(88, 36)
+	pause_button.pressed.connect(func():
+		if main and main.has_method("toggle_pause"):
+			main.toggle_pause()
+	)
+	top.add_child(pause_button)
 
 	var core_name := _text("CORE", 14, Color("#2f8a62"))
 	core_name.position = Vector2(18, 46)
@@ -320,6 +329,37 @@ func _build() -> void:
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(flash)
 	_style_chips()
+
+
+func install_pause_overlay() -> void:
+	if pause_overlay != null:
+		return
+	pause_overlay = preload("res://scripts/pause_overlay.gd").new()
+	pause_overlay.name = "PauseOverlay"
+	pause_overlay.z_index = 100
+	var layer := get_parent()
+	if layer:
+		layer.add_child(pause_overlay)
+	else:
+		add_child(pause_overlay)
+	_raise_pause_overlay()
+
+
+func set_pause_visible(on: bool) -> void:
+	if pause_overlay == null:
+		return
+	if on:
+		_raise_pause_overlay()
+	pause_overlay.visible = on
+
+
+func _raise_pause_overlay() -> void:
+	if pause_overlay == null:
+		return
+	var layer := pause_overlay.get_parent()
+	if layer == null:
+		return
+	layer.move_child(pause_overlay, layer.get_child_count() - 1)
 
 
 ## Largest square that stays inside the 128×88 chip with at least 10px

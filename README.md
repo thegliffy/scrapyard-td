@@ -6,17 +6,17 @@ A cozy, **bright** cartoony **grid tower defense**. Cute eldritch horrors leak o
 
 ## Download
 
-**[v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1)** is the current build. You do not need Godot.
+**[v0.4.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.2)** is the current build. You do not need Godot.
 
 ### Windows
 
-1. Download [ScrapyardTD-v0.4.1-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.1/ScrapyardTD-v0.4.1-windows-x86_64.zip).
+1. Download [ScrapyardTD-v0.4.2-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.2/ScrapyardTD-v0.4.2-windows-x86_64.zip).
 2. Unzip it.
 3. Double-click `ScrapyardTD.exe`.
 
 ### Linux (x86_64)
 
-1. Download [ScrapyardTD-v0.4.1-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.1/ScrapyardTD-v0.4.1-linux-x86_64.zip).
+1. Download [ScrapyardTD-v0.4.2-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.2/ScrapyardTD-v0.4.2-linux-x86_64.zip).
 2. Unzip it.
 3. Make it executable and run it:
 
@@ -25,7 +25,7 @@ chmod +x ScrapyardTD.x86_64
 ./ScrapyardTD.x86_64
 ```
 
-Older cuts: [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0), [v0.3.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.3.0), [v0.2.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.2), [v0.2.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.1), [v0.2.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.0), [v0.1.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.2), [v0.1.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.1), [v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0).
+Older cuts: [v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1), [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0), [v0.3.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.3.0), [v0.2.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.2), [v0.2.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.1), [v0.2.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.0), [v0.1.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.2), [v0.1.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.1), [v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0).
 
 ## Open in Godot
 
@@ -66,7 +66,7 @@ You own **Pea Blaster**, **Glue Goo**, and the **Yard Approach** map from the st
 3. **Battle**, pick a yard, then pick a tower from the **bottom bar** (the chip shows the weapon sprite, the slot number, a short name, and the gold cost) or press `1`–`5` for that slot. An empty slot does nothing.
 4. Click a gold **+** on a hardpoint. Slots come in **pods of four** (a 2×2 of marked cells). Empty cells in a pod can each hold one tower. There is no free placement.
 5. Click a built tower to inspect it. Tiles in range light up. Upgrade (`U`) up to 3 tiers, or sell (`Backspace`) for 60% of the gold you spent.
-6. You can build during a wave. `Space` calls the next wave early for a little bonus gold. `F` toggles 2× speed.
+6. You can build during a wave. `Space` calls the next wave early for a little bonus gold. `F` toggles 2× speed. **Pause** (top right), `P`, or `Esc` freezes the whole battle, including the prep clock and auto-call. **Resume**, `P`, or `Esc` continues from the same moment, speed included. Custom yards and editor playtests pause the same way.
 
 Clear **100 waves** to win. The Big Cute Boss shows up at waves **21, 40, 60, 80, and 100**. Sky Nap, a flying boss, shows up at **50** and **90**. Later visits have more health. If the core hits 0, you lose. The end screen shows gold earned and scrap gained, and offers **Battle again** (or `R`) and **Main menu**. A playtest's button says **Editor** instead, and returns to the draft.
 
@@ -92,7 +92,7 @@ Guns only hit the layer printed on them: **Ground**, **Air**, or **Both**. Scrap
 | `Space` or **Call** | Send the next wave early for a little bonus gold |
 | **Auto** next to Call | Call every next wave the moment prep starts. Saved. Off until you turn it on |
 | `F` or **1× / 2×** | Toggle double speed |
-| `Esc` | Cancel the current selection |
+| `P`, `Esc`, or **Pause** | Freeze the battle. **Resume**, `P`, or `Esc` continues, speed unchanged |
 | `R` | Restart after a win or a loss |
 
 ## Design (v0.3.0)
@@ -174,6 +174,7 @@ Popping a splitter is not always safer than letting it walk. Swarmlings are fast
 - **0.3.0** — Bestiary on the main menu, remembered per critter. Four flying kinds ride the lane a little above the tiles. Every gun has a layer: Ground, Air, or Both (Pea hits both). Five new unlocks: Flak Puff, Sky Needle, Dual Rail, Net Lob, and Orbit Drone. Flyers join from wave 14, and Sky Nap arrives at waves 50 and 90. The yard is a bright space scene: a neon road on the old lanes, and a floating island on every hardpoint.
 - **0.4.0** — Map editor (beta). Yards are JSON (`res://maps` for the built-ins, `user://maps` for yours). Battle loads those files and draws them with the same view the editor uses, so Yard Approach is unchanged. Custom yards and playtests do not award scrap. The Battle picker can start a saved custom yard.
 - **0.4.1** — Lanes are one smooth neon line instead of stamped tiles. The gold coin icon is gone; gold is plain text (`Gold 170`, costs like `50g`). **Auto** next to Call sends the next wave as soon as prep starts, with the same early bonus, and the choice is saved. It stays off until you turn it on, including for the first prep.
+- **0.4.2** — **Pause** in the top-right of the battle HUD, also `P` and `Esc`. A dark overlay covers the board and the HUD and blocks every click underneath. Enemies, shots, towers, the prep countdown, and auto-call all freeze, then resume exactly where they were, including 1× or 2×. Custom yards and editor playtests included.
 
 ## Art
 
