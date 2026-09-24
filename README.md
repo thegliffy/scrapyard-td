@@ -17,9 +17,9 @@ Older builds stay up: [v0.4.2](https://github.com/thegliffy/scrapyard-td/release
 
 ## How to play
 
-<img src="docs/images/menu.webp" alt="The main menu over the splash art, with Battle, Adventure, Unlocks, Bestiary, Map Editor, Settings, and Quit." width="880">
+<img src="docs/images/menu.webp" alt="The main menu on the new splash. The buttons stack in the gap between the two islands." width="880">
 
-The menu opens on the splash. The title and buttons fade in over about a second. Your saved **scrap** sits under the title.
+The menu opens on the splash. The title and buttons fade in over about a second, and the buttons stack in the dark gap between the two islands. Your saved **scrap** sits under the title.
 
 <img src="docs/images/start.webp" alt="Wave 1 waiting on Start. The preview reads 6 Fast Skitters, with no countdown." width="880">
 

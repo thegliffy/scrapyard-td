@@ -84,26 +84,29 @@ func _build() -> void:
 		["Settings", Color("#efe4ff"), _settings],
 		["Quit", Color("#ffe0f0"), _quit_game],
 	]
-	var widths := [120, 168, 118, 128, 140, 118, 88]
+	# The splash leaves a dark channel between the two islands. At 1280×720
+	# that channel is centered near x=688, so the buttons stack there
+	# instead of sitting on the characters along the bottom.
+	var button_w := 200
+	var button_h := 52
 	var gap := 8
-	var total := gap * (widths.size() - 1)
-	for w in widths:
-		total += w
-	var x := (1280 - total) / 2.0
+	var column_x := 688.0 - button_w * 0.5
+	var y := 168.0
 	for i in specs.size():
 		var button := _button(font, specs[i][0], specs[i][1], 14 if i == 1 or i == 4 else 18)
-		button.position = Vector2(x, 624)
-		button.size = Vector2(widths[i], 72)
+		button.position = Vector2(column_x, y)
+		button.size = Vector2(button_w, button_h)
 		button.disabled = true
 		button.pressed.connect(specs[i][2])
 		ui.add_child(button)
 		_buttons.append(button)
-		x += widths[i] + gap
+		y += button_h + gap
 
-	_notice = _label(font, 18, Color("#fff6e4"))
-	_notice.position = Vector2(0, 584)
-	_notice.size = Vector2(1280, 28)
+	_notice = _label(font, 16, Color("#fff6e4"))
+	_notice.position = Vector2(column_x, y + 4)
+	_notice.size = Vector2(button_w, 44)
 	_notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_notice.add_theme_color_override("font_outline_color", Color("#1a1030"))
 	_notice.add_theme_constant_override("outline_size", 6)
 	ui.add_child(_notice)
