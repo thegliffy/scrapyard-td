@@ -5,23 +5,11 @@ var tower = null
 var hovered := false
 var selected := false
 var ghost: Texture2D
+var _island: Texture2D
 
 
-func _draw_pod_frame(half: float) -> void:
-	var origin := Board.pod_origin(cell)
-	if origin.x < 0:
-		return
-	var ink := Color("#e8a04a")
-	var top_left := Vector2(-half, -half)
-	var bottom_right := Vector2(half, half)
-	if cell.x == origin.x:
-		draw_line(top_left, Vector2(-half, half), ink, 4.0)
-	if cell.x == origin.x + 1:
-		draw_line(Vector2(half, -half), bottom_right, ink, 4.0)
-	if cell.y == origin.y:
-		draw_line(top_left, Vector2(half, -half), ink, 4.0)
-	if cell.y == origin.y + 1:
-		draw_line(Vector2(-half, half), bottom_right, ink, 4.0)
+func _ready() -> void:
+	_island = Art.map_tex("island")
 
 
 func setup(next_cell: Vector2i) -> void:
@@ -31,24 +19,26 @@ func setup(next_cell: Vector2i) -> void:
 
 
 func _draw() -> void:
-	var half := float(Board.TILE) * 0.5
-	var inset := 7.0
-	var pad := Rect2(-half + inset, -half + inset, float(Board.TILE) - inset * 2.0, float(Board.TILE) - inset * 2.0)
-	var fill := Color("#ffd36a")
+	var size := 60.0
+	if hovered or selected:
+		size = 64.0
+	var tint := Color.WHITE
 	if tower != null:
-		fill = Color("#e6b44a")
+		tint = Color(0.92, 0.86, 0.8)
 	elif hovered:
-		fill = Color("#ffe7a8")
-	draw_rect(pad, fill)
-	draw_rect(pad, Color("#c9844a"), false, 3.0)
+		tint = Color(1, 1, 0.92)
+	if _island:
+		draw_texture_rect(_island, Rect2(-size * 0.5, -size * 0.46, size, size), false, tint)
+	else:
+		draw_circle(Vector2(0, 2), 20.0, Color("#f4dcc4"))
 	if tower == null:
-		draw_line(Vector2(-7, 0), Vector2(7, 0), Color("#fffaf2"), 3.0)
-		draw_line(Vector2(0, -7), Vector2(0, 7), Color("#fffaf2"), 3.0)
+		draw_line(Vector2(-7, -1), Vector2(7, -1), Color("#5a3d70"), 4.0)
+		draw_line(Vector2(0, -8), Vector2(0, 6), Color("#5a3d70"), 4.0)
+		draw_line(Vector2(-7, -2), Vector2(7, -2), Color("#fffaf2"), 2.0)
+		draw_line(Vector2(0, -8), Vector2(0, 5), Color("#fffaf2"), 2.0)
 		if ghost:
-			draw_texture_rect(ghost, Rect2(-18, -20, 36, 36), false, Color(1, 1, 1, 0.6))
-	var full := Rect2(-half, -half, float(Board.TILE), float(Board.TILE))
+			draw_texture_rect(ghost, Rect2(-18, -22, 36, 36), false, Color(1, 1, 1, 0.6))
 	if selected:
-		draw_rect(full, Color("#fff6d2"), false, 4.0)
+		draw_arc(Vector2(0, 2), 24.0, 0, TAU, 28, Color("#fff1a8"), 3.0, true)
 	elif hovered:
-		draw_rect(full, Color("#ffffffcc"), false, 2.0)
-	_draw_pod_frame(half)
+		draw_arc(Vector2(0, 2), 24.0, 0, TAU, 28, Color(1, 1, 1, 0.85), 2.0, true)

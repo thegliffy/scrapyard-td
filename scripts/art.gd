@@ -32,6 +32,15 @@ const TOWER := {
 	"orbit": "res://assets/sprites/towers/orbit_drone.png",
 }
 
+## Swap these PNGs when the art director's map set arrives.
+const MAP := {
+	"space": "res://assets/sprites/map/space_backdrop.png",
+	"island": "res://assets/sprites/map/island.png",
+	"core_island": "res://assets/sprites/map/core_island.png",
+	"core": "res://assets/sprites/map/core.png",
+	"rift": "res://assets/sprites/map/rift.png",
+}
+
 const PROJECTILE := {
 	"pea": "res://assets/sprites/projectiles/pea.png",
 	"glue": "res://assets/sprites/projectiles/glue.png",
@@ -55,6 +64,10 @@ static func ui_font() -> Font:
 
 static func enemy_tex(kind: String) -> Texture2D:
 	return load(ENEMY[kind])
+
+
+static func map_tex(id: String) -> Texture2D:
+	return load(MAP[id])
 
 
 static var _icon_cache := {}

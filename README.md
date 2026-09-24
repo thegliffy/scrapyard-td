@@ -86,7 +86,7 @@ Guns only hit the layer printed on them: **Ground**, **Air**, or **Both**. Scrap
 ## Design (v0.3.0)
 
 - **Cute and bright.** The yard is a light lavender-and-cream board, not a night scene. UI panels are soft cream and pink. Guns are chunky cartoons with faces — friendly, not hard scrap hardware.
-- **Top-down grid.** The board is **24 × 11 tiles**. Lanes are sequences of those cells. Critters sit, then hop to the next cell center. They never path off the grid.
+- **Top-down grid.** The board is **24 × 11 tiles**, floating in a bright cartoon starfield. Lanes are a glowing road along those same cells. Each hardpoint is a little scrap island, and the core sits on its own. Critters still hop cell to cell. Yard Approach, Side Dock, and Deep Yard only tint that backdrop.
 - **Fixed slots, groups of four.** **36 slots** in **nine 2×2 pods** (north entry and mid, both sides of the east lane, the merge, and the south lane).
 - **Weapon icons.** Each Battle selection chip, and the Unlocks gun tiles, shows the whole cartoon inside the box. The drawing is trimmed to its real edges, kept in proportion, and inset so it cannot spill over the frame.
 - **Loadout.** Five Battle slots. The first three are free. Slot 4 is 30 scrap and slot 5 is 50 scrap. Only equipped guns appear on the bar. Starters sit in slots 1 and 2 (Pea, Glue).
@@ -159,7 +159,7 @@ Popping a splitter is not always safer than letting it walk. Swarmlings are fast
 - **0.2.0** — Meta layer. The menu is Battle, Adventure (coming soon), Unlocks, Settings, and Quit, with persistent scrap on the splash. In-run currency is gold and resets every Battle. Scrap is awarded at the end (a win pays more; a loss is a flat 8) and is spent only on the Unlocks screen. Guns and yards you have not bought stay out of the Battle. A 5-slot loadout gates the bottom bar: slots 1–3 are free, slots 4 and 5 cost scrap. Side Dock and Deep Yard reuse the Yard Approach lanes.
 - **0.2.1** — Battle selection icons actually fit in their boxes. The tower image was being left at its full pixel size, so the gun spilled out of the chip. Each icon is now inset inside the frame, aspect kept, with padding around the drawing. Unlocks tiles use the same fit.
 - **0.2.2** — Battles are 100 waves, with bosses at 21, 40, 60, 80, and 100. Health keeps scaling after the old finale. Chunky Tanks, Shielded, and Elite Tanks pop into weaker versions of themselves. A win pays 2 scrap per wave cleared. A loss pays 1 scrap.
-- **0.3.0** — Bestiary on the main menu, remembered per critter. Four flying kinds ride the lane a little above the tiles. Every gun has a layer: Ground, Air, or Both (Pea hits both). Five new unlocks: Flak Puff, Sky Needle, Dual Rail, Net Lob, and Orbit Drone. Flyers join from wave 14, and Sky Nap arrives at waves 50 and 90.
+- **0.3.0** — Bestiary on the main menu, remembered per critter. Four flying kinds ride the lane a little above the tiles. Every gun has a layer: Ground, Air, or Both (Pea hits both). Five new unlocks: Flak Puff, Sky Needle, Dual Rail, Net Lob, and Orbit Drone. Flyers join from wave 14, and Sky Nap arrives at waves 50 and 90. The yard is a bright space scene: a neon road on the old lanes, and a floating island on every hardpoint.
 
 ## Art
 
