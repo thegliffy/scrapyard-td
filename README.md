@@ -163,7 +163,7 @@ Popping a splitter is not always safer than letting it walk. Swarmlings are fast
 
 ## Art
 
-`assets/concept/` holds the art-direction boards. The original five guns are cut from `02_towers_sheet.png` and scaled to fit each square. Flak Puff, Sky Needle, Dual Rail, Net Lob, Orbit Drone, and the four flying critters use stand-in drawings in the same cute style until the art director drops replacements into `assets/sprites/towers/` and `assets/sprites/enemies/`. The menu background is the art-director splash: `assets/ui/main_menu_splash.png` (full color) crossfades to `assets/ui/main_menu_splash_dim.png` as the title and buttons appear.
+`assets/concept/` holds the art-direction boards. The original five guns are cut from `02_towers_sheet.png`. Flak Puff, Sky Needle, Dual Rail, Net Lob, and Orbit Drone, plus Small Flyer, Flyer, Shielded Flyer, and Sky Nap, are the art director’s v0.3 sprites. Every gun tile is trimmed to its real edges and inset so it stays inside the chip. The menu background is the art-director splash: `assets/ui/main_menu_splash.png` (full color) crossfades to `assets/ui/main_menu_splash_dim.png` as the title and buttons appear.
 
 ```bash
 python3 tools/slice_towers.py

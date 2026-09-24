@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bixj5ux7nkoib"
-path="res://.godot/imported/needle.png-5fad154e15297115fa516724c739ac8b.ctex"
+uid="uid://cksf6ay7xceoq"
+path="res://.godot/imported/net_lob.png-2f7bdde749c278566e1455fd0967feb7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/towers/needle.png"
-dest_files=["res://.godot/imported/needle.png-5fad154e15297115fa516724c739ac8b.ctex"]
+source_file="res://assets/sprites/towers/net_lob.png"
+dest_files=["res://.godot/imported/net_lob.png-2f7bdde749c278566e1455fd0967feb7.ctex"]
 
 [params]
 

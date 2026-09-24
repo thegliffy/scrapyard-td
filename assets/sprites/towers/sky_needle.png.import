@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cul5cm6q5wdbt"
-path="res://.godot/imported/net.png-b81f425cca5336f0ce1b33a74519dd3b.ctex"
+uid="uid://be5j1pgb8kct4"
+path="res://.godot/imported/sky_needle.png-c683e73ea1f24c2e26972d276dee80d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/towers/net.png"
-dest_files=["res://.godot/imported/net.png-b81f425cca5336f0ce1b33a74519dd3b.ctex"]
+source_file="res://assets/sprites/towers/sky_needle.png"
+dest_files=["res://.godot/imported/sky_needle.png-c683e73ea1f24c2e26972d276dee80d4.ctex"]
 
 [params]
 

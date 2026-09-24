@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://s01sd3g6y3su"
-path="res://.godot/imported/dual.png-39864a3156f792ab498eb852edc70bf5.ctex"
+uid="uid://cmt3swxerkgaw"
+path="res://.godot/imported/flak_puff.png-f989d47899fa9f7fc5e098d5409c3c19.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/towers/dual.png"
-dest_files=["res://.godot/imported/dual.png-39864a3156f792ab498eb852edc70bf5.ctex"]
+source_file="res://assets/sprites/towers/flak_puff.png"
+dest_files=["res://.godot/imported/flak_puff.png-f989d47899fa9f7fc5e098d5409c3c19.ctex"]
 
 [params]
 

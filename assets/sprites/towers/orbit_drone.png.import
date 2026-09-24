@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jefkifjemg4n"
-path="res://.godot/imported/orbit.png-95316a9f09ceb90cee398779d4d9d393.ctex"
+uid="uid://ddal8q68fy3v3"
+path="res://.godot/imported/orbit_drone.png-fc397dc2dc5100f2f56fab8c29fc05d9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/towers/orbit.png"
-dest_files=["res://.godot/imported/orbit.png-95316a9f09ceb90cee398779d4d9d393.ctex"]
+source_file="res://assets/sprites/towers/orbit_drone.png"
+dest_files=["res://.godot/imported/orbit_drone.png-fc397dc2dc5100f2f56fab8c29fc05d9.ctex"]
 
 [params]
 

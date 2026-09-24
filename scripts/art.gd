@@ -25,11 +25,11 @@ const TOWER := {
 	"glue": "res://assets/sprites/towers/glue.png",
 	"boom": "res://assets/sprites/towers/boom.png",
 	"magnet": "res://assets/sprites/towers/magnet.png",
-	"flak": "res://assets/sprites/towers/flak.png",
-	"needle": "res://assets/sprites/towers/needle.png",
-	"dual": "res://assets/sprites/towers/dual.png",
-	"net": "res://assets/sprites/towers/net.png",
-	"orbit": "res://assets/sprites/towers/orbit.png",
+	"flak": "res://assets/sprites/towers/flak_puff.png",
+	"needle": "res://assets/sprites/towers/sky_needle.png",
+	"dual": "res://assets/sprites/towers/dual_rail.png",
+	"net": "res://assets/sprites/towers/net_lob.png",
+	"orbit": "res://assets/sprites/towers/orbit_drone.png",
 }
 
 const PROJECTILE := {
