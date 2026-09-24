@@ -28,7 +28,7 @@ const MAPS := {
 	"deep_yard": {
 		"name": "Deep Yard",
 		"blurb": "Same lanes, deeper dusk. A harder crawl.",
-		"tint": "#b794f0",
+		"tint": "#6a62d8",
 		"tint_amount": 0.3,
 		"hp_scale": 1.18,
 		"speed_scale": 1.06,

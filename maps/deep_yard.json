@@ -7,7 +7,7 @@
     64,
     80
   ],
-  "backdrop": "space",
+  "backdrop": "deep_space",
   "core": [
     22,
     5
@@ -572,7 +572,7 @@
   "name": "Deep Yard",
   "blurb": "Same lanes, deeper dusk. A harder crawl.",
   "builtin": true,
-  "tint": "#b794f0",
+  "tint": "#6a62d8",
   "tint_amount": 0.3,
   "hp_scale": 1.18,
   "speed_scale": 1.06

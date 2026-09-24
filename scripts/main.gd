@@ -549,6 +549,20 @@ func _run_smoke() -> void:
 	if not MapValidator.ok(Board.active):
 		push_error("smoke: built-in yard failed the map validator")
 		failed = true
+	if Board.active.backdrop != "deep_space" or MapData.blank("draft", "Draft").backdrop != "deep_space":
+		push_error("smoke: deep space is not the default backdrop")
+		failed = true
+	if Art.backdrop_tex("deep_space") == null or Art.backdrop_tex("space") == null:
+		push_error("smoke: backdrop art missing")
+		failed = true
+	var dock_yard := MapLibrary.load_builtin("side_dock")
+	var deep_yard := MapLibrary.load_builtin("deep_yard")
+	if dock_yard.backdrop != "deep_space" or deep_yard.backdrop != "deep_space":
+		push_error("smoke: built-in yards left the old backdrop")
+		failed = true
+	if dock_yard.tint_amount > 0.25 or deep_yard.tint_amount > 0.35 or deep_yard.tint == "#b794f0":
+		push_error("smoke: dock or deep tint would wash the dark plate")
+		failed = true
 	if MapValidator.ok(MapData.blank("draft", "Draft")):
 		push_error("smoke: empty yard should not validate")
 		failed = true

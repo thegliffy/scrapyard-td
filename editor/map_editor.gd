@@ -16,7 +16,11 @@ const LANE_NAMES := ["North", "South", "West", "East"]
 const TINTS := [
 	["Yard", "#ffffff", 0.0],
 	["Dock", "#7eb6ff", 0.22],
-	["Deep", "#b794f0", 0.3],
+	["Deep", "#6a62d8", 0.3],
+]
+const BACKDROPS := [
+	["Night", "deep_space"],
+	["Dusk", "space"],
 ]
 
 var view: MapView
@@ -40,6 +44,7 @@ var _open_list: VBoxContainer
 var _tool_buttons := {}
 var _style_buttons := {}
 var _tint_buttons := {}
+var _backdrop_buttons := {}
 var _save_button: Button
 var _save_as_button: Button
 var _play_button: Button
@@ -337,10 +342,13 @@ func _build_ui() -> void:
 		root.add_child(button)
 		_tint_buttons[tint[0]] = button
 		x += 68
-	var space := _button(font, "Space", 70, 28, 14)
-	space.position = Vector2(x, 646)
-	space.pressed.connect(_set_backdrop)
-	root.add_child(space)
+	for backdrop in BACKDROPS:
+		var button := _button(font, backdrop[0], 70, 28, 14)
+		button.position = Vector2(x, 646)
+		button.pressed.connect(_set_backdrop.bind(backdrop[1], backdrop[0]))
+		root.add_child(button)
+		_backdrop_buttons[backdrop[1]] = button
+		x += 74
 
 	_grid_label = _label(font, 14, Color("#fff6e4"))
 	_grid_label.position = Vector2(8, 682)
@@ -463,6 +471,8 @@ func _refresh_labels() -> void:
 		_tool_buttons[key].modulate = Color.WHITE if key == tool else Color(0.72, 0.72, 0.78)
 	for key in _style_buttons:
 		_style_buttons[key].modulate = Color.WHITE if key == style else Color(0.72, 0.72, 0.78)
+	for key in _backdrop_buttons:
+		_backdrop_buttons[key].modulate = Color.WHITE if data.backdrop == key else Color(0.72, 0.72, 0.78)
 	_grid_label.text = "Grid %d × %d" % [data.cols, data.rows]
 	var lane_name := "Lane"
 	if lane_index >= 0 and lane_index < data.lanes.size():
@@ -551,10 +561,10 @@ func _set_tint(hex: String, amount: float) -> void:
 	_edit(before)
 
 
-func _set_backdrop() -> void:
+func _set_backdrop(backdrop_id: String, label: String) -> void:
 	var before := data.to_json()
-	data.backdrop = "space"
-	status = "Backdrop is the space yard."
+	data.backdrop = backdrop_id
+	status = "Backdrop is %s." % label
 	_edit(before)
 
 

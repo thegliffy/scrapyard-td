@@ -24,7 +24,7 @@ Built-ins today: `yard_approach`, `side_dock`, `deep_yard`. Side Dock and Deep Y
   "rows": 11,
   "tile": 48,
   "origin": [64, 80],
-  "backdrop": "space",
+  "backdrop": "deep_space",
   "tint": "#ffffff",
   "tint_amount": 0.0,
   "hp_scale": 1.0,
@@ -55,8 +55,8 @@ Built-ins today: `yard_approach`, `side_dock`, `deep_yard`. Side Dock and Deep Y
 - `lanes` is an ordered list. Each lane's `cells` are the full orthogonal walk from spawn (first cell) to the Station Core (last cell), including both ends. Lane ids for the editor are `a`, `b`, `c`, `d`.
 - `core` is the Station Core cell. Every lane must end on it.
 - `pods` are hardpoint groups. Each pod is a 2×2 whose `origin` is the top-left cell. `style` is `pink`, `teal`, or `crystal` (island art `island_a`, `island_b`, `island_c`).
-- `backdrop` is an `Art` map id. The only one shipped is `space`.
-- `tint` and `tint_amount` lerp the backdrop. `hp_scale` and `speed_scale` multiply enemy health and speed for that yard.
+- `backdrop` is an `Art` map id. `deep_space` is the default (Battle, new yards, playtests). `space` is the older brighter field, still selectable in the editor.
+- `tint` and `tint_amount` lay a short color wash on the backdrop. On the dark plate that wash stays faint: Dock is a cool blue, Deep is a violet that is not a pink fog. `hp_scale` and `speed_scale` multiply enemy health and speed for that yard.
 - `builtin` is forced `true` when a file is loaded from `res://maps`, and forced `false` for `user://maps`.
 
 ## Rules

@@ -21,7 +21,7 @@ var cols := 24
 var rows := 11
 var tile := 48
 var origin := Vector2(64, 80)
-var backdrop := "space"
+var backdrop := "deep_space"
 var tint := "#ffffff"
 var tint_amount := 0.0
 var hp_scale := 1.0
@@ -43,7 +43,7 @@ static func from_dict(raw: Dictionary) -> MapData:
 	data.tile = maxi(8, int(raw.get("tile", 48)))
 	var origin_raw = raw.get("origin", [64, 80])
 	data.origin = Vector2(float(origin_raw[0]), float(origin_raw[1]))
-	data.backdrop = str(raw.get("backdrop", "space"))
+	data.backdrop = str(raw.get("backdrop", "deep_space"))
 	data.tint = str(raw.get("tint", "#ffffff"))
 	data.tint_amount = float(raw.get("tint_amount", 0.0))
 	data.hp_scale = float(raw.get("hp_scale", 1.0))

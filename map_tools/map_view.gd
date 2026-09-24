@@ -21,15 +21,14 @@ const _ROAD_LAYERS := [
 ]
 const _CORNER_RADIUS := 18.0
 
-var _space_tex: Texture2D
 var _core_island_tex: Texture2D
+var _backdrop_cache := {}
 var _core_tex: Texture2D
 var _rift_tex: Texture2D
 var _islands := {}
 
 
 func _ready() -> void:
-	_space_tex = Art.map_tex("space")
 	_core_island_tex = Art.map_tex("core_island")
 	_core_tex = Art.map_tex("core")
 	_rift_tex = Art.map_tex("rift")
@@ -59,16 +58,39 @@ func _draw() -> void:
 		draw_rect(Board.cell_rect(hover_cell), Color(1, 1, 1, 0.85), false, 2.0)
 
 
+func _backdrop_texture(backdrop_id: String) -> Texture2D:
+	if _backdrop_cache.has(backdrop_id):
+		return _backdrop_cache[backdrop_id]
+	var source := Art.backdrop_tex(backdrop_id)
+	if source == null:
+		return null
+	# The 1920 plate's imported texture draws blank in the compatibility
+	# renderer. A plain ImageTexture of the same pixels does not.
+	var image := source.get_image()
+	if image.get_format() != Image.FORMAT_RGBA8:
+		image.convert(Image.FORMAT_RGBA8)
+	var tex := ImageTexture.create_from_image(image)
+	_backdrop_cache[backdrop_id] = tex
+	return tex
+
+
 func _draw_space() -> void:
 	var view := Rect2(0, 0, 1280, 720)
-	var tint_amount := Profile.map_tint_amount()
-	var mod := Color.WHITE
-	if tint_amount > 0.0:
-		mod = Color.WHITE.lerp(Profile.map_tint(), tint_amount)
-	if _space_tex:
-		draw_texture_rect(_space_tex, view, false, mod)
+	var backdrop_id := "deep_space"
+	if Board.active != null and str(Board.active.backdrop) != "":
+		backdrop_id = str(Board.active.backdrop)
+	var tex := _backdrop_texture(backdrop_id)
+	if tex:
+		draw_texture_rect(tex, view, false)
 	else:
-		draw_rect(view, Color("#241448"))
+		draw_rect(view, Color("#070b24"))
+	# A white-lerp multiply barely shows on this dark plate, and a strong
+	# lavender mix turns it pink. A short overlay keeps Dock cool and Deep violet.
+	var tint_amount := Profile.map_tint_amount()
+	if tint_amount > 0.0:
+		var wash := Profile.map_tint()
+		wash.a = clampf(tint_amount * 0.45, 0.0, 0.14)
+		draw_rect(view, wash)
 
 
 func _draw_cell(cell: Vector2i) -> void:

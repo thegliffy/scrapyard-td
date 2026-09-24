@@ -33,6 +33,7 @@ const TOWER := {
 }
 
 const MAP := {
+	"deep_space": "res://assets/sprites/map/backdrop_deep_space.png",
 	"space": "res://assets/sprites/map/backdrop_space.png",
 	"path_tile": "res://assets/sprites/map/path_tile_128.png",
 	"path_strip": "res://assets/sprites/map/path_strip.png",
@@ -45,6 +46,13 @@ const MAP := {
 }
 
 const ISLANDS := ["island_a", "island_b", "island_c"]
+const BACKDROPS := ["deep_space", "space"]
+
+
+static func backdrop_tex(id: String) -> Texture2D:
+	if id not in BACKDROPS:
+		id = "deep_space"
+	return load(MAP[id])
 
 const PROJECTILE := {
 	"pea": "res://assets/sprites/projectiles/pea.png",
