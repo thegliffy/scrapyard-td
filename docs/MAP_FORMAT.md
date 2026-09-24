@@ -75,7 +75,7 @@ Built-ins today: `yard_approach`, `side_dock`, `deep_yard`. Side Dock and Deep Y
 
 Waves still name lanes `a`, `b`, or `alt`. `a` and `b` are the first two lanes (a one-lane yard uses that lane for both). `alt` cycles every lane on the map, so a third and fourth lane do get spawns. On the two-lane built-in yards this is the same north / south flip as before.
 
-`MapView` draws the backdrop, neon road, turn joints, islands, core island, and rifts. Battle's `scripts/map.gd` is that view plus in-run stains. The two-lane road stamp is the same segment length, joint size, and shared-tail skip the shipped yard used, so Yard Approach does not get a double-drawn join.
+`MapView` draws the backdrop, one continuous neon line per lane (rounded corners, pink and cyan), islands, the core island, and rifts. Battle's `scripts/map.gd` is that view plus in-run stains. A segment a later lane shares with an earlier one is drawn once, so a merge is not a double-bright overlap.
 
 ## Scrap
 

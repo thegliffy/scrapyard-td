@@ -12,6 +12,7 @@ var boss_label: Label
 var upgrade_button: Button
 var sell_button: Button
 var call_button: Button
+var auto_button: CheckButton
 var speed_button: Button
 var mute_button: Button
 var core_fill: ColorRect
@@ -61,7 +62,7 @@ func pulse_hurt() -> void:
 func refresh_all() -> void:
 	if gold_label == null:
 		return
-	gold_label.text = "GOLD  %d" % Game.gold
+	gold_label.text = "Gold %d" % Game.gold
 	wave_label.text = "WAVE  %d / %d" % [Game.display_wave(), Game.wave_total]
 	core_label.text = "%d / %d" % [Game.core_hp, Game.core_max]
 	var ratio := 0.0 if Game.core_max == 0 else clampf(float(Game.core_hp) / float(Game.core_max), 0.0, 1.0)
@@ -79,11 +80,13 @@ func _refresh_live() -> void:
 	if Game.phase == "prep":
 		status_label.text = "Next in %ds   ·   %s" % [int(ceil(Game.prep_left)), Game.preview]
 		call_button.disabled = false
-		call_button.text = "Call\n+%d" % Game.early_bonus()
+		call_button.text = "Call\n+%dg" % Game.early_bonus()
+		auto_button.disabled = false
 	elif Game.phase == "combat":
 		status_label.text = "%s   ·   %s" % [Game.combat_label, Game.preview]
 		call_button.disabled = true
 		call_button.text = "On the lane"
+		auto_button.disabled = false
 	elif Game.phase == "win":
 		status_label.text = "Yard's quiet"
 		call_button.disabled = true
@@ -138,17 +141,9 @@ func _build() -> void:
 	status_label.clip_text = true
 	top.add_child(status_label)
 
-	var scrap_icon := TextureRect.new()
-	scrap_icon.texture = load("res://assets/sprites/ui/scrap.png")
-	scrap_icon.position = Vector2(900, 18)
-	scrap_icon.size = Vector2(36, 36)
-	scrap_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	scrap_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	scrap_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	top.add_child(scrap_icon)
-	gold_label = _text("GOLD  %d" % Balance.START_GOLD, 24, Color("#c47a20"))
-	gold_label.position = Vector2(944, 16)
-	gold_label.size = Vector2(320, 40)
+	gold_label = _text("Gold %d" % Balance.START_GOLD, 24, Color("#c47a20"))
+	gold_label.position = Vector2(900, 16)
+	gold_label.size = Vector2(360, 40)
 	top.add_child(gold_label)
 
 	var core_name := _text("CORE", 14, Color("#2f8a62"))
@@ -218,7 +213,7 @@ func _build() -> void:
 		button.add_child(icon)
 		Art.show_tower_icon(icon, kind)
 		var caption := Label.new()
-		caption.text = "%d  %s   %d" % [slot + 1, Balance.TOWERS[kind]["short"], Balance.cost(kind)]
+		caption.text = "%d  %s  %dg" % [slot + 1, Balance.TOWERS[kind]["short"], Balance.cost(kind)]
 		caption.position = Vector2(6, icon_rect.end.y + 4.0)
 		caption.size = Vector2(116, 16)
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -268,14 +263,26 @@ func _build() -> void:
 	info.add_child(sell_button)
 
 	call_button = _small_button("Call")
-	call_button.position = Vector2(958, 12)
-	call_button.size = Vector2(110, 88)
+	call_button.position = Vector2(958, 8)
+	call_button.size = Vector2(110, 50)
 	call_button.add_theme_font_size_override("font_size", 16)
 	call_button.pressed.connect(func():
 		Sfx.play("ui")
 		main.call_early()
 	)
 	bottom.add_child(call_button)
+	auto_button = CheckButton.new()
+	auto_button.text = "Auto"
+	auto_button.focus_mode = Control.FOCUS_NONE
+	auto_button.position = Vector2(958, 60)
+	auto_button.size = Vector2(110, 36)
+	auto_button.add_theme_font_override("font", font)
+	auto_button.add_theme_font_size_override("font_size", 14)
+	auto_button.add_theme_color_override("font_color", Color("#2a2048"))
+	auto_button.add_theme_color_override("font_hover_color", Color("#1a1430"))
+	auto_button.set_pressed_no_signal(Profile.auto_call)
+	auto_button.toggled.connect(_on_auto_call)
+	bottom.add_child(auto_button)
 
 	speed_button = _small_button("1×")
 	speed_button.position = Vector2(1078, 12)
@@ -332,6 +339,12 @@ func _on_chip(kind: String) -> void:
 	main.select_build(kind)
 
 
+func _on_auto_call(on: bool) -> void:
+	Profile.set_auto_call(on)
+	if not Sfx.muted:
+		Sfx.play("ui")
+
+
 func _style_chips() -> void:
 	for kind in chips.keys():
 		var button: Button = chips[kind]
@@ -355,12 +368,12 @@ func _fill_info() -> void:
 		upgrade_button.visible = true
 		sell_button.visible = true
 		var refund := int(floor(float(tower.invested) * 0.6))
-		sell_button.text = "Sell %d" % refund
+		sell_button.text = "Sell %dg" % refund
 		if tower.tier >= 3:
 			upgrade_button.text = "Maxed"
 			upgrade_button.disabled = true
 		else:
-			upgrade_button.text = "Up %d" % tower.upgrade_cost()
+			upgrade_button.text = "Up %dg" % tower.upgrade_cost()
 			upgrade_button.disabled = false
 		return
 	upgrade_button.visible = false
@@ -368,7 +381,7 @@ func _fill_info() -> void:
 	if main.build_kind != "":
 		var id: String = main.build_kind
 		var data: Dictionary = Balance.TOWERS[id]
-		info_label.text = "Placing %s · %s · %d\n%s" % [
+		info_label.text = "Placing %s · %s · %dg\n%s" % [
 			data["name"], Balance.target_label(id), Balance.cost(id), data["blurb"]
 		]
 	else:

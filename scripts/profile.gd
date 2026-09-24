@@ -32,6 +32,8 @@ var playtest_loadout: PackedStringArray = PackedStringArray()
 var open_slots := FREE_SLOTS
 var seen: PackedStringArray = PackedStringArray()
 var muted := false
+## When on, prep calls the next wave immediately, same as the Call button.
+var auto_call := false
 var battle_map := "yard_approach"
 
 
@@ -55,6 +57,7 @@ func load_profile() -> void:
 		return
 	scrap = maxi(0, int(cfg.get_value("profile", "scrap", 0)))
 	muted = bool(cfg.get_value("profile", "muted", false))
+	auto_call = bool(cfg.get_value("profile", "auto_call", false))
 	guns = _kept(cfg.get_value("profile", "guns", STARTER_GUNS), GUN_ORDER)
 	maps = _kept(cfg.get_value("profile", "maps", STARTER_MAPS), MAP_ORDER)
 	for id in STARTER_GUNS:
@@ -78,6 +81,7 @@ func save_profile() -> void:
 	var cfg := ConfigFile.new()
 	cfg.set_value("profile", "scrap", scrap)
 	cfg.set_value("profile", "muted", muted)
+	cfg.set_value("profile", "auto_call", auto_call)
 	cfg.set_value("profile", "guns", guns)
 	cfg.set_value("profile", "maps", maps)
 	cfg.set_value("profile", "loadout", loadout)
@@ -95,6 +99,7 @@ func reset_for_smoke() -> void:
 func _apply_defaults() -> void:
 	scrap = 0
 	muted = false
+	auto_call = false
 	guns = PackedStringArray(STARTER_GUNS)
 	maps = PackedStringArray(STARTER_MAPS)
 	loadout = _starter_loadout()
@@ -279,6 +284,11 @@ func set_muted(next: bool) -> void:
 	muted = next
 	if is_instance_valid(Sfx):
 		Sfx.muted = muted
+	save_profile()
+
+
+func set_auto_call(next: bool) -> void:
+	auto_call = next
 	save_profile()
 
 

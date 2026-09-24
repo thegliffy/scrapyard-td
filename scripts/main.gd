@@ -406,6 +406,15 @@ func _run_smoke() -> void:
 	if Profile.battle_scrap(true, 21) != 42 or Profile.battle_scrap(true, 100) != 200 or Profile.battle_scrap(true, 0) != 0:
 		push_error("smoke: win scrap is not 2 per wave cleared")
 		failed = true
+	if Profile.auto_call:
+		push_error("smoke: auto-call should start off")
+		failed = true
+	Profile.set_auto_call(true)
+	Profile.load_profile()
+	if not Profile.auto_call:
+		push_error("smoke: auto-call did not persist")
+		failed = true
+	Profile.set_auto_call(false)
 	if Balance.WAVE_COUNT != 100 or Game.wave_total != 100 or Balance.WAVES.size() != 21:
 		push_error("smoke: expected 100 waves with 21 handcrafted")
 		failed = true

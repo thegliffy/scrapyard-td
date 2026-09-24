@@ -29,6 +29,10 @@ func _begin_prep(index: int) -> void:
 	Game.prep_left = 16.0 if index == 0 else 9.0
 	Game.combat_label = ""
 	Game.changed.emit()
+	# Same bonus as pressing Call at the start of prep. Off by default, so
+	# wave 1 still waits unless the player turned Auto on.
+	if Profile.auto_call:
+		call_early()
 
 
 func _begin_combat() -> void:

@@ -13,8 +13,15 @@ var hover_cell := Vector2i(-99, -99)
 ## playtest cannot leave the editing core looking damaged.
 var live_core := true
 
+const _ROAD_LAYERS := [
+	{"width": 22.0, "color": Color(0.86, 0.28, 0.72, 1.0)},
+	{"width": 12.0, "color": Color(0.25, 0.92, 1.0, 1.0)},
+	{"width": 6.0, "color": Color(1.0, 0.55, 0.9, 1.0)},
+	{"width": 2.4, "color": Color(1.0, 0.98, 1.0, 1.0)},
+]
+const _CORNER_RADIUS := 18.0
+
 var _space_tex: Texture2D
-var _path_tex: Texture2D
 var _core_island_tex: Texture2D
 var _core_tex: Texture2D
 var _rift_tex: Texture2D
@@ -23,7 +30,6 @@ var _islands := {}
 
 func _ready() -> void:
 	_space_tex = Art.map_tex("space")
-	_path_tex = Art.map_tex("path_tile")
 	_core_island_tex = Art.map_tex("core_island")
 	_core_tex = Art.map_tex("core")
 	_rift_tex = Art.map_tex("rift")
@@ -85,79 +91,126 @@ func _draw_cell_overlay(cell: Vector2i) -> void:
 		draw_rect(rect, Color("#fff1a8"), false, 2.0)
 
 
+## One continuous neon stroke per lane. Shared segments are drawn by the
+## first lane only, so a merge does not stack a second bright copy.
 func _draw_roads() -> void:
-	if _path_tex == null:
-		return
-	if Board.lanes.size() == 2:
-		var shared := _shared_count()
-		_stamp_lane(Board.lane_a, Board.lane_a.size() - 1)
-		var south_end := Board.lane_b.size() - 1 - shared
-		if south_end < 1:
-			south_end = Board.lane_b.size() - 1
-		_stamp_lane(Board.lane_b, south_end)
-		return
-	var seen := {}
+	for stroke in _road_strokes():
+		var points := _smooth_centers(stroke["cells"])
+		if points.size() < 2:
+			continue
+		_draw_neon(points, bool(stroke["trim_start"]), bool(stroke["trim_end"]))
+
+
+func _road_strokes() -> Array:
+	var covered := {}
+	var strokes: Array = []
 	for lane in Board.lanes:
-		_stamp_lane_once(lane, seen)
+		var cells: Array = lane
+		if cells.size() < 2:
+			continue
+		var run: Array[Vector2i] = []
+		var trim_start := false
+		for i in range(cells.size() - 1):
+			var a: Vector2i = cells[i]
+			var b: Vector2i = cells[i + 1]
+			var key := _segment_key(a, b)
+			if covered.has(key):
+				if run.size() >= 2:
+					strokes.append({"cells": run.duplicate(), "trim_start": trim_start, "trim_end": true})
+				run = []
+				trim_start = true
+				continue
+			covered[key] = true
+			if run.is_empty():
+				run = [a, b]
+			else:
+				run.append(b)
+		if run.size() >= 2:
+			strokes.append({"cells": run, "trim_start": trim_start, "trim_end": false})
+	return strokes
 
 
-func _shared_count() -> int:
-	var north: Array = Board.lane_a
-	var south: Array = Board.lane_b
-	var count := 0
-	while count < north.size() and count < south.size():
-		if north[north.size() - 1 - count] != south[south.size() - 1 - count]:
-			break
-		count += 1
-	return count
+func _segment_key(a: Vector2i, b: Vector2i) -> String:
+	if a.x > b.x or (a.x == b.x and a.y > b.y):
+		var swap := a
+		a = b
+		b = swap
+	return "%d,%d,%d,%d" % [a.x, a.y, b.x, b.y]
 
 
-func _stamp_lane(cells: Array, last_index: int) -> void:
-	var last := mini(last_index, cells.size() - 1)
-	for i in range(last):
-		_stamp_segment(Board.cell_center(cells[i]), Board.cell_center(cells[i + 1]))
-		if i + 1 < last:
-			var into: Vector2i = cells[i + 1] - cells[i]
-			var out: Vector2i = cells[i + 2] - cells[i + 1]
-			if into != out:
-				_stamp_joint(Board.cell_center(cells[i + 1]))
+func _smooth_centers(cells: Array) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	if cells.is_empty():
+		return points
+	points.append(Board.cell_center(cells[0]))
+	for i in range(1, cells.size() - 1):
+		var prev := Board.cell_center(cells[i - 1])
+		var curr := Board.cell_center(cells[i])
+		var next := Board.cell_center(cells[i + 1])
+		var into := curr - prev
+		var out := next - curr
+		if into.length_squared() < 1.0 or out.length_squared() < 1.0:
+			points.append(curr)
+			continue
+		into = into.normalized()
+		out = out.normalized()
+		if into.dot(out) > 0.99 or into.dot(out) < -0.5:
+			continue
+		var radius := minf(_CORNER_RADIUS, prev.distance_to(curr) * 0.45)
+		radius = minf(radius, curr.distance_to(next) * 0.45)
+		var start := curr - into * radius
+		var end := curr + out * radius
+		var arc_center := start + out * radius
+		var from_angle := (-out).angle()
+		var sweep := wrapf(into.angle() - from_angle, -PI, PI)
+		points.append(start)
+		for step in range(1, 8):
+			var angle := from_angle + sweep * (float(step) / 8.0)
+			points.append(arc_center + Vector2.from_angle(angle) * radius)
+		points.append(end)
+	points.append(Board.cell_center(cells[-1]))
+	return points
 
 
-func _stamp_lane_once(cells: Array, seen: Dictionary) -> void:
-	var last := cells.size() - 1
-	for i in range(last):
-		var a: Vector2i = cells[i]
-		var b: Vector2i = cells[i + 1]
-		var key := "%d,%d,%d,%d" % [a.x, a.y, b.x, b.y]
-		if not seen.has(key):
-			seen[key] = true
-			_stamp_segment(Board.cell_center(a), Board.cell_center(b))
-		if i + 1 < last:
-			var into: Vector2i = cells[i + 1] - cells[i]
-			var out: Vector2i = cells[i + 2] - cells[i + 1]
-			if into != out:
-				_stamp_joint(Board.cell_center(cells[i + 1]))
+func _draw_neon(points: PackedVector2Array, trim_start: bool, trim_end: bool) -> void:
+	for layer in _ROAD_LAYERS:
+		var width := float(layer["width"])
+		var color: Color = layer["color"]
+		var drawn := points
+		if trim_start:
+			drawn = _trim_end(drawn, width * 0.5, true)
+		if trim_end:
+			drawn = _trim_end(drawn, width * 0.5, false)
+		if drawn.size() < 2:
+			continue
+		draw_polyline(drawn, color, width, true)
+		if not trim_start:
+			draw_circle(drawn[0], width * 0.5, color)
+		if not trim_end:
+			draw_circle(drawn[drawn.size() - 1], width * 0.5, color)
 
 
-func _stamp_joint(center: Vector2) -> void:
-	var size := 100.0
-	for angle in [0.0, PI * 0.5]:
-		draw_set_transform(center, angle, Vector2.ONE)
-		draw_texture_rect(_path_tex, Rect2(-size * 0.5, -size * 0.5, size, size), false)
-		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-
-
-func _stamp_segment(a: Vector2, b: Vector2) -> void:
-	var delta := b - a
-	var length := delta.length()
-	if length < 1.0:
-		return
-	var mid := (a + b) * 0.5
-	var width := (length + 36.0) * (128.0 / 115.0)
-	var height := 88.0
-	draw_set_transform(mid, delta.angle(), Vector2.ONE)
-	draw_texture_rect(_path_tex, Rect2(-width * 0.5, -height * 0.5, width, height), false)
-	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+func _trim_end(points: PackedVector2Array, amount: float, from_start: bool) -> PackedVector2Array:
+	var out := points.duplicate()
+	if from_start:
+		out.reverse()
+	var remain := amount
+	while out.size() >= 2 and remain > 0.01:
+		var a: Vector2 = out[out.size() - 2]
+		var b: Vector2 = out[out.size() - 1]
+		var dist := a.distance_to(b)
+		if dist <= 0.01:
+			out.remove_at(out.size() - 1)
+			continue
+		if dist > remain:
+			out[out.size() - 1] = b + (a - b).normalized() * remain
+			remain = 0.0
+		else:
+			out.remove_at(out.size() - 1)
+			remain -= dist
+	if from_start:
+		out.reverse()
+	return out
 
 
 func _draw_islands() -> void:
