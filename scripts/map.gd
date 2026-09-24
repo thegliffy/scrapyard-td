@@ -84,6 +84,9 @@ func _draw_cell(cell: Vector2i) -> void:
 			fill = Color("#ffe08a")
 	if cell == Board.spawn_a or cell == Board.spawn_b:
 		fill = fill.lerp(Color("#e4b0ff"), 0.35)
+	var tint_amount := Profile.map_tint_amount()
+	if tint_amount > 0.0:
+		fill = fill.lerp(Profile.map_tint(), tint_amount)
 	draw_rect(rect, fill)
 	for stain in stains:
 		if stain["cell"] == cell:

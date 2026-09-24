@@ -12,7 +12,7 @@ var max_hp := 1.0
 var shield := 0.0
 var max_shield := 0.0
 var speed := 1.0
-var scrap := 0
+var gold := 0
 var leak_damage := 1
 var alive := true
 var slow_factor := 1.0
@@ -38,12 +38,13 @@ func setup(kind_id: String, path_cells: Array, start_index: int = 0, hop: float 
 	var data := Balance.enemy(kind_id)
 	display_name = str(data["name"])
 	path = path_cells
-	max_hp = float(data["hp"])
+	var hp_scale := Profile.map_hp_scale()
+	max_hp = float(data["hp"]) * hp_scale
 	hp = max_hp
-	max_shield = float(data["shield"])
+	max_shield = float(data["shield"]) * hp_scale
 	shield = max_shield
-	speed = float(data["speed"])
-	scrap = int(data["scrap"])
+	speed = float(data["speed"]) * Profile.map_speed_scale()
+	gold = int(data["gold"])
 	leak_damage = int(data["leak"])
 	fit = float(data["display"]) / float(data["tex"])
 	skitter = bool(data["skitter"])
@@ -118,11 +119,11 @@ func die() -> void:
 	if not alive:
 		return
 	alive = false
-	Game.register_kill(scrap)
+	Game.register_kill(gold)
 	var fx = _fx()
 	if fx:
 		fx.burst(global_position, body_color, 12 if not is_boss else 24)
-		fx.float_text(global_position + Vector2(0, -20), "+%d" % scrap, Color("#ffe08a"))
+		fx.float_text(global_position + Vector2(0, -20), "+%d" % gold, Color("#ffe08a"))
 		fx.stain(current_cell(), Color(body_color.r, body_color.g, body_color.b, 0.45), 0.25)
 	Sfx.play("pop", randf_range(0.9, 1.15) if not is_boss else 0.75)
 	for tower in get_tree().get_nodes_in_group("towers"):

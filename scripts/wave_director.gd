@@ -14,7 +14,7 @@ func call_early() -> void:
 		return
 	var bonus := Game.early_bonus()
 	if bonus > 0:
-		Game.add_scrap(bonus)
+		Game.add_gold(bonus)
 		var fx = get_tree().get_first_node_in_group("vfx")
 		if fx:
 			fx.float_text(Board.cell_center(Vector2i(11, 5)), "+%d early" % bonus, Color("#ffe08a"))
@@ -46,7 +46,7 @@ func _begin_combat() -> void:
 	Sfx.play("wave")
 	Game.changed.emit()
 	if Game.autoplay:
-		print("WAVE %d %s hp=%d scrap=%d" % [index + 1, wave["title"], Game.core_hp, Game.scrap])
+		print("WAVE %d %s hp=%d gold=%d" % [index + 1, wave["title"], Game.core_hp, Game.gold])
 		if wave.get("boss", false):
 			for tower in get_tree().get_nodes_in_group("towers"):
 				print("  TOWER %s T%d %s" % [tower.kind, tower.tier, tower.cell])

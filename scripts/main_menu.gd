@@ -1,14 +1,17 @@
 extends Control
 
 const RUN := "res://scenes/main.tscn"
+const UNLOCKS := "res://scenes/unlocks.tscn"
+const MAP_SELECT := "res://scenes/map_select.tscn"
+const SETTINGS := "res://scenes/settings.tscn"
 const BRIGHT_SPLASH := "res://assets/ui/main_menu_splash.png"
 const DIM_SPLASH := "res://assets/ui/main_menu_splash_dim.png"
 const FADE_TIME := 0.8
 
 var _bright: TextureRect
 var _ui: Control
-var _play: Button
-var _quit: Button
+var _buttons: Array[Button] = []
+var _notice: Label
 var _fade := 0.0
 
 
@@ -30,10 +33,8 @@ func _process(delta: float) -> void:
 	if _ui:
 		_ui.modulate.a = t
 	var ready := t > 0.45
-	if _play:
-		_play.disabled = not ready
-	if _quit:
-		_quit.disabled = not ready
+	for button in _buttons:
+		button.disabled = not ready
 	if _fade >= 1.0:
 		set_process(false)
 
@@ -54,35 +55,54 @@ func _build() -> void:
 	add_child(ui)
 	_ui = ui
 
-	var title := _label(font, 64, Color("#fff6e4"))
+	var title := _label(font, 58, Color("#fff6e4"))
 	title.text = "Scrapyard TD"
-	title.position = Vector2(0, 28)
-	title.size = Vector2(1280, 78)
+	title.position = Vector2(0, 18)
+	title.size = Vector2(1280, 70)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_outline_color", Color("#1a1030"))
 	title.add_theme_constant_override("outline_size", 14)
 	ui.add_child(title)
 
-	var flavor := _label(font, 22, Color("#f3e6ff"))
-	flavor.text = "Cute guns. Cuter monsters. Keep the core lit."
-	flavor.position = Vector2(0, 108)
-	flavor.size = Vector2(1280, 36)
-	flavor.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	flavor.add_theme_color_override("font_outline_color", Color("#1a1030"))
-	flavor.add_theme_constant_override("outline_size", 8)
-	ui.add_child(flavor)
+	var scrap := _label(font, 26, Color("#ffe08a"))
+	scrap.text = "SCRAP  %d" % Profile.scrap
+	scrap.position = Vector2(0, 92)
+	scrap.size = Vector2(1280, 36)
+	scrap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	scrap.add_theme_color_override("font_outline_color", Color("#1a1030"))
+	scrap.add_theme_constant_override("outline_size", 8)
+	ui.add_child(scrap)
 
-	_play = _button(font, "Play", Color("#b6f3c8"))
-	_play.position = Vector2(360, 620)
-	_play.disabled = true
-	_play.pressed.connect(_play_run)
-	ui.add_child(_play)
+	var specs := [
+		["Battle", Color("#b6f3c8"), _battle],
+		["Adventure\nComing Soon", Color("#ddd4ee"), _adventure],
+		["Unlocks", Color("#ffe9a8"), _unlocks],
+		["Settings", Color("#efe4ff"), _settings],
+		["Quit", Color("#ffe0f0"), _quit_game],
+	]
+	var widths := [180, 250, 180, 180, 140]
+	var gap := 14
+	var total := gap * (widths.size() - 1)
+	for w in widths:
+		total += w
+	var x := (1280 - total) / 2.0
+	for i in specs.size():
+		var button := _button(font, specs[i][0], specs[i][1], 18 if i == 1 else 22)
+		button.position = Vector2(x, 624)
+		button.size = Vector2(widths[i], 72)
+		button.disabled = true
+		button.pressed.connect(specs[i][2])
+		ui.add_child(button)
+		_buttons.append(button)
+		x += widths[i] + gap
 
-	_quit = _button(font, "Quit", Color("#ffe0f0"))
-	_quit.position = Vector2(700, 620)
-	_quit.disabled = true
-	_quit.pressed.connect(_quit_game)
-	ui.add_child(_quit)
+	_notice = _label(font, 18, Color("#fff6e4"))
+	_notice.position = Vector2(0, 584)
+	_notice.size = Vector2(1280, 28)
+	_notice.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_notice.add_theme_color_override("font_outline_color", Color("#1a1030"))
+	_notice.add_theme_constant_override("outline_size", 6)
+	ui.add_child(_notice)
 
 
 func _splash(path: String) -> TextureRect:
@@ -106,32 +126,50 @@ func _label(font: Font, size: int, color: Color) -> Label:
 	return label
 
 
-func _button(font: Font, text: String, bg: Color) -> Button:
+func _button(font: Font, text: String, bg: Color, font_size: int) -> Button:
 	var button := Button.new()
 	button.text = text
-	button.size = Vector2(320, 64)
 	button.focus_mode = Control.FOCUS_NONE
 	button.add_theme_font_override("font", font)
-	button.add_theme_font_size_override("font_size", 28)
+	button.add_theme_font_size_override("font_size", font_size)
 	button.add_theme_color_override("font_color", Color("#5a3d70"))
 	button.add_theme_color_override("font_hover_color", Color("#3d2858"))
 	var style := StyleBoxFlat.new()
 	style.bg_color = bg
 	style.border_color = Color("#e7b4d0")
 	style.set_border_width_all(4)
-	style.set_corner_radius_all(20)
+	style.set_corner_radius_all(18)
 	button.add_theme_stylebox_override("normal", style)
 	var hover := style.duplicate()
 	hover.bg_color = bg.lightened(0.12)
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("pressed", hover)
+	var disabled := style.duplicate()
+	disabled.bg_color = bg.darkened(0.08)
+	button.add_theme_stylebox_override("disabled", disabled)
 	return button
 
 
-func _play_run() -> void:
+func _battle() -> void:
 	Sfx.play("ui")
 	Engine.time_scale = 1.0
-	get_tree().change_scene_to_file(RUN)
+	get_tree().change_scene_to_file(MAP_SELECT)
+
+
+func _adventure() -> void:
+	Sfx.play("error")
+	if _notice:
+		_notice.text = "Adventure is coming soon."
+
+
+func _unlocks() -> void:
+	Sfx.play("ui")
+	get_tree().change_scene_to_file(UNLOCKS)
+
+
+func _settings() -> void:
+	Sfx.play("ui")
+	get_tree().change_scene_to_file(SETTINGS)
 
 
 func _quit_game() -> void:

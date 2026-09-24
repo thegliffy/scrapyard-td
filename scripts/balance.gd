@@ -4,8 +4,36 @@ extends RefCounted
 ## Speeds are cells per second. Ranges and splash are in tiles.
 ## Enemies are cute eldritch horrors; towers stay scrapyard gadgets.
 
-const START_SCRAP := 170
+const START_GOLD := 170
 const CORE_HP := 22
+
+## Same lane layout. Tint and a light stat tweak tell the yards apart.
+const MAPS := {
+	"yard_approach": {
+		"name": "Yard Approach",
+		"blurb": "The home yard. Two rifts, one core.",
+		"tint": "#ffffff",
+		"tint_amount": 0.0,
+		"hp_scale": 1.0,
+		"speed_scale": 1.0,
+	},
+	"side_dock": {
+		"name": "Side Dock",
+		"blurb": "Same lanes, cooler light. A little tougher.",
+		"tint": "#7eb6ff",
+		"tint_amount": 0.22,
+		"hp_scale": 1.1,
+		"speed_scale": 1.0,
+	},
+	"deep_yard": {
+		"name": "Deep Yard",
+		"blurb": "Same lanes, deeper dusk. A harder crawl.",
+		"tint": "#b794f0",
+		"tint_amount": 0.3,
+		"hp_scale": 1.18,
+		"speed_scale": 1.06,
+	},
+}
 
 const TOWERS := {
 	"pea": {
@@ -49,7 +77,7 @@ const TOWERS := {
 	"boom": {
 		"name": "Boom Barrel",
 		"short": "Boom",
-		"blurb": "Lobs a scrap bomb. Splashes a tile or two.",
+		"blurb": "Lobs a bomb. Splashes a tile or two.",
 		"cost": 125,
 		"upgrade": [95, 150],
 		"range": [3.6, 4.0, 4.4],
@@ -61,7 +89,7 @@ const TOWERS := {
 	"magnet": {
 		"name": "Scrap Magnet",
 		"short": "Magnet",
-		"blurb": "No shooting. Pulls extra scrap out of the yard.",
+		"blurb": "No shooting. Pulls extra gold out of the yard.",
 		"cost": 80,
 		"upgrade": [65, 110],
 		"range": [3.0, 3.4, 3.8],
@@ -77,7 +105,7 @@ const ENEMIES := {
 		"hp": 30,
 		"shield": 0,
 		"speed": 2.28,
-		"scrap": 7,
+		"gold": 7,
 		"leak": 1,
 		"display": 34.0,
 		"tex": 128.0,
@@ -95,7 +123,7 @@ const ENEMIES := {
 		"hp": 170,
 		"shield": 0,
 		"speed": 1.05,
-		"scrap": 16,
+		"gold": 16,
 		"leak": 3,
 		"display": 50.0,
 		"tex": 128.0,
@@ -113,7 +141,7 @@ const ENEMIES := {
 		"hp": 55,
 		"shield": 48,
 		"speed": 1.5,
-		"scrap": 13,
+		"gold": 13,
 		"leak": 2,
 		"display": 36.0,
 		"tex": 128.0,
@@ -131,7 +159,7 @@ const ENEMIES := {
 		"hp": 62,
 		"shield": 0,
 		"speed": 1.15,
-		"scrap": 9,
+		"gold": 9,
 		"leak": 2,
 		"display": 46.0,
 		"tex": 128.0,
@@ -149,7 +177,7 @@ const ENEMIES := {
 		"hp": 16,
 		"shield": 0,
 		"speed": 2.35,
-		"scrap": 3,
+		"gold": 3,
 		"leak": 1,
 		"display": 28.0,
 		"tex": 128.0,
@@ -167,7 +195,7 @@ const ENEMIES := {
 		"hp": 1900,
 		"shield": 160,
 		"speed": 0.62,
-		"scrap": 120,
+		"gold": 120,
 		"leak": 10,
 		"display": 90.0,
 		"tex": 192.0,

@@ -59,7 +59,7 @@ func _build() -> void:
 	stats_label.size = Vector2(520, 80)
 	card.add_child(stats_label)
 
-	var again := _action_button(font, "Play again", Color("#b6f3c8"), Color("#d4ffe4"))
+	var again := _action_button(font, "Battle again", Color("#b6f3c8"), Color("#d4ffe4"))
 	again.position = Vector2(36, 328)
 	again.pressed.connect(_restart)
 	card.add_child(again)
@@ -91,12 +91,13 @@ func _show(won: bool) -> void:
 		body_label.text = "The soft things snuggled the reactor\na little too close."
 		portrait.texture = load("res://assets/sprites/map/core.png")
 		Sfx.play("lose")
-	stats_label.text = "Wave %d / %d\nPops %d    Leaks %d    Scrap earned %d" % [
+	stats_label.text = "Wave %d / %d\nPops %d    Leaks %d    Gold %d\nScrap +%d" % [
 		clampi(Game.display_wave(), 1, Game.wave_total),
 		Game.wave_total,
 		Game.kills,
 		Game.leaks,
 		Game.earned,
+		Game.meta_awarded,
 	]
 
 

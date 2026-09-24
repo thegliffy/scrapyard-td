@@ -4,7 +4,8 @@ signal changed
 signal core_hit(amount: int)
 signal game_over(won: bool)
 
-var scrap: int = Balance.START_SCRAP
+var gold: int = Balance.START_GOLD
+var meta_awarded: int = 0
 var core_hp: int = Balance.CORE_HP
 var core_max: int = Balance.CORE_HP
 var wave_index: int = -1
@@ -25,7 +26,8 @@ var autoplay: bool = false
 
 
 func boot() -> void:
-	scrap = Balance.START_SCRAP
+	gold = Balance.START_GOLD
+	meta_awarded = 0
 	core_max = Balance.CORE_HP
 	core_hp = core_max
 	wave_index = -1
@@ -52,26 +54,26 @@ func _process(delta: float) -> void:
 		banner_t = max(0.0, banner_t - delta)
 
 
-func add_scrap(amount: int) -> void:
+func add_gold(amount: int) -> void:
 	if amount == 0:
 		return
-	scrap += amount
+	gold += amount
 	if amount > 0:
 		earned += amount
 	changed.emit()
 
 
 func try_spend(amount: int) -> bool:
-	if scrap < amount:
+	if gold < amount:
 		return false
-	scrap -= amount
+	gold -= amount
 	changed.emit()
 	return true
 
 
 func register_kill(amount: int) -> void:
 	kills += 1
-	add_scrap(amount)
+	add_gold(amount)
 
 
 func damage_core(amount: int) -> void:
@@ -98,6 +100,9 @@ func finish(won: bool) -> void:
 	phase = "win" if won else "lose"
 	speed = 1.0
 	Engine.time_scale = 1.0
+	if not autoplay:
+		var cleared := maxi(0, wave_index + 1) if won else 0
+		meta_awarded = Profile.award_battle(won, cleared)
 	changed.emit()
 	game_over.emit(won)
 

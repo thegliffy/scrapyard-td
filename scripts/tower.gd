@@ -45,7 +45,7 @@ func notify_kill(at: Vector2) -> void:
 	var bonus := int(Balance.tier_value(kind, "bonus", tier))
 	if bonus <= 0:
 		return
-	Game.add_scrap(bonus)
+	Game.add_gold(bonus)
 	var fx = get_tree().get_first_node_in_group("vfx")
 	if fx:
 		fx.float_text(global_position + Vector2(8, -16), "+%d" % bonus, Color("#fff1b0"))
@@ -62,7 +62,7 @@ func _process(delta: float) -> void:
 		if magnet_wait <= 0.0:
 			magnet_wait = Balance.tier_value(kind, "income_every", tier)
 			var gain := int(Balance.tier_value(kind, "income", tier))
-			Game.add_scrap(gain)
+			Game.add_gold(gain)
 			var fx = get_tree().get_first_node_in_group("vfx")
 			if fx:
 				fx.float_text(global_position + Vector2(0, -18), "+%d" % gain, Color("#ffe08a"))

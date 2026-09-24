@@ -2,7 +2,7 @@ extends Control
 
 var main: Node
 var font: Font
-var scrap_label: Label
+var gold_label: Label
 var wave_label: Label
 var core_label: Label
 var status_label: Label
@@ -54,9 +54,9 @@ func pulse_hurt() -> void:
 
 
 func refresh_all() -> void:
-	if scrap_label == null:
+	if gold_label == null:
 		return
-	scrap_label.text = "SCRAP  %d" % Game.scrap
+	gold_label.text = "GOLD  %d" % Game.gold
 	wave_label.text = "WAVE  %d / %d" % [Game.display_wave(), Game.wave_total]
 	core_label.text = "%d / %d" % [Game.core_hp, Game.core_max]
 	var ratio := 0.0 if Game.core_max == 0 else clampf(float(Game.core_hp) / float(Game.core_max), 0.0, 1.0)
@@ -115,7 +115,7 @@ func _build() -> void:
 	top.add_theme_stylebox_override("panel", _panel_style(true))
 	add_child(top)
 
-	var title := _text("SCRAPYARD", 22, Color("#6a3d88"))
+	var title := _text(Profile.map_name().to_upper(), 18, Color("#6a3d88"))
 	title.position = Vector2(18, 8)
 	title.size = Vector2(220, 30)
 	top.add_child(title)
@@ -141,10 +141,10 @@ func _build() -> void:
 	scrap_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	scrap_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(scrap_icon)
-	scrap_label = _text("SCRAP  %d" % Balance.START_SCRAP, 24, Color("#c47a20"))
-	scrap_label.position = Vector2(944, 16)
-	scrap_label.size = Vector2(320, 40)
-	top.add_child(scrap_label)
+	gold_label = _text("GOLD  %d" % Balance.START_GOLD, 24, Color("#c47a20"))
+	gold_label.position = Vector2(944, 16)
+	gold_label.size = Vector2(320, 40)
+	top.add_child(gold_label)
 
 	var core_name := _text("CORE", 14, Color("#2f8a62"))
 	core_name.position = Vector2(18, 46)
@@ -192,11 +192,14 @@ func _build() -> void:
 	bottom.add_theme_stylebox_override("panel", _panel_style(false))
 	add_child(bottom)
 
-	for index in CHIP_KINDS.size():
-		var kind: String = CHIP_KINDS[index]
+	var entries: Array = Profile.equipped_entries()
+	for entry in entries:
+		var slot := int(entry["slot"])
+		var kind: String = str(entry["id"])
 		var button := Button.new()
+		button.clip_contents = false
 		button.focus_mode = Control.FOCUS_NONE
-		button.position = Vector2(12 + index * 136, 12)
+		button.position = Vector2(12 + slot * 136, 12)
 		button.size = Vector2(128, 88)
 		button.add_theme_font_override("font", font)
 		button.add_theme_font_size_override("font_size", 16)
@@ -207,14 +210,14 @@ func _build() -> void:
 		button.pressed.connect(_on_chip.bind(kind))
 		var icon := TextureRect.new()
 		icon.texture = Art.tower_tex(kind)
-		icon.position = Vector2(44, 8)
-		icon.size = Vector2(40, 40)
+		icon.position = Vector2(48, 6)
+		icon.size = Vector2(32, 32)
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(icon)
 		var caption := Label.new()
-		caption.text = "%d  %s   %d" % [index + 1, Balance.TOWERS[kind]["short"], Balance.cost(kind)]
+		caption.text = "%d  %s   %d" % [slot + 1, Balance.TOWERS[kind]["short"], Balance.cost(kind)]
 		caption.position = Vector2(4, 58)
 		caption.size = Vector2(120, 22)
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -286,7 +289,7 @@ func _build() -> void:
 	mute_button.position = Vector2(1172, 12)
 	mute_button.size = Vector2(96, 88)
 	mute_button.pressed.connect(func():
-		Sfx.toggle_mute()
+		Profile.set_muted(not Sfx.muted)
 		if not Sfx.muted:
 			Sfx.play("ui")
 		refresh_all()
