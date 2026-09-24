@@ -13,11 +13,12 @@ var hover_cell := Vector2i(-99, -99)
 ## playtest cannot leave the editing core looking damaged.
 var live_core := true
 
+## One cyan road. Outer layer is a soft glow, then the body, then a
+## brighter cyan core. Same outer width as the old ribbon. No second hue.
 const _ROAD_LAYERS := [
-	{"width": 22.0, "color": Color(0.86, 0.28, 0.72, 1.0)},
-	{"width": 12.0, "color": Color(0.25, 0.92, 1.0, 1.0)},
-	{"width": 6.0, "color": Color(1.0, 0.55, 0.9, 1.0)},
-	{"width": 2.4, "color": Color(1.0, 0.98, 1.0, 1.0)},
+	{"width": 22.0, "color": Color(0.18, 0.72, 0.98, 0.42)},
+	{"width": 14.0, "color": Color(0.12, 0.84, 1.0, 1.0)},
+	{"width": 5.0, "color": Color(0.45, 0.96, 1.0, 1.0)},
 ]
 const _CORNER_RADIUS := 18.0
 
@@ -113,7 +114,7 @@ func _draw_cell_overlay(cell: Vector2i) -> void:
 		draw_rect(rect, Color("#fff1a8"), false, 2.0)
 
 
-## One continuous neon stroke per lane. Shared segments are drawn by the
+## One continuous cyan stroke per lane. Shared segments are drawn by the
 ## first lane only, so a merge does not stack a second bright copy.
 func _draw_roads() -> void:
 	for stroke in _road_strokes():
@@ -290,4 +291,4 @@ func _draw_rifts() -> void:
 	for cell in spawns:
 		var center := Board.cell_center(cell)
 		var s := 36.0
-		draw_texture_rect(_rift_tex, Rect2(center.x - s * 0.5, center.y - s * 0.5, s, s), false, Color(1, 1, 1, 0.92))
+		draw_texture_rect(_rift_tex, Rect2(center.x - s * 0.5, center.y - s * 0.5, s, s), false, Color(0.85, 1.0, 1.0, 0.95))

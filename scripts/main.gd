@@ -679,7 +679,24 @@ func _run_smoke() -> void:
 	if absf(dock_yard.hp_scale - 1.1) > 0.001 or absf(deep_yard.hp_scale - 1.18) > 0.001 or absf(deep_yard.speed_scale - 1.06) > 0.001:
 		push_error("smoke: yard difficulty scales drifted")
 		failed = true
+	var widest := 0.0
+	for layer in MapView._ROAD_LAYERS:
+		var road_color: Color = layer["color"]
+		widest = maxf(widest, float(layer["width"]))
+		if road_color.r > road_color.b * 0.75 or road_color.g < 0.6:
+			push_error("smoke: road layer is not cyan")
+			failed = true
+		if road_color.r > 0.8 and road_color.g > 0.9 and road_color.b > 0.9:
+			push_error("smoke: road layer is white")
+			failed = true
+	if widest < 20.0 or widest > 24.0:
+		push_error("smoke: road width drifted")
+		failed = true
 	Board.apply(deep_yard)
+	hud._fill_info()
+	if "all three rifts" not in hud.info_label.text:
+		push_error("smoke: three-lane hint should name all three rifts")
+		failed = true
 	if Board.lane_ids.size() != 3 or Board.lane("c").is_empty() or Board.lane("c")[0] != Vector2i(0, 5):
 		push_error("smoke: deep yard did not map lane c")
 		failed = true
@@ -689,10 +706,18 @@ func _run_smoke() -> void:
 	var solo := deep_yard.duplicate_map()
 	solo.lanes = [solo.lanes[0]]
 	Board.apply(solo)
+	hud._fill_info()
+	if "the rift" not in hud.info_label.text or "both" in hud.info_label.text or "three" in hud.info_label.text:
+		push_error("smoke: one-lane hint should name a single rift")
+		failed = true
 	if Board.lane("b").is_empty() or Board.lane("b")[0] != Board.lane("a")[0]:
 		push_error("smoke: one-lane yard did not reuse lane a for b")
 		failed = true
 	Board.apply(MapLibrary.load_builtin("yard_approach"))
+	hud._fill_info()
+	if "both rifts" not in hud.info_label.text:
+		push_error("smoke: two-lane hint should say both rifts")
+		failed = true
 	if Board.lane_a.size() != 27 or Board.CORE != Vector2i(22, 5) or Board.SLOTS.size() != 36:
 		push_error("smoke: yard approach was not restored")
 		failed = true

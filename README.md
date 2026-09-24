@@ -8,14 +8,14 @@ Desktop only, true top-down. **Battle** is the mode you can play. **Adventure** 
 
 ## Download
 
-**[v0.4.5](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.5)** is the current build. You do not need Godot.
+**[v0.4.6](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.6)** is the current build. You do not need Godot.
 
-- Windows: [ScrapyardTD-v0.4.5-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.5/ScrapyardTD-v0.4.5-windows-x86_64.zip). Unzip it and double-click `ScrapyardTD.exe`.
-- Linux x86_64: [ScrapyardTD-v0.4.5-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.5/ScrapyardTD-v0.4.5-linux-x86_64.zip). Unzip, then `chmod +x ScrapyardTD.x86_64` and `./ScrapyardTD.x86_64`.
+- Windows: [ScrapyardTD-v0.4.6-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.6/ScrapyardTD-v0.4.6-windows-x86_64.zip). Unzip it and double-click `ScrapyardTD.exe`.
+- Linux x86_64: [ScrapyardTD-v0.4.6-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.6/ScrapyardTD-v0.4.6-linux-x86_64.zip). Unzip, then `chmod +x ScrapyardTD.x86_64` and `./ScrapyardTD.x86_64`.
 
-**v0.4.5** — Side Dock and Deep Yard have their own lanes and islands.
+**v0.4.6** — The road is solid glowing cyan.
 
-Older builds stay up: [v0.4.4](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.4), [v0.4.3](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.3), [v0.4.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.2), [v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1), [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0).
+Older builds stay up: [v0.4.5](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.5), [v0.4.4](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.4), [v0.4.3](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.3), [v0.4.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.2), [v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1), [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0).
 
 ## How to play
 

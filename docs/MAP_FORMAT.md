@@ -83,7 +83,7 @@ Waves still name lanes `a`, `b`, or `alt`. `a` is always the first lane in the f
 
 On Yard Approach, `alt` flips North and South. On Side Dock it flips Pier and Slip. On Deep Yard it rotates High, Low, then Cut, so Cut is every third alternating spawn. Bosses marked `a` still walk the first lane (High, in Deep Yard). Escorts marked `b` walk the second (Low). Cut has no dedicated boss entry.
 
-`MapView` draws the backdrop, one continuous neon line per lane (rounded corners, pink and cyan), islands, the core island, and rifts. Battle's `scripts/map.gd` is that view plus in-run stains. A segment a later lane shares with an earlier one is drawn once, so a merge is not a double-bright overlap.
+`MapView` draws the backdrop, one continuous cyan line per lane (rounded corners, a soft cyan glow, and a brighter cyan core), islands, the core island, and rifts. Battle's `scripts/map.gd` is that view plus in-run stains. A segment a later lane shares with an earlier one is drawn once, so a merge is not a double-bright overlap.
 
 ## Scrap
 

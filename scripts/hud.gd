@@ -244,7 +244,7 @@ func _build() -> void:
 
 	var info := Panel.new()
 	info.position = Vector2(696, 12)
-	info.size = Vector2(250, 88)
+	info.size = Vector2(256, 88)
 	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var info_style := StyleBoxFlat.new()
 	info_style.bg_color = Color("#fffaf4")
@@ -255,8 +255,8 @@ func _build() -> void:
 	bottom.add_child(info)
 
 	info_label = _text("", 14, Color("#4a3568"))
-	info_label.position = Vector2(10, 6)
-	info_label.size = Vector2(230, 44)
+	info_label.position = Vector2(8, 6)
+	info_label.size = Vector2(240, 44)
 	info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	info_label.clip_text = true
 	info.add_child(info_label)
@@ -432,7 +432,19 @@ func _fill_info() -> void:
 			data["name"], Balance.target_label(id), Balance.cost(id), data["blurb"]
 		]
 	else:
-		info_label.text = "Gold pads only. Cover both rifts.\n1–5 build, U upgrade, Space call."
+		info_label.text = "Gold pads only. %s\n1–5 build, U upgrade, Space call." % _rift_cover()
+
+
+## Lane count, not a fixed "both". One rift, both, all three, or all N.
+func _rift_cover() -> String:
+	var count := Board.lanes.size()
+	if count <= 1:
+		return "Cover the rift."
+	if count == 2:
+		return "Cover both rifts."
+	if count == 3:
+		return "Cover all three rifts."
+	return "Cover all %d rifts." % count
 
 
 func _tower_blurb(tower) -> String:
