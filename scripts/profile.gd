@@ -32,7 +32,8 @@ var playtest_loadout: PackedStringArray = PackedStringArray()
 var open_slots := FREE_SLOTS
 var seen: PackedStringArray = PackedStringArray()
 var muted := false
-## When on, prep calls the next wave immediately, same as the Call button.
+## When on, each prep after wave 1 calls the next wave immediately, same as Call.
+## Wave 1 always waits for Start.
 var auto_call := false
 var battle_map := "yard_approach"
 

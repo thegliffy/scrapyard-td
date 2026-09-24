@@ -26,12 +26,13 @@ func _begin_prep(index: int) -> void:
 	Game.phase = "prep"
 	Game.upcoming = index
 	Game.preview = str(Balance.wave_at(index)["preview"])
-	Game.prep_left = 16.0 if index == 0 else 9.0
+	# Wave 1 waits until Start. Later preps are a short countdown.
+	Game.prep_left = 0.0 if index == 0 else 9.0
 	Game.combat_label = ""
 	Game.changed.emit()
-	# Same bonus as pressing Call at the start of prep. Off by default, so
-	# wave 1 still waits unless the player turned Auto on.
-	if Profile.auto_call:
+	# Auto matches pressing Call at the start of a countdown. It never
+	# starts wave 1, even when the toggle is already on.
+	if index > 0 and Profile.auto_call:
 		call_early()
 
 
@@ -89,6 +90,8 @@ func _process(delta: float) -> void:
 	if Game.ended:
 		return
 	if Game.phase == "prep":
+		if Game.is_first_prep():
+			return
 		Game.prep_left = max(0.0, Game.prep_left - delta)
 		if Game.prep_left <= 0.0:
 			_begin_combat()

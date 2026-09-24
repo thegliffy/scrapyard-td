@@ -126,7 +126,12 @@ func display_wave() -> int:
 	return wave_index + 1
 
 
+## The prep before wave 1. No clock, no bonus, and auto-call does not skip it.
+func is_first_prep() -> bool:
+	return phase == "prep" and upcoming == 0
+
+
 func early_bonus() -> int:
-	if phase != "prep":
-		return 0
-	return mini(12, int(floor(prep_left)))
+	if not is_first_prep() and phase == "prep":
+		return mini(12, int(floor(prep_left)))
+	return 0

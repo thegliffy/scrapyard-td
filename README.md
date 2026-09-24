@@ -66,7 +66,7 @@ You own **Pea Blaster**, **Glue Goo**, and the **Yard Approach** map from the st
 3. **Battle**, pick a yard, then pick a tower from the **bottom bar** (the chip shows the weapon sprite, the slot number, a short name, and the gold cost) or press `1`–`5` for that slot. An empty slot does nothing.
 4. Click a gold **+** on a hardpoint. Slots come in **pods of four** (a 2×2 of marked cells). Empty cells in a pod can each hold one tower. There is no free placement.
 5. Click a built tower to inspect it. Tiles in range light up. Upgrade (`U`) up to 3 tiers, or sell (`Backspace`) for 60% of the gold you spent.
-6. You can build during a wave. `Space` calls the next wave early for a little bonus gold. `F` toggles 2× speed. **Pause** (top right), `P`, or `Esc` freezes the whole battle, including the prep clock and auto-call. **Resume**, `P`, or `Esc` continues from the same moment, speed included. Custom yards and editor playtests pause the same way.
+6. Wave 1 does not count down. Build as long as you like, then press **Start** (or `Space`). There is no early bonus for that first wave. Later waves give you a short prep: **Call** sends the next one early for a little bonus gold, and the clock starts it if you wait. **Auto** does that from the second prep on, and never starts wave 1. `F` toggles 2× speed. **Pause** (top right), `P`, or `Esc` freezes the whole battle, including a later prep clock and auto-call. **Resume**, `P`, or `Esc` continues from the same moment, speed included. Custom yards and editor playtests do the same.
 
 Clear **100 waves** to win. The Big Cute Boss shows up at waves **21, 40, 60, 80, and 100**. Sky Nap, a flying boss, shows up at **50** and **90**. Later visits have more health. If the core hits 0, you lose. The end screen shows gold earned and scrap gained, and offers **Battle again** (or `R`) and **Main menu**. A playtest's button says **Editor** instead, and returns to the draft.
 
@@ -89,8 +89,9 @@ Guns only hit the layer printed on them: **Ground**, **Air**, or **Both**. Scrap
 | Left click a tower | Inspect it. Range lights up in tiles |
 | `U` or **Up** | Upgrade (3 tiers) |
 | `Backspace` or **Sell** | Sell for 60% of the gold you spent |
-| `Space` or **Call** | Send the next wave early for a little bonus gold |
-| **Auto** next to Call | Call every next wave the moment prep starts. Saved. Off until you turn it on |
+| `Space` or **Start** | Begin wave 1 whenever you are ready. No countdown and no bonus |
+| `Space` or **Call** | After wave 1, send the next wave early for a little bonus gold |
+| **Auto** next to Call | From the second prep on, call the next wave as soon as prep starts. Saved. Never starts wave 1 |
 | `F` or **1× / 2×** | Toggle double speed |
 | `P`, `Esc`, or **Pause** | Freeze the battle. **Resume**, `P`, or `Esc` continues, speed unchanged |
 | `R` | Restart after a win or a loss |
@@ -173,8 +174,8 @@ Popping a splitter is not always safer than letting it walk. Swarmlings are fast
 - **0.2.2** — Battles are 100 waves, with bosses at 21, 40, 60, 80, and 100. Health keeps scaling after the old finale. Chunky Tanks, Shielded, and Elite Tanks pop into weaker versions of themselves. A win pays 2 scrap per wave cleared. A loss pays 1 scrap.
 - **0.3.0** — Bestiary on the main menu, remembered per critter. Four flying kinds ride the lane a little above the tiles. Every gun has a layer: Ground, Air, or Both (Pea hits both). Five new unlocks: Flak Puff, Sky Needle, Dual Rail, Net Lob, and Orbit Drone. Flyers join from wave 14, and Sky Nap arrives at waves 50 and 90. The yard is a bright space scene: a neon road on the old lanes, and a floating island on every hardpoint.
 - **0.4.0** — Map editor (beta). Yards are JSON (`res://maps` for the built-ins, `user://maps` for yours). Battle loads those files and draws them with the same view the editor uses, so Yard Approach is unchanged. Custom yards and playtests do not award scrap. The Battle picker can start a saved custom yard.
-- **0.4.1** — Lanes are one smooth neon line instead of stamped tiles. The gold coin icon is gone; gold is plain text (`Gold 170`, costs like `50g`). **Auto** next to Call sends the next wave as soon as prep starts, with the same early bonus, and the choice is saved. It stays off until you turn it on, including for the first prep.
-- **0.4.2** — **Pause** in the top-right of the battle HUD, also `P` and `Esc`. A dark overlay covers the board and the HUD and blocks every click underneath. Enemies, shots, towers, the prep countdown, and auto-call all freeze, then resume exactly where they were, including 1× or 2×. Custom yards and editor playtests included. Battle, custom yards, the editor, and playtests use the deep-space backdrop. The older brighter field is still in the editor. Dock and Deep tints stay a light wash on the darker plate.
+- **0.4.1** — Lanes are one smooth neon line instead of stamped tiles. The gold coin icon is gone; gold is plain text (`Gold 170`, costs like `50g`). **Auto** next to Call sends the next wave as soon as prep starts, with the same early bonus, and the choice is saved. It stays off until you turn it on.
+- **0.4.2** — **Pause** in the top-right of the battle HUD, also `P` and `Esc`. A dark overlay covers the board and the HUD and blocks every click underneath. Enemies, shots, towers, a later prep countdown, and auto-call all freeze, then resume exactly where they were, including 1× or 2×. Custom yards and editor playtests included. Battle uses the deep-space backdrop. The older brighter field is still in the editor. Dock and Deep tints stay a light wash on the darker plate. Wave 1 has no countdown: **Start** begins it with no bonus, and **Auto** never starts that first wave. It only calls from the second prep on.
 
 ## Art
 

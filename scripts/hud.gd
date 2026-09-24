@@ -79,10 +79,14 @@ func _refresh_live() -> void:
 	if status_label == null:
 		return
 	if Game.phase == "prep":
-		status_label.text = "Next in %ds   ·   %s" % [int(ceil(Game.prep_left)), Game.preview]
 		call_button.disabled = false
-		call_button.text = "Call\n+%dg" % Game.early_bonus()
 		auto_button.disabled = false
+		if Game.is_first_prep():
+			status_label.text = Game.preview
+			call_button.text = "Start"
+		else:
+			status_label.text = "Next in %ds   ·   %s" % [int(ceil(Game.prep_left)), Game.preview]
+			call_button.text = "Call\n+%dg" % Game.early_bonus()
 	elif Game.phase == "combat":
 		status_label.text = "%s   ·   %s" % [Game.combat_label, Game.preview]
 		call_button.disabled = true

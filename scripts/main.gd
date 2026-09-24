@@ -340,6 +340,20 @@ func _run_smoke() -> void:
 	if Game.phase != "prep":
 		push_error("smoke: expected prep, got %s" % Game.phase)
 		failed = true
+	if not Game.is_first_prep() or Game.early_bonus() != 0:
+		push_error("smoke: wave 1 prep should wait with no bonus")
+		failed = true
+	hud._refresh_live()
+	var opening_call: Button = hud.get("call_button")
+	var opening_status: Label = hud.get("status_label")
+	if opening_call == null or opening_call.text != "Start" or "Next in" in opening_status.text:
+		push_error("smoke: wave 1 HUD should say Start and hide the countdown")
+		failed = true
+	var opening_gold: int = Game.gold
+	wave._process(40.0)
+	if Game.phase != "prep" or Game.gold != opening_gold or Game.early_bonus() != 0:
+		push_error("smoke: wave 1 prep expired or paid gold")
+		failed = true
 	if not place_tower(Vector2i(1, 2), "pea"):
 		push_error("smoke: could not place Pea Blaster")
 		failed = true
@@ -572,6 +586,31 @@ func _run_smoke() -> void:
 	if MapSession.blocks_scrap():
 		push_error("smoke: a normal yard blocked scrap")
 		failed = true
+	var start_gold: int = Game.gold
+	Profile.set_auto_call(true)
+	wave._begin_prep(0)
+	if not Game.is_first_prep():
+		push_error("smoke: auto-call started wave 1")
+		failed = true
+	wave.call_early()
+	if Game.phase != "combat" or Game.wave_index != 0 or Game.gold != start_gold:
+		push_error("smoke: Start did not begin wave 1 for free")
+		failed = true
+	wave._begin_prep(1)
+	if Game.phase != "combat" or Game.wave_index != 1 or Game.gold != start_gold + 9:
+		push_error("smoke: auto-call skipped the second prep bonus")
+		failed = true
+	Profile.set_auto_call(false)
+	wave._begin_prep(1)
+	if Game.phase != "prep" or Game.is_first_prep() or Game.early_bonus() != 9:
+		push_error("smoke: later prep lost its countdown bonus")
+		failed = true
+	hud._refresh_live()
+	var later_call: Button = hud.get("call_button")
+	var later_status: Label = hud.get("status_label")
+	if later_call.text != "Call\n+9g" or "Next in" not in later_status.text:
+		push_error("smoke: later prep HUD is not Call")
+		failed = true
 	var prep_before: float = Game.prep_left
 	var scale_before := Engine.time_scale
 	var speed_before: float = Game.speed
@@ -619,7 +658,9 @@ func _run_smoke() -> void:
 
 
 func _auto_call() -> void:
-	if Game.phase != "prep" or Game.prep_left < 1.2:
+	if Game.phase != "prep":
+		return
+	if not Game.is_first_prep() and Game.prep_left < 1.2:
 		return
 	if tower_at(Vector2i(1, 2)) == null or tower_at(Vector2i(1, 8)) == null:
 		return
