@@ -6,17 +6,17 @@ A cozy, **bright** cartoony **grid tower defense**. Cute eldritch horrors leak o
 
 ## Download
 
-**[v0.2.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.0)** is the current build. You do not need Godot.
+**[v0.2.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.1)** is the current build. You do not need Godot.
 
 ### Windows
 
-1. Download [ScrapyardTD-v0.2.0-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.2.0/ScrapyardTD-v0.2.0-windows-x86_64.zip).
+1. Download [ScrapyardTD-v0.2.1-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.2.1/ScrapyardTD-v0.2.1-windows-x86_64.zip).
 2. Unzip it.
 3. Double-click `ScrapyardTD.exe`.
 
 ### Linux (x86_64)
 
-1. Download [ScrapyardTD-v0.2.0-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.2.0/ScrapyardTD-v0.2.0-linux-x86_64.zip).
+1. Download [ScrapyardTD-v0.2.1-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.2.1/ScrapyardTD-v0.2.1-linux-x86_64.zip).
 2. Unzip it.
 3. Make it executable and run it:
 
@@ -25,7 +25,7 @@ chmod +x ScrapyardTD.x86_64
 ./ScrapyardTD.x86_64
 ```
 
-Older cuts: [v0.1.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.2), [v0.1.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.1), [v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0).
+Older cuts: [v0.2.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.0), [v0.1.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.2), [v0.1.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.1), [v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0).
 
 ## Open in Godot
 
@@ -85,7 +85,7 @@ Clear **20 waves**, then pop the **Big Cute Boss**, to win. If the core hits 0, 
 - **Cute and bright.** The yard is a light lavender-and-cream board, not a night scene. UI panels are soft cream and pink. Guns are chunky cartoons with faces — friendly, not hard scrap hardware.
 - **Top-down grid.** The board is **24 × 11 tiles**. Lanes are sequences of those cells. Critters sit, then hop to the next cell center. They never path off the grid.
 - **Fixed slots, groups of four.** **36 slots** in **nine 2×2 pods** (north entry and mid, both sides of the east lane, the merge, and the south lane).
-- **Weapon icons.** Each gun tile — the Battle bar and the Unlocks rows and slots — shows that tower's cartoon sprite scaled down so the whole drawing sits inside the square with padding.
+- **Weapon icons.** Each Battle selection chip, and the Unlocks gun tiles, shows the whole cartoon inside the box. The drawing is trimmed to its real edges, kept in proportion, and inset so it cannot spill over the frame.
 - **Loadout.** Five Battle slots. The first three are free. Slot 4 is 30 scrap and slot 5 is 50 scrap. Only equipped guns appear on the bar. Starters sit in slots 1 and 2 (Pea, Glue).
 - **Yards.** **Yard Approach** is free. **Side Dock** (50 scrap) and **Deep Yard** (100 scrap) use the same lanes, with a tint and a light health / speed bump. They are not new layouts.
 - **Waves.** **20 waves, then the boss.** New kinds arrive a few at a time, and the count / gap / speed mix climbs gradually through the early and mid game instead of spiking.
@@ -137,6 +137,7 @@ Popping a Swarm-Splitter is not always safer than letting it walk: the Swarmling
 - **0.1.1** — Hardpoints expanded to nine 2×2 pods (36 slots). Bottom bar shows each tower's sprite. Fast Skitters slowed 20%.
 - **0.1.2** — Weapon icons fit their squares. 20 waves plus the boss, with a gentler ramp, and starting gold 170. The yard and UI are candy-bright. Guns are the art-director cartoons (tower sheet), including on the bottom bar. A main menu opens on the bright splash and crossfades to the dimmer one as the buttons appear.
 - **0.2.0** — Meta layer. The menu is Battle, Adventure (coming soon), Unlocks, Settings, and Quit, with persistent scrap on the splash. In-run currency is gold and resets every Battle. Scrap is awarded at the end (a win pays more; a loss is a flat 8) and is spent only on the Unlocks screen. Guns and yards you have not bought stay out of the Battle. A 5-slot loadout gates the bottom bar: slots 1–3 are free, slots 4 and 5 cost scrap. Side Dock and Deep Yard reuse the Yard Approach lanes.
+- **0.2.1** — Battle selection icons actually fit in their boxes. The tower image was being left at its full pixel size, so the gun spilled out of the chip. Each icon is now inset inside the frame, aspect kept, with padding around the drawing. Unlocks tiles use the same fit.
 
 ## Art
 

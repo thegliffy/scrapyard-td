@@ -197,7 +197,7 @@ func _build() -> void:
 		var slot := int(entry["slot"])
 		var kind: String = str(entry["id"])
 		var button := Button.new()
-		button.clip_contents = false
+		button.clip_contents = true
 		button.focus_mode = Control.FOCUS_NONE
 		button.position = Vector2(12 + slot * 136, 12)
 		button.size = Vector2(128, 88)
@@ -208,18 +208,14 @@ func _build() -> void:
 		button.add_theme_color_override("font_pressed_color", Color("#1a1430"))
 		button.text = ""
 		button.pressed.connect(_on_chip.bind(kind))
-		var icon := TextureRect.new()
-		icon.texture = Art.tower_tex(kind)
-		icon.position = Vector2(48, 6)
-		icon.size = Vector2(32, 32)
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var icon_rect := _chip_icon_rect()
+		var icon := Art.make_tower_icon(icon_rect, kind)
 		button.add_child(icon)
+		Art.show_tower_icon(icon, kind)
 		var caption := Label.new()
 		caption.text = "%d  %s   %d" % [slot + 1, Balance.TOWERS[kind]["short"], Balance.cost(kind)]
-		caption.position = Vector2(4, 58)
-		caption.size = Vector2(120, 22)
+		caption.position = Vector2(6, icon_rect.end.y + 4.0)
+		caption.size = Vector2(116, 16)
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		caption.add_theme_font_override("font", font)
@@ -312,6 +308,18 @@ func _build() -> void:
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(flash)
 	_style_chips()
+
+
+## Largest square that stays inside the 128×88 chip with at least 10px
+## above the gun and a caption band below it.
+func _chip_icon_rect() -> Rect2:
+	var top := 10.0
+	var bottom := 6.0
+	var caption_h := 16.0
+	var gap := 4.0
+	var side := 88.0 - top - gap - caption_h - bottom
+	var x := (128.0 - side) * 0.5
+	return Rect2(x, top, side, side)
 
 
 func _on_chip(kind: String) -> void:

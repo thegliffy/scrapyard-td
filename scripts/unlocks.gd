@@ -94,14 +94,10 @@ func _gun_row(id: String) -> Control:
 	var row := Panel.new()
 	row.size = Vector2(800, 62)
 	row.add_theme_stylebox_override("panel", _card_style(Color("#fffaf4")))
-	var icon := TextureRect.new()
-	icon.texture = Art.tower_tex(id)
-	icon.position = Vector2(10, 8)
-	icon.size = Vector2(46, 46)
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var icon := Art.make_tower_icon(Rect2(8, 8, 46, 46), id)
 	row.add_child(icon)
+	Art.show_tower_icon(icon, id)
+	row.clip_contents = true
 	var name := _label(str(Balance.TOWERS[id]["name"]), 18, Color("#5a3d70"))
 	name.position = Vector2(68, 16)
 	name.size = Vector2(280, 30)
@@ -139,16 +135,13 @@ func _map_row(id: String) -> Control:
 func _slot(index: int) -> Button:
 	var button := _button("", Color("#fff6ee"), 16, 110)
 	button.size = Vector2(140, 120)
+	button.clip_contents = true
 	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	button.pressed.connect(_on_slot.bind(index))
-	var icon := TextureRect.new()
-	icon.name = "Icon"
-	icon.position = Vector2(42, 8)
-	icon.size = Vector2(56, 56)
-	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var icon_rect := _slot_icon_rect()
+	var icon := Art.make_tower_icon(icon_rect, "")
 	button.add_child(icon)
+	Art.show_tower_icon(icon, "")
 	var lock := LockMark.new()
 	lock.name = "Lock"
 	lock.position = Vector2(54, 10)
@@ -157,8 +150,8 @@ func _slot(index: int) -> Button:
 	button.add_child(lock)
 	var caption := _label("", 14, Color("#5a3d70"))
 	caption.name = "Caption"
-	caption.position = Vector2(4, 70)
-	caption.size = Vector2(132, 42)
+	caption.position = Vector2(4, 78)
+	caption.size = Vector2(132, 34)
 	caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	button.add_child(caption)
@@ -208,7 +201,7 @@ func _paint_slot(index: int) -> void:
 	var lock: Control = button.get_node("Lock")
 	var caption: Label = button.get_node("Caption")
 	if not Profile.slot_open(index):
-		icon.texture = null
+		Art.show_tower_icon(icon, "")
 		lock.visible = true
 		caption.text = "Locked\n%d scrap" % Profile.slot_cost(index)
 		button.disabled = false
@@ -218,10 +211,10 @@ func _paint_slot(index: int) -> void:
 	button.disabled = false
 	var id := Profile.loadout_at(index)
 	if id == "":
-		icon.texture = null
+		Art.show_tower_icon(icon, "")
 		caption.text = "Slot %d\nempty" % [index + 1]
 	else:
-		icon.texture = Art.tower_tex(id)
+		Art.show_tower_icon(icon, id)
 		caption.text = "%d  %s" % [index + 1, Balance.TOWERS[id]["short"]]
 
 
@@ -289,6 +282,16 @@ func _on_slot(index: int) -> void:
 		Sfx.play("ui")
 		_status.text = "Cleared slot %d." % [index + 1]
 		_refresh()
+
+
+func _slot_icon_rect() -> Rect2:
+	var top := 10.0
+	var bottom := 8.0
+	var caption_h := 34.0
+	var gap := 6.0
+	var side := 120.0 - top - gap - caption_h - bottom
+	var x := (140.0 - side) * 0.5
+	return Rect2(x, top, side, side)
 
 
 func _back() -> void:
