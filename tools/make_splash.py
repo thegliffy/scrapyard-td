@@ -61,6 +61,8 @@ def _shot(draw: ImageDraw.ImageDraw, a, b, color, width=10) -> None:
 
 
 def main() -> None:
+    print("Menu splash is the art-director pair in assets/ui/. Not overwriting it.")
+    return
     im = _gradient()
     draw = ImageDraw.Draw(im)
     # Clouds.

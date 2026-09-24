@@ -1,12 +1,12 @@
 extends Control
 
 const RUN := "res://scenes/main.tscn"
-const BRIGHT_SPLASH := "res://assets/concept/05_main_menu_splash.png"
-const DIM_SPLASH := "res://assets/concept/05_main_menu_splash_dim.png"
+const BRIGHT_SPLASH := "res://assets/ui/main_menu_splash.png"
+const DIM_SPLASH := "res://assets/ui/main_menu_splash_dim.png"
 const FADE_TIME := 0.8
 
 var _bright: TextureRect
-var _card: Panel
+var _ui: Control
 var _play: Button
 var _quit: Button
 var _fade := 0.0
@@ -27,8 +27,8 @@ func _process(delta: float) -> void:
 	_fade = minf(1.0, _fade + delta / FADE_TIME)
 	var t := smoothstep(0.0, 1.0, _fade)
 	_bright.modulate.a = 1.0 - t
-	if _card:
-		_card.modulate.a = t
+	if _ui:
+		_ui.modulate.a = t
 	var ready := t > 0.45
 	if _play:
 		_play.disabled = not ready
@@ -47,47 +47,42 @@ func _build() -> void:
 	_bright = _splash(BRIGHT_SPLASH)
 	add_child(_bright)
 
-	var card := Panel.new()
-	card.position = Vector2(56, 150)
-	card.size = Vector2(460, 420)
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(1, 0.97, 0.94, 0.92)
-	style.border_color = Color("#f0b6d4")
-	style.set_border_width_all(6)
-	style.set_corner_radius_all(32)
-	style.shadow_color = Color(0.45, 0.28, 0.55, 0.18)
-	style.shadow_size = 18
-	card.add_theme_stylebox_override("panel", style)
-	card.modulate.a = 0.0
-	add_child(card)
-	_card = card
+	var ui := Control.new()
+	ui.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ui.modulate.a = 0.0
+	add_child(ui)
+	_ui = ui
 
-	var title := _label(font, 54, Color("#6a3d88"))
+	var title := _label(font, 64, Color("#fff6e4"))
 	title.text = "Scrapyard TD"
-	title.position = Vector2(28, 36)
-	title.size = Vector2(404, 70)
+	title.position = Vector2(0, 28)
+	title.size = Vector2(1280, 78)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	card.add_child(title)
+	title.add_theme_color_override("font_outline_color", Color("#1a1030"))
+	title.add_theme_constant_override("outline_size", 14)
+	ui.add_child(title)
 
-	var flavor := _label(font, 20, Color("#8a6498"))
-	flavor.text = "Cute guns. Cuter monsters.\nKeep the core lit."
-	flavor.position = Vector2(28, 118)
-	flavor.size = Vector2(404, 64)
+	var flavor := _label(font, 22, Color("#f3e6ff"))
+	flavor.text = "Cute guns. Cuter monsters. Keep the core lit."
+	flavor.position = Vector2(0, 108)
+	flavor.size = Vector2(1280, 36)
 	flavor.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	flavor.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	card.add_child(flavor)
+	flavor.add_theme_color_override("font_outline_color", Color("#1a1030"))
+	flavor.add_theme_constant_override("outline_size", 8)
+	ui.add_child(flavor)
 
 	_play = _button(font, "Play", Color("#b6f3c8"))
-	_play.position = Vector2(70, 220)
+	_play.position = Vector2(360, 620)
 	_play.disabled = true
 	_play.pressed.connect(_play_run)
-	card.add_child(_play)
+	ui.add_child(_play)
 
 	_quit = _button(font, "Quit", Color("#ffe0f0"))
-	_quit.position = Vector2(70, 304)
+	_quit.position = Vector2(700, 620)
 	_quit.disabled = true
 	_quit.pressed.connect(_quit_game)
-	card.add_child(_quit)
+	ui.add_child(_quit)
 
 
 func _splash(path: String) -> TextureRect:

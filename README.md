@@ -108,7 +108,7 @@ Popping a Swarm-Splitter is not always safer than letting it walk: the Swarmling
 
 ## Art
 
-`assets/concept/` holds the art-direction boards. The menu uses `05_main_menu_splash.png` (bright) and `05_main_menu_splash_dim.png` (dim). In-game tower sprites are chunky cartoons with faces, drawn to read on a single tile and inside the bottom-bar squares.
+`assets/concept/` holds the art-direction boards. The menu background is the art-director splash: `assets/ui/main_menu_splash.png` (full color) crossfades to `assets/ui/main_menu_splash_dim.png` as the title and buttons appear. In-game tower sprites are chunky cartoons with faces, drawn to read on a single tile and inside the bottom-bar squares.
 
 ```bash
 python3 tools/make_art.py
