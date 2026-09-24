@@ -10,16 +10,20 @@ const TILE := 48
 const ORIGIN := Vector2(64, 80)
 const CORE := Vector2i(22, 5)
 
-const SLOTS: Array[Vector2i] = [
-	Vector2i(2, 0),
-	Vector2i(5, 2),
-	Vector2i(9, 2),
-	Vector2i(15, 2),
-	Vector2i(2, 10),
-	Vector2i(6, 8),
-	Vector2i(15, 8),
+## Top-left cell of each 2×2 hardpoint pod. Four marked cells, no freeplace.
+const POD_ORIGINS: Array[Vector2i] = [
+	Vector2i(1, 2),
+	Vector2i(8, 2),
+	Vector2i(14, 0),
+	Vector2i(14, 4),
+	Vector2i(20, 3),
+	Vector2i(1, 7),
+	Vector2i(7, 7),
+	Vector2i(14, 8),
 	Vector2i(20, 6),
 ]
+
+static var SLOTS: Array[Vector2i] = []
 
 static var lane_a: Array[Vector2i] = []
 static var lane_b: Array[Vector2i] = []
@@ -30,6 +34,11 @@ static var _ready_paths := false
 
 
 static func ensure() -> void:
+	if SLOTS.is_empty():
+		for origin in POD_ORIGINS:
+			for dy in 2:
+				for dx in 2:
+					SLOTS.append(origin + Vector2i(dx, dy))
 	if _ready_paths:
 		return
 	_ready_paths = true
@@ -64,7 +73,16 @@ static func lane(which: String) -> Array[Vector2i]:
 
 
 static func is_slot(cell: Vector2i) -> bool:
+	ensure()
 	return cell in SLOTS
+
+
+static func pod_origin(cell: Vector2i) -> Vector2i:
+	ensure()
+	for origin in POD_ORIGINS:
+		if cell.x >= origin.x and cell.x < origin.x + 2 and cell.y >= origin.y and cell.y < origin.y + 2:
+			return origin
+	return Vector2i(-1, -1)
 
 
 static func is_inside(cell: Vector2i) -> bool:
@@ -100,8 +118,13 @@ static func cells_in_range(origin: Vector2i, radius: float) -> Array[Vector2i]:
 static func validate() -> PackedStringArray:
 	ensure()
 	var errs := PackedStringArray()
-	if SLOTS.size() != 8:
-		errs.append("expected 8 build slots")
+	if SLOTS.size() != POD_ORIGINS.size() * 4:
+		errs.append("expected %d build slots in pods of 4" % (POD_ORIGINS.size() * 4))
+	for origin in POD_ORIGINS:
+		for dy in 2:
+			for dx in 2:
+				if not ((origin + Vector2i(dx, dy)) in SLOTS):
+					errs.append("pod %s is not a full 2x2" % origin)
 	if lane_a.is_empty() or lane_b.is_empty():
 		errs.append("lanes missing")
 	_check_lane(lane_a, "north", errs)

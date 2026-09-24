@@ -203,8 +203,27 @@ func _build() -> void:
 		button.add_theme_color_override("font_color", Color("#2a2048"))
 		button.add_theme_color_override("font_hover_color", Color("#1a1430"))
 		button.add_theme_color_override("font_pressed_color", Color("#1a1430"))
-		button.text = "%d  %s\n%d scrap" % [index + 1, Balance.TOWERS[kind]["short"], Balance.cost(kind)]
+		button.text = ""
 		button.pressed.connect(_on_chip.bind(kind))
+		var icon := TextureRect.new()
+		icon.texture = Art.tower_tex(kind)
+		icon.position = Vector2(34, 2)
+		icon.size = Vector2(60, 58)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		button.add_child(icon)
+		var caption := Label.new()
+		caption.text = "%d  %s   %d" % [index + 1, Balance.TOWERS[kind]["short"], Balance.cost(kind)]
+		caption.position = Vector2(4, 62)
+		caption.size = Vector2(120, 22)
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		caption.add_theme_font_override("font", font)
+		caption.add_theme_font_size_override("font_size", 14)
+		caption.add_theme_color_override("font_color", Color("#2a2048"))
+		caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		button.add_child(caption)
 		chips[kind] = button
 		bottom.add_child(button)
 

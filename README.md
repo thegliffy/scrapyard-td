@@ -6,17 +6,17 @@ Godot 4 · desktop · one mission. Not a web game.
 
 ## Download
 
-**[v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0)** is a playable build. You do not need the Godot editor.
+**[v0.1.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.1)** is the current playable build. You do not need the Godot editor.
 
 ### Windows
 
-1. Download [ScrapyardTD-v0.1.0-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.1.0/ScrapyardTD-v0.1.0-windows-x86_64.zip).
+1. Download [ScrapyardTD-v0.1.1-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.1.1/ScrapyardTD-v0.1.1-windows-x86_64.zip).
 2. Unzip it.
 3. Double-click `ScrapyardTD.exe`.
 
 ### Linux (x86_64)
 
-1. Download [ScrapyardTD-v0.1.0-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.1.0/ScrapyardTD-v0.1.0-linux-x86_64.zip).
+1. Download [ScrapyardTD-v0.1.1-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.1.1/ScrapyardTD-v0.1.1-linux-x86_64.zip).
 2. Unzip it.
 3. Make it executable and run it:
 
@@ -40,7 +40,7 @@ godot --headless --path . --export-release "Windows Desktop" export/windows/Scra
 
 Presets live in `export_presets.cfg`. Each build is one file with the game packed inside.
 
-You have a few seconds before the first leak. Cover **both** rifts. The north lane is blue, the south lane is pink, and they merge on the lilac tiles into the core. Gold squares with a plus are the only build spots.
+You have a few seconds before the first leak. Cover **both** rifts. The north lane is blue, the south lane is pink, and they merge on the lilac tiles into the core. Gold squares with a plus are the only build spots, grouped as **2×2 pods**. The bottom bar shows each weapon's sprite.
 
 Clear all 12 waves and pop the **Big Cute Boss** to win. If the core hits 0, the yard goes dark. **Try again** is on the end screen (or press `R`).
 
@@ -64,7 +64,7 @@ You can build and upgrade during a wave, not only between them.
 
 The board is **24 × 11 tiles**. Lanes are sequences of those tiles. Critters move **cell to cell** (they sit, then hop to the next center). They never path off the grid.
 
-Build slots are eight marked cells. There is no free placement.
+Build slots are **36 marked cells in nine 2×2 pods** (north entry and mid, both sides of the east lane, the merge, and the south lane). There is no free placement.
 
 Range, chain jumps, glue, and bomb splash are all measured in **tiles**. Selecting a tower lights every cell in range.
 
@@ -86,7 +86,7 @@ These are cute cosmic weirdos, not ships. Cozy first, uncanny second. No gore.
 
 | Critter | Role |
 | --- | --- |
-| Fast Skitter | Tiny pink spider. Fast, and it scurries |
+| Fast Skitter | Tiny pink spider. Quick, but the opening gives you a beat to build |
 | Chunky Tank | Purple turtle. Heavy shell, slow |
 | Shielded | Shy mint creature in a glass bubble. Pop the bubble, then the critter |
 | Swarm-Splitter | Orange blob. On pop, splits into three Swarmlings |

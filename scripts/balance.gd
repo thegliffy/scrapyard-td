@@ -76,7 +76,7 @@ const ENEMIES := {
 		"name": "Fast Skitter",
 		"hp": 30,
 		"shield": 0,
-		"speed": 2.85,
+		"speed": 2.28,
 		"scrap": 7,
 		"leak": 1,
 		"display": 34.0,

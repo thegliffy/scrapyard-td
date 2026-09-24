@@ -7,6 +7,23 @@ var selected := false
 var ghost: Texture2D
 
 
+func _draw_pod_frame(half: float) -> void:
+	var origin := Board.pod_origin(cell)
+	if origin.x < 0:
+		return
+	var ink := Color("#6b4310")
+	var top_left := Vector2(-half, -half)
+	var bottom_right := Vector2(half, half)
+	if cell.x == origin.x:
+		draw_line(top_left, Vector2(-half, half), ink, 4.0)
+	if cell.x == origin.x + 1:
+		draw_line(Vector2(half, -half), bottom_right, ink, 4.0)
+	if cell.y == origin.y:
+		draw_line(top_left, Vector2(half, -half), ink, 4.0)
+	if cell.y == origin.y + 1:
+		draw_line(Vector2(-half, half), bottom_right, ink, 4.0)
+
+
 func setup(next_cell: Vector2i) -> void:
 	cell = next_cell
 	position = Board.cell_center(cell)
@@ -34,3 +51,4 @@ func _draw() -> void:
 		draw_rect(full, Color("#fff6d2"), false, 4.0)
 	elif hovered:
 		draw_rect(full, Color("#ffffffcc"), false, 2.0)
+	_draw_pod_frame(half)

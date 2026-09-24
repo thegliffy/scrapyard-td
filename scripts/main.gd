@@ -5,12 +5,12 @@ const ENEMY_SCENE := preload("res://scenes/enemies/enemy.tscn")
 const SLOT_SCENE := preload("res://scenes/map/build_slot.tscn")
 
 const AUTOPLAY_PLAN: Array = [
-	[Vector2i(2, 0), "pea"],
-	[Vector2i(2, 10), "pea"],
-	[Vector2i(5, 2), "pea"],
-	[Vector2i(6, 8), "pea"],
-	[Vector2i(15, 8), "glue"],
-	[Vector2i(15, 2), "spark"],
+	[Vector2i(1, 2), "pea"],
+	[Vector2i(1, 8), "pea"],
+	[Vector2i(8, 2), "pea"],
+	[Vector2i(7, 8), "pea"],
+	[Vector2i(14, 8), "glue"],
+	[Vector2i(14, 4), "spark"],
 	[Vector2i(20, 6), "boom"],
 	[Vector2i(9, 2), "magnet"],
 ]
@@ -320,7 +320,7 @@ func _run_smoke() -> void:
 	if Game.phase != "prep":
 		push_error("smoke: expected prep, got %s" % Game.phase)
 		failed = true
-	if not place_tower(Vector2i(2, 0), "pea"):
+	if not place_tower(Vector2i(1, 2), "pea"):
 		push_error("smoke: could not place Pea Blaster")
 		failed = true
 	elif Game.scrap != Balance.START_SCRAP - Balance.cost("pea"):
@@ -343,7 +343,7 @@ func _run_smoke() -> void:
 	if Game.core_hp != hp_before - 3:
 		push_error("smoke: Chunky Tank leak damage")
 		failed = true
-	if place_tower(Vector2i(2, 0), "spark"):
+	if place_tower(Vector2i(1, 2), "spark"):
 		push_error("smoke: occupied cell accepted a tower")
 		failed = true
 	if failed or not Board.validate().is_empty():
@@ -357,6 +357,6 @@ func _run_smoke() -> void:
 func _auto_call() -> void:
 	if Game.phase != "prep" or Game.prep_left < 1.2:
 		return
-	if tower_at(Vector2i(2, 0)) == null or tower_at(Vector2i(2, 10)) == null:
+	if tower_at(Vector2i(1, 2)) == null or tower_at(Vector2i(1, 8)) == null:
 		return
 	wave.call_early()
