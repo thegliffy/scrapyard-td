@@ -1,12 +1,12 @@
 # Scrapyard TD
 
-A cozy top-down tower defense. You are the dock boss of a tiny scrap yard. Cute eldritch things leak out of two rifts and hop along the lanes toward the **Station Core**. Pop them for scrap, spend it on towers, and keep the core lit.
+A cozy, cartoony **grid tower defense**. Cute eldritch horrors leak out of two rifts and hop, cell by cell, toward the **Station Core**. Pop them for scrap, spend it on scrapyard towers, and keep the core lit.
 
-Godot 4 · desktop · one mission. Not a web game.
+One mission. Desktop only (Godot 4). Not a web game. True top-down — not isometric. The 3/4 art is mood only.
 
 ## Download
 
-**[v0.1.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.2)** is the current playable build. You do not need the Godot editor.
+**[v0.1.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.2)** is the current build. You do not need Godot.
 
 ### Windows
 
@@ -25,32 +25,37 @@ chmod +x ScrapyardTD.x86_64
 ./ScrapyardTD.x86_64
 ```
 
-## Play from source
+Older cuts: [v0.1.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.1), [v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0).
+
+## Open in Godot
 
 1. Install [Godot 4.3 or newer](https://godotengine.org/download) (developed on 4.7).
-2. Open this folder as a project (`project.godot`).
-3. Press **Play**.
+2. **Import** or **Open** this folder (`project.godot`).
+3. Press **F5** / **Play**. The main scene is `scenes/main.tscn`.
 
-To rebuild the executables (Godot 4.7, with the matching export templates installed):
+Rebuild the executables with Godot 4.7 and the matching export templates. Presets are in `export_presets.cfg`. Each export is one file with the game packed inside.
 
 ```bash
 godot --headless --path . --export-release "Linux" export/linux/ScrapyardTD.x86_64
 godot --headless --path . --export-release "Windows Desktop" export/windows/ScrapyardTD.exe
 ```
 
-Presets live in `export_presets.cfg`. Each build is one file with the game packed inside.
+## How to play
 
-You have a few seconds before the first leak. Cover **both** rifts. The north lane is blue, the south lane is pink, and they merge on the lilac tiles into the core. Gold squares with a plus are the only build spots, grouped as **2×2 pods**. The bottom bar shows each weapon's sprite.
+You start with **170 scrap** and a few seconds before the first leak. Cover **both** rifts. The north lane is blue, the south lane is pink, and they merge on the lilac tiles into the core.
 
-Clear **20 waves**, then pop the **Big Cute Boss** to win. The early waves stay small and new kinds arrive one step at a time. If the core hits 0, the yard goes dark. **Try again** is on the end screen (or press `R`).
+1. Pick a tower from the **bottom bar** (the chip shows the weapon sprite, a hotkey, a short name, and the cost) or press `1`–`5`.
+2. Click a gold **+** on a hardpoint. Slots come in **pods of four** (a 2×2 of marked cells). Empty cells in a pod can each hold one tower. There is no free placement.
+3. Click a built tower to inspect it. Tiles in range light up. Upgrade (`U`) up to 3 tiers, or sell (`Backspace`) for 60% of what you spent.
+4. You can build during a wave. `Space` calls the next wave early for a little bonus scrap. `F` toggles 2× speed.
 
-## Controls
+Clear **20 waves**, then pop the **Big Cute Boss**, to win. If the core hits 0, you lose. **Try again** is on the end screen (`R`).
 
 | Input | Action |
 | --- | --- |
 | `1`–`5` or a bottom chip | Choose a tower |
-| Left click a gold pad | Build it there |
-| Left click a tower | Inspect it. Its range lights up the tiles |
+| Left click a gold pad | Build it on that hardpoint |
+| Left click a tower | Inspect it. Range lights up in tiles |
 | `U` or **Up** | Upgrade (3 tiers) |
 | `Backspace` or **Sell** | Sell for 60% of what you spent |
 | `Space` or **Call** | Send the next wave early for a little bonus scrap |
@@ -58,15 +63,14 @@ Clear **20 waves**, then pop the **Big Cute Boss** to win. The early waves stay 
 | `Esc` | Cancel the current selection |
 | `R` | Restart after a win or a loss |
 
-You can build and upgrade during a wave, not only between them.
+## Design (v0.1.2)
 
-## The yard is a grid
-
-The board is **24 × 11 tiles**. Lanes are sequences of those tiles. Critters move **cell to cell** (they sit, then hop to the next center). They never path off the grid.
-
-Build slots are **36 marked cells in nine 2×2 pods** (north entry and mid, both sides of the east lane, the merge, and the south lane). There is no free placement.
-
-Range, chain jumps, glue, and bomb splash are all measured in **tiles**. Selecting a tower lights every cell in range.
+- **Top-down grid.** The board is **24 × 11 tiles**. Lanes are sequences of those cells. Critters sit, then hop to the next cell center. They never path off the grid.
+- **Fixed slots, groups of four.** **36 slots** in **nine 2×2 pods** (north entry and mid, both sides of the east lane, the merge, and the south lane).
+- **Weapon icons.** Each bottom-bar square shows that tower's sprite, scaled to fit inside the chip with padding.
+- **Waves.** **20 waves, then the boss.** New kinds arrive a few at a time, and the count / gap / speed mix climbs gradually through the early and mid game instead of spiking.
+- **Early speed.** Fast Skitters (the opener, and every later wave that reuses them) move **20% slower** than the original v0.1.0 base. Later enemy types were not slowed.
+- Range, chain jumps, glue, and bomb splash are measured in **tiles**. Towers shoot whatever is closest to the core. If the boss is in range and nobody is about to leak, they focus the boss.
 
 ## Towers
 
@@ -78,11 +82,9 @@ Range, chain jumps, glue, and bomb splash are all measured in **tiles**. Selecti
 | Boom Barrel | Splash on a cluster of tiles |
 | Scrap Magnet | No gun. Drips scrap, and a little extra when something pops nearby |
 
-Towers shoot whatever is closest to the core. If the Big Cute Boss is in range and nobody is about to leak, they focus the boss instead.
+## Enemies
 
-## The leaks
-
-These are cute cosmic weirdos, not ships. Cozy first, uncanny second. No gore.
+Cute cosmic weirdos, not ships. Cozy first, uncanny second. No gore.
 
 | Critter | Role |
 | --- | --- |
@@ -91,19 +93,23 @@ These are cute cosmic weirdos, not ships. Cozy first, uncanny second. No gore.
 | Shielded | Shy mint creature in a glass bubble. Pop the bubble, then the critter |
 | Swarm-Splitter | Orange blob. On pop, splits into three Swarmlings |
 | Swarmling | A little piece of the swarm. Tiny and quick |
-| Big Cute Boss | The final boss. Purple, horned, many eyes, very huggable. Burps swarmlings. Do not let it reach the core |
+| Big Cute Boss | The final boss. Purple, horned, many eyes. Burps Swarmlings. Do not let it reach the core |
 
-Killing a sac is not always safer than letting it walk: the babies are faster than the sac was.
+Popping a Swarm-Splitter is not always safer than letting it walk: the Swarmlings are faster than the blob was.
+
+## Version history
+
+- **0.1.0** — First playable cut. Top-down grid, fixed slots, cute eldritch roster, scrapyard towers, one map, win/lose. Windows and Linux builds.
+- **0.1.1** — Hardpoints expanded to nine 2×2 pods (36 slots). Bottom bar shows each tower's sprite. Fast Skitters slowed 20%.
+- **0.1.2** — Weapon icons scaled to fit the squares. Wave plan stretched to 20 waves plus the boss, with a gentler difficulty ramp. Starting scrap raised to 170 so the longer run stays viable.
 
 ## Art
 
-`assets/concept/` holds the art-direction boards. Gameplay is true top-down on the grid; the 3/4 mood vignette is mood only. Enemy sprites follow the latest roster sheet: a pink Fast Skitter, a purple Chunky Tank, a shy mint Shielded inside a glass bubble, an orange Swarm-Splitter, and a horned many-eyed Big Cute Boss. In-game sprites are original flat cartoons in that same bold-outline language, drawn to read on a single tile.
-
-Sprites and blips can be regenerated with:
+`assets/concept/` holds the art-direction boards. In-game sprites are original flat cartoons with bold outlines, drawn to read on a single tile.
 
 ```bash
 python3 tools/make_art.py
 python3 tools/make_sfx.py
 ```
 
-UI type is [Nunito](https://fonts.google.com/specimen/Nunito), under the SIL Open Font License (`assets/fonts/OFL-Nunito.txt`).
+UI type is [Nunito](https://fonts.google.com/specimen/Nunito), SIL Open Font License (`assets/fonts/OFL-Nunito.txt`).
