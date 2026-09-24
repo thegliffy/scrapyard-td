@@ -495,9 +495,69 @@ func _run_smoke() -> void:
 	if str(Balance.wave_at(89)["entries"][0]["kind"]) != "flying_boss" or str(Balance.wave_at(20)["entries"][0]["kind"]) != "big_cute_boss":
 		push_error("smoke: wave 90 flyer or ground finale")
 		failed = true
-	if Profile.GUN_ORDER.size() != 10 or int(Profile.GUN_COST["flak"]) != 45 or int(Profile.GUN_COST["orbit"]) != 90:
+	if Profile.GUN_ORDER.size() != 13 or int(Profile.GUN_COST["flak"]) != 45 or int(Profile.GUN_COST["orbit"]) != 90:
 		push_error("smoke: gun roster or scrap costs")
 		failed = true
+	if int(Profile.GUN_COST["stomper"]) != 60 or int(Profile.GUN_COST["fizz"]) != 75 or int(Profile.GUN_COST["nova"]) != 110:
+		push_error("smoke: new gun scrap costs")
+		failed = true
+	if Balance.can_hit("stomper", "small_flyer") or not Balance.can_hit("stomper", "fast_skitter"):
+		push_error("smoke: stomper should be ground only")
+		failed = true
+	if Balance.can_hit("fizz", "fast_skitter") or not Balance.can_hit("fizz", "flyer"):
+		push_error("smoke: fizz should be air only")
+		failed = true
+	if not Balance.can_hit("nova", "fast_skitter") or not Balance.can_hit("nova", "flying_boss"):
+		push_error("smoke: nova should hit ground and air")
+		failed = true
+	if Balance.cost("nova") <= Balance.cost("orbit") or Balance.cost("stomper") >= Balance.cost("boom"):
+		push_error("smoke: new gun gold costs drifted")
+		failed = true
+	var area_bug = spawn_enemy("fast_skitter", "a")
+	var area_moth = spawn_enemy("small_flyer", "a")
+	area_bug.global_position = Board.cell_center(Vector2i(8, 1))
+	area_moth.global_position = Board.cell_center(Vector2i(8, 1)) + Vector2(0, -28)
+	var bug_hp: float = area_bug.hp
+	var moth_hp: float = area_moth.hp
+	var stomper = TOWER_SCENE.instantiate()
+	entities.add_child(stomper)
+	stomper.setup("stomper", Vector2i(8, 2), 100)
+	stomper._shoot(area_bug)
+	if area_bug.hp >= bug_hp or area_moth.hp != moth_hp:
+		push_error("smoke: stomper did not slam ground only")
+		failed = true
+	bug_hp = area_bug.hp
+	var fizz = TOWER_SCENE.instantiate()
+	entities.add_child(fizz)
+	fizz.setup("fizz", Vector2i(8, 2), 110)
+	fizz._shoot(area_moth)
+	var clouds := get_tree().get_nodes_in_group("fizz_clouds")
+	if clouds.is_empty():
+		push_error("smoke: fizz did not lob a cloud")
+		failed = true
+	else:
+		clouds[0]._process(0.2)
+	if area_moth.hp >= moth_hp or area_bug.hp != bug_hp:
+		push_error("smoke: fizz cloud did not tick flyers only")
+		failed = true
+	bug_hp = area_bug.hp
+	moth_hp = area_moth.hp
+	var nova = TOWER_SCENE.instantiate()
+	entities.add_child(nova)
+	nova.setup("nova", Vector2i(8, 2), 175)
+	nova._shoot(area_bug)
+	if area_bug.hp >= bug_hp or area_moth.hp >= moth_hp:
+		push_error("smoke: nova missed a layer")
+		failed = true
+	stomper.queue_free()
+	fizz.queue_free()
+	nova.queue_free()
+	for cloud in get_tree().get_nodes_in_group("fizz_clouds"):
+		cloud.queue_free()
+	area_bug.alive = false
+	area_bug.queue_free()
+	area_moth.alive = false
+	area_moth.queue_free()
 	var bird = spawn_enemy("small_flyer", "a")
 	var ground_y := Board.cell_center(bird.current_cell()).y
 	if not bird.flying or bird.global_position.y >= ground_y - 10.0 or not Profile.has_seen("small_flyer"):

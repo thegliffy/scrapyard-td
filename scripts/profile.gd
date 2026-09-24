@@ -3,7 +3,7 @@ extends Node
 ## Persistent meta profile. Gold is not stored here — it resets every Battle.
 
 const SAVE_PATH := "user://profile.cfg"
-const GUN_ORDER := ["pea", "glue", "spark", "flak", "needle", "boom", "net", "dual", "magnet", "orbit"]
+const GUN_ORDER := ["pea", "glue", "spark", "flak", "needle", "boom", "stomper", "net", "fizz", "dual", "magnet", "orbit", "nova"]
 const MAP_ORDER := ["yard_approach", "side_dock", "deep_yard"]
 const STARTER_GUNS := ["pea", "glue"]
 const STARTER_MAPS := ["yard_approach"]
@@ -16,6 +16,9 @@ const GUN_COST := {
 	"dual": 70,
 	"magnet": 80,
 	"orbit": 90,
+	"stomper": 60,
+	"fizz": 75,
+	"nova": 110,
 }
 const MAP_COST := {"side_dock": 50, "deep_yard": 100}
 const LOSE_SCRAP := 1

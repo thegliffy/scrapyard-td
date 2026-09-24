@@ -6,17 +6,17 @@ A cozy, **bright** cartoony **grid tower defense**. Cute eldritch horrors leak o
 
 ## Download
 
-**[v0.4.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.2)** is the current build. You do not need Godot.
+**[v0.4.3](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.3)** is the current build. You do not need Godot.
 
 ### Windows
 
-1. Download [ScrapyardTD-v0.4.2-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.2/ScrapyardTD-v0.4.2-windows-x86_64.zip).
+1. Download [ScrapyardTD-v0.4.3-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.3/ScrapyardTD-v0.4.3-windows-x86_64.zip).
 2. Unzip it.
 3. Double-click `ScrapyardTD.exe`.
 
 ### Linux (x86_64)
 
-1. Download [ScrapyardTD-v0.4.2-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.2/ScrapyardTD-v0.4.2-linux-x86_64.zip).
+1. Download [ScrapyardTD-v0.4.3-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.3/ScrapyardTD-v0.4.3-linux-x86_64.zip).
 2. Unzip it.
 3. Make it executable and run it:
 
@@ -25,7 +25,7 @@ chmod +x ScrapyardTD.x86_64
 ./ScrapyardTD.x86_64
 ```
 
-Older cuts: [v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1), [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0), [v0.3.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.3.0), [v0.2.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.2), [v0.2.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.1), [v0.2.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.0), [v0.1.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.2), [v0.1.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.1), [v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0).
+Older cuts: [v0.4.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.2), [v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1), [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0), [v0.3.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.3.0), [v0.2.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.2), [v0.2.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.1), [v0.2.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.2.0), [v0.1.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.2), [v0.1.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.1), [v0.1.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.1.0).
 
 ## Open in Godot
 
@@ -80,7 +80,7 @@ The editor can paint and erase a lane (the path stays orthogonal and draws as th
 
 The Battle yard picker lists saved custom maps under the unlocked yards. Those runs use your real loadout and still award no scrap.
 
-Guns only hit the layer printed on them: **Ground**, **Air**, or **Both**. Scrap Magnet does not shoot. Pea Blaster and Spark Arc hit both. Glue and Boom stay on the ground. Flak, Needle, and Net are for flyers (Net's tier 3 also slows nearby ground critters). Dual Rail and Orbit Drone hit both.
+Guns only hit the layer printed on them: **Ground**, **Air**, or **Both**. Scrap Magnet does not shoot. Pea Blaster and Spark Arc hit both. Glue, Boom, and Stomper stay on the ground. Flak, Needle, Net, and Fizz Cloud are for flyers (Net's tier 3 also slows nearby ground critters). Dual Rail, Orbit Drone, and Nova hit both. Stomper, Fizz Cloud, and Nova are area guns, not projectile splash: a slam, a lingering cloud, and a heavy pulse.
 
 | Input | Action |
 | --- | --- |
@@ -118,10 +118,13 @@ Spent from persistent scrap. Starters are already owned.
 | Flak Puff | 45 |
 | Sky Needle | 55 |
 | Boom Barrel | 60 |
+| Stomper | 60 |
 | Net Lob | 65 |
 | Dual Rail | 70 |
+| Fizz Cloud | 75 |
 | Scrap Magnet | 80 |
 | Orbit Drone | 90 |
+| Nova | 110 |
 | Side Dock | 50 |
 | Deep Yard | 100 |
 | Loadout slot 4 | 30 |
@@ -135,12 +138,15 @@ Spent from persistent scrap. Starters are already owned.
 | Spark Arc | Both | Hits one critter, then jumps to neighbors it can reach |
 | Glue Goo | Ground | Slows ground critters. Tier 3 also gums nearby friends. Starts equipped |
 | Boom Barrel | Ground | Splash on ground critters only |
+| Stomper | Ground | Slam around the tower. No projectile. Ignores flyers |
 | Scrap Magnet | — | No gun. Drips gold, and a little extra when something pops nearby |
 | Flak Puff | Air | Cheap air splash |
 | Sky Needle | Air | Fast single-target shots at flyers |
 | Dual Rail | Both | A medium gun for either layer |
 | Net Lob | Air | Slows flyers. Tier 3 also slows nearby ground critters |
+| Fizz Cloud | Air | Lobs a cloud that lingers and ticks every flyer inside it |
 | Orbit Drone | Both | Slow, heavy, with a little splash on either layer |
+| Nova | Both | Slow heavy pulse. Hits every critter in range, ground and air |
 
 ## Enemies
 
@@ -176,10 +182,11 @@ Popping a splitter is not always safer than letting it walk. Swarmlings are fast
 - **0.4.0** — Map editor (beta). Yards are JSON (`res://maps` for the built-ins, `user://maps` for yours). Battle loads those files and draws them with the same view the editor uses, so Yard Approach is unchanged. Custom yards and playtests do not award scrap. The Battle picker can start a saved custom yard.
 - **0.4.1** — Lanes are one smooth neon line instead of stamped tiles. The gold coin icon is gone; gold is plain text (`Gold 170`, costs like `50g`). **Auto** next to Call sends the next wave as soon as prep starts, with the same early bonus, and the choice is saved. It stays off until you turn it on.
 - **0.4.2** — **Pause** in the top-right of the battle HUD, also `P` and `Esc`. A dark overlay covers the board and the HUD and blocks every click underneath. Enemies, shots, towers, a later prep countdown, and auto-call all freeze, then resume exactly where they were, including 1× or 2×. Custom yards and editor playtests included. Battle uses the deep-space backdrop. The older brighter field is still in the editor. Dock and Deep tints stay a light wash on the darker plate. Wave 1 has no countdown: **Start** begins it with no bonus, and **Auto** never starts that first wave. It only calls from the second prep on.
+- **0.4.3** — Three area guns. **Stomper** (60 scrap, 100 gold) slams ground critters around itself. **Fizz Cloud** (75 scrap, 110 gold) lobs a lingering cloud onto flyers. **Nova** (110 scrap, 175 gold) is a slow pulse that hits ground and air. They are not projectile splash. Each has three tiers. Icons fit the Battle chips and the Unlocks slots.
 
 ## Art
 
-`assets/concept/` holds the art-direction boards. The original five guns are cut from `02_towers_sheet.png`. Flak Puff, Sky Needle, Dual Rail, Net Lob, and Orbit Drone, plus Small Flyer, Flyer, Shielded Flyer, and Sky Nap, are the art director’s v0.3 sprites. Every gun tile is trimmed to its real edges and inset so it stays inside the chip. The Battle yard uses the deep-space backdrop and floating islands. The older brighter field is still available in the map editor. Lanes are drawn as one neon line, not a tiled stamp. The menu background is the art-director splash: `assets/ui/main_menu_splash.png` (full color) crossfades to `assets/ui/main_menu_splash_dim.png` as the title and buttons appear.
+`assets/concept/` holds the art-direction boards. The original five guns are cut from `02_towers_sheet.png`. Flak Puff, Sky Needle, Dual Rail, Net Lob, and Orbit Drone, plus Small Flyer, Flyer, Shielded Flyer, and Sky Nap, are the art director’s v0.3 sprites. Stomper, Fizz Cloud, and Nova, and their slam, cloud, and pulse effects, are the v0.4 painted set. Every gun tile is trimmed to its real edges and inset so it stays inside the chip. The Battle yard uses the deep-space backdrop and floating islands. The older brighter field is still available in the map editor. Lanes are drawn as one neon line, not a tiled stamp. The menu background is the art-director splash: `assets/ui/main_menu_splash.png` (full color) crossfades to `assets/ui/main_menu_splash_dim.png` as the title and buttons appear.
 
 ```bash
 python3 tools/slice_towers.py

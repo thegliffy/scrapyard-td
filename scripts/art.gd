@@ -30,6 +30,18 @@ const TOWER := {
 	"dual": "res://assets/sprites/towers/dual_rail.png",
 	"net": "res://assets/sprites/towers/net_lob.png",
 	"orbit": "res://assets/sprites/towers/orbit_drone.png",
+	"stomper": "res://assets/sprites/towers/stomper.png",
+	"fizz": "res://assets/sprites/towers/fizz_cloud.png",
+	"nova": "res://assets/sprites/towers/nova.png",
+}
+
+const FX := {
+	"stomp_ring": "res://assets/sprites/fx/fx_stomp_ring.png",
+	"stomp_ring_tinted": "res://assets/sprites/fx/fx_stomp_ring_tinted.png",
+	"fizz_cloud": "res://assets/sprites/fx/fx_fizz_cloud.png",
+	"fizz_cloud_tinted": "res://assets/sprites/fx/fx_fizz_cloud_tinted.png",
+	"nova_ring": "res://assets/sprites/fx/fx_nova_ring.png",
+	"nova_ring_tinted": "res://assets/sprites/fx/fx_nova_ring_tinted.png",
 }
 
 const MAP := {
@@ -88,6 +100,10 @@ static var _icon_cache := {}
 
 static func tower_tex(kind: String) -> Texture2D:
 	return load(TOWER[kind])
+
+
+static func fx_tex(id: String) -> Texture2D:
+	return load(FX[id])
 
 
 ## UI icon with the transparent margin trimmed, so the gun fills its box

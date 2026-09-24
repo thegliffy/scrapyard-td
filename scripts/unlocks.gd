@@ -58,11 +58,11 @@ func _build() -> void:
 		var row := _gun_row(id)
 		var col := gun_i % 2
 		var line := int(float(gun_i) / 2.0)
-		row.position = Vector2(24 + col * 412, 146 + line * 64)
+		row.position = Vector2(24 + col * 400, 138 + line * 54)
 		add_child(row)
 		gun_i += 1
 
-	var y := 146
+	var y := 138
 	for id in Profile.MAP_ORDER:
 		var row := _map_row(id)
 		row.position = Vector2(860, y)
@@ -70,12 +70,12 @@ func _build() -> void:
 		y += 88
 
 	var load_h := _label("Battle loadout", 22, Color("#5c3d78"))
-	load_h.position = Vector2(24, 500)
+	load_h.position = Vector2(24, 530)
 	load_h.size = Vector2(400, 30)
 	add_child(load_h)
 
 	var note := _label("Slots 1–3 are free. Slots 4 and 5 cost scrap.", 16, Color("#7a6494"))
-	note.position = Vector2(280, 504)
+	note.position = Vector2(280, 534)
 	note.size = Vector2(700, 26)
 	add_child(note)
 
@@ -85,7 +85,7 @@ func _build() -> void:
 	var x := (1280 - total) / 2.0
 	for i in Profile.LOADOUT_SIZE:
 		var slot := _slot(i)
-		slot.position = Vector2(x, 544)
+		slot.position = Vector2(x, 566)
 		add_child(slot)
 		x += slot_w + gap
 
@@ -94,22 +94,22 @@ func _build() -> void:
 
 func _gun_row(id: String) -> Control:
 	var row := Panel.new()
-	row.size = Vector2(400, 62)
+	row.size = Vector2(388, 54)
 	row.add_theme_stylebox_override("panel", _card_style(Color("#fffaf4")))
-	var icon := Art.make_tower_icon(Rect2(8, 8, 46, 46), id)
+	var icon := Art.make_tower_icon(Rect2(4, 4, 46, 46), id)
 	row.add_child(icon)
 	Art.show_tower_icon(icon, id)
 	row.clip_contents = true
-	var name := _label(str(Balance.TOWERS[id]["name"]), 16, Color("#5a3d70"))
-	name.position = Vector2(62, 16)
-	name.size = Vector2(148, 30)
+	var name := _label(str(Balance.TOWERS[id]["name"]), 15, Color("#5a3d70"))
+	name.position = Vector2(56, 4)
+	name.size = Vector2(140, 22)
 	row.add_child(name)
-	var layer := _label(Balance.target_label(id), 14, Color("#7a6494"))
-	layer.position = Vector2(214, 18)
-	layer.size = Vector2(64, 24)
+	var layer := _label(Balance.target_label(id), 13, Color("#7a6494"))
+	layer.position = Vector2(56, 26)
+	layer.size = Vector2(90, 20)
 	row.add_child(layer)
-	var action := _button("", Color("#ffe9a8"), 108, 40)
-	action.position = Vector2(282, 11)
+	var action := _button("", Color("#ffe9a8"), 100, 32)
+	action.position = Vector2(276, 11)
 	action.pressed.connect(_on_gun.bind(id))
 	row.add_child(action)
 	_gun_buttons[id] = action

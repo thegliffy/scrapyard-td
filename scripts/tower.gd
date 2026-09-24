@@ -106,6 +106,12 @@ func _shoot(target) -> void:
 	if kind == "spark":
 		_shoot_spark(target)
 		return
+	if kind == "stomper" or kind == "nova":
+		_pulse(target)
+		return
+	if kind == "fizz":
+		_lob_fizz()
+		return
 	var fx_parent := get_tree().get_first_node_in_group("projectiles")
 	if fx_parent == null:
 		fx_parent = get_parent()
@@ -149,6 +155,57 @@ func _shoot(target) -> void:
 		"layer": layer,
 		"slow_layer": slow_layer,
 	})
+
+
+func _pulse(_target) -> void:
+	var radius := range_tiles()
+	var layer := Balance.tower_target(kind)
+	var amount := Balance.tier_value(kind, "damage", tier)
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if not _living(enemy) or not Balance.layer_matches(layer, bool(enemy.flying)):
+			continue
+		var dist: float = global_position.distance_to(enemy.global_position) / float(Board.TILE)
+		if dist <= radius + 0.05:
+			enemy.take_damage(amount)
+	var fx = get_tree().get_first_node_in_group("vfx")
+	if kind == "stomper":
+		if fx:
+			fx.stomp_ring(global_position, radius)
+		Sfx.play("boom", randf_range(0.78, 0.9))
+	else:
+		if fx:
+			fx.nova_ring(global_position, radius)
+		Sfx.play("spark", randf_range(0.7, 0.84))
+
+
+func _lob_fizz() -> void:
+	var reach := range_tiles()
+	var cluster: Array = []
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if not _living(enemy) or not bool(enemy.flying):
+			continue
+		var dist: float = global_position.distance_to(enemy.global_position) / float(Board.TILE)
+		if dist <= reach + 0.05:
+			cluster.append(enemy)
+	if cluster.is_empty():
+		return
+	var aim := Vector2.ZERO
+	for enemy in cluster:
+		aim += enemy.global_position
+	aim /= float(cluster.size())
+	var cloud := Node2D.new()
+	cloud.set_script(load("res://scripts/fizz_cloud.gd"))
+	var parent := get_tree().get_first_node_in_group("projectiles")
+	if parent == null:
+		parent = get_parent()
+	parent.add_child(cloud)
+	cloud.setup(aim, {
+		"radius": Balance.tier_value(kind, "radius", tier),
+		"damage": Balance.tier_value(kind, "damage", tier),
+		"tick": Balance.tier_value(kind, "tick", tier),
+		"linger": Balance.tier_value(kind, "linger", tier),
+	})
+	Sfx.play("glue", randf_range(1.08, 1.2))
 
 
 func _shoot_spark(first) -> void:

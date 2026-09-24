@@ -3,11 +3,45 @@ extends Node2D
 var pops: Array = []
 var texts: Array = []
 var bolts: Array = []
+var rings: Array = []
+var _stomp_tex: Texture2D
+var _nova_tex: Texture2D
 
 
 func _ready() -> void:
 	add_to_group("vfx")
 	z_index = 400
+	_stomp_tex = Art.fx_tex("stomp_ring_tinted")
+	_nova_tex = Art.fx_tex("nova_ring_tinted")
+
+
+## Outer artwork sits inside the 256 canvas, not on the edge.
+const _STOMP_EDGE := 117.0 / 128.0
+const _NOVA_EDGE := 111.0 / 128.0
+
+
+func stomp_ring(pos: Vector2, radius_tiles: float) -> void:
+	var reach := radius_tiles * float(Board.TILE) / _STOMP_EDGE
+	rings.append({
+		"p": pos,
+		"tex": _stomp_tex,
+		"reach": reach,
+		"flat": 1.0, # the painted ring is already a flat ellipse
+		"life": 0.38,
+		"max": 0.38,
+	})
+
+
+func nova_ring(pos: Vector2, radius_tiles: float) -> void:
+	var reach := radius_tiles * float(Board.TILE) / _NOVA_EDGE
+	rings.append({
+		"p": pos,
+		"tex": _nova_tex,
+		"reach": reach,
+		"flat": 1.0,
+		"life": 0.5,
+		"max": 0.5,
+	})
 
 
 func burst(pos: Vector2, color: Color, count: int = 8) -> void:
@@ -80,6 +114,12 @@ func _process(delta: float) -> void:
 		if float(bolt["life"]) > 0.0:
 			next_bolts.append(bolt)
 	bolts = next_bolts
+	var next_rings: Array = []
+	for ring in rings:
+		ring["life"] = float(ring["life"]) - delta
+		if float(ring["life"]) > 0.0:
+			next_rings.append(ring)
+	rings = next_rings
 	queue_redraw()
 
 
@@ -98,6 +138,17 @@ func _draw() -> void:
 		pale.a = alpha * 0.45
 		draw_polyline(bolt["pts"], pale, 7.0, true)
 		draw_polyline(bolt["pts"], color, 3.0, true)
+	for ring in rings:
+		var tex: Texture2D = ring["tex"]
+		if tex == null:
+			continue
+		var alpha := clampf(float(ring["life"]) / float(ring["max"]), 0.0, 1.0)
+		var grow := 1.0 - alpha
+		var span := float(ring["reach"]) * lerpf(0.28, 1.0, grow)
+		var flat := float(ring["flat"])
+		draw_set_transform(ring["p"], 0.0, Vector2.ONE)
+		draw_texture_rect(tex, Rect2(-span, -span * flat, span * 2.0, span * 2.0 * flat), false, Color(1, 1, 1, alpha))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	for item in texts:
 		var alpha := clampf(float(item["life"]) / float(item["max"]), 0.0, 1.0)
 		var color: Color = item["color"]

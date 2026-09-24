@@ -34,6 +34,9 @@ const CHIP_COLORS := {
 	"dual": Color("#ffd0ea"),
 	"net": Color("#b8f0c8"),
 	"orbit": Color("#ffe0a8"),
+	"stomper": Color("#ffc090"),
+	"fizz": Color("#b8f4e4"),
+	"nova": Color("#e0c4ff"),
 }
 
 
@@ -455,6 +458,15 @@ func _tower_blurb(tower) -> String:
 				Balance.tier_value(tower.kind, "income_every", tower.tier),
 				int(Balance.tier_value(tower.kind, "bonus", tower.tier)),
 			]
+		"stomper":
+			detail = "%.0f slam" % Balance.tier_value(tower.kind, "damage", tower.tier)
+		"fizz":
+			detail = "%.0f / tick, %.1fs cloud" % [
+				Balance.tier_value(tower.kind, "damage", tower.tier),
+				Balance.tier_value(tower.kind, "linger", tower.tier),
+			]
+		"nova":
+			detail = "%.0f pulse" % Balance.tier_value(tower.kind, "damage", tower.tier)
 		_:
 			detail = "%.0f dmg, %.1f/s" % [
 				Balance.tier_value(tower.kind, "damage", tower.tier),
