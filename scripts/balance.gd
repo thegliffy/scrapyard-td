@@ -4,7 +4,7 @@ extends RefCounted
 ## Speeds are cells per second. Ranges and splash are in tiles.
 ## Enemies are cute eldritch horrors; towers stay scrapyard gadgets.
 
-const START_SCRAP := 150
+const START_SCRAP := 170
 const CORE_HP := 22
 
 const TOWERS := {
@@ -182,112 +182,181 @@ const ENEMIES := {
 	},
 }
 
+## 20 build-up waves, then the boss. New kinds arrive a few at a time.
 const WAVES: Array = [
 	{
 		"title": "Fast Skitters",
-		"preview": "8 Fast Skitters",
+		"preview": "6 Fast Skitters",
 		"entries": [
-			{"kind": "fast_skitter", "count": 8, "gap": 0.8, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 6, "gap": 1.0, "lane": "alt"},
 		],
 	},
 	{
 		"title": "More Skitters",
-		"preview": "12 Fast Skitters",
+		"preview": "8 Fast Skitters",
 		"entries": [
-			{"kind": "fast_skitter", "count": 12, "gap": 0.55, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 8, "gap": 0.9, "lane": "alt"},
+		],
+	},
+	{
+		"title": "Skitter Line",
+		"preview": "10 Fast Skitters",
+		"entries": [
+			{"kind": "fast_skitter", "count": 10, "gap": 0.8, "lane": "alt"},
+		],
+	},
+	{
+		"title": "One Tank",
+		"preview": "8 Fast Skitters & 1 Chunky Tank",
+		"entries": [
+			{"kind": "fast_skitter", "count": 8, "gap": 0.75, "lane": "alt"},
+			{"kind": "chunky_tank", "count": 1, "gap": 1.2, "lane": "alt"},
+		],
+	},
+	{
+		"title": "Two Tanks",
+		"preview": "6 Fast Skitters & 2 Chunky Tanks",
+		"entries": [
+			{"kind": "fast_skitter", "count": 6, "gap": 0.75, "lane": "alt"},
+			{"kind": "chunky_tank", "count": 2, "gap": 1.1, "lane": "alt"},
 		],
 	},
 	{
 		"title": "Chunky Tanks",
 		"preview": "6 Fast Skitters & 3 Chunky Tanks",
 		"entries": [
-			{"kind": "fast_skitter", "count": 6, "gap": 0.65, "lane": "alt"},
-			{"kind": "chunky_tank", "count": 3, "gap": 0.9, "lane": "alt"},
-		],
-	},
-	{
-		"title": "Plump Parade",
-		"preview": "5 Chunky Tanks & 8 Fast Skitters",
-		"entries": [
-			{"kind": "chunky_tank", "count": 5, "gap": 0.85, "lane": "alt"},
-			{"kind": "fast_skitter", "count": 8, "gap": 0.5, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 6, "gap": 0.7, "lane": "alt"},
+			{"kind": "chunky_tank", "count": 3, "gap": 1.0, "lane": "alt"},
 		],
 	},
 	{
 		"title": "Shielded",
-		"preview": "7 Shielded",
+		"preview": "4 Shielded & 4 Fast Skitters",
 		"entries": [
-			{"kind": "shielded", "count": 7, "gap": 0.75, "lane": "alt"},
+			{"kind": "shielded", "count": 4, "gap": 0.9, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 4, "gap": 0.7, "lane": "alt"},
 		],
 	},
 	{
-		"title": "Bubbles & Skitters",
-		"preview": "8 Fast Skitters & 4 Shielded",
+		"title": "More Bubbles",
+		"preview": "6 Shielded",
 		"entries": [
-			{"kind": "fast_skitter", "count": 8, "gap": 0.48, "lane": "alt"},
-			{"kind": "shielded", "count": 4, "gap": 0.7, "lane": "alt"},
+			{"kind": "shielded", "count": 6, "gap": 0.85, "lane": "alt"},
+		],
+	},
+	{
+		"title": "Bubbles & Shells",
+		"preview": "5 Shielded, 2 Chunky Tanks, 4 Skitters",
+		"entries": [
+			{"kind": "shielded", "count": 5, "gap": 0.8, "lane": "alt"},
+			{"kind": "chunky_tank", "count": 2, "gap": 1.0, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 4, "gap": 0.65, "lane": "alt"},
 		],
 	},
 	{
 		"title": "Swarm-Splitters",
-		"preview": "5 Swarm-Splitters & 6 Fast Skitters",
+		"preview": "2 Swarm-Splitters & 6 Fast Skitters",
 		"entries": [
-			{"kind": "swarm_splitter", "count": 5, "gap": 0.9, "lane": "alt"},
-			{"kind": "fast_skitter", "count": 6, "gap": 0.5, "lane": "alt"},
+			{"kind": "swarm_splitter", "count": 2, "gap": 1.1, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 6, "gap": 0.65, "lane": "alt"},
 		],
 	},
 	{
-		"title": "Rush Hour",
-		"preview": "4 Chunky Tanks, 4 Shielded, 8 Fast Skitters",
+		"title": "Soft Split",
+		"preview": "3 Swarm-Splitters & 4 Shielded",
 		"entries": [
-			{"kind": "chunky_tank", "count": 4, "gap": 0.7, "lane": "alt"},
-			{"kind": "shielded", "count": 4, "gap": 0.55, "lane": "alt"},
-			{"kind": "fast_skitter", "count": 8, "gap": 0.4, "lane": "alt"},
+			{"kind": "swarm_splitter", "count": 3, "gap": 1.0, "lane": "alt"},
+			{"kind": "shielded", "count": 4, "gap": 0.75, "lane": "alt"},
 		],
 	},
 	{
 		"title": "Splitters & Tanks",
-		"preview": "6 Swarm-Splitters & 4 Chunky Tanks",
+		"preview": "4 Swarm-Splitters & 3 Chunky Tanks",
 		"entries": [
-			{"kind": "swarm_splitter", "count": 6, "gap": 0.75, "lane": "alt"},
-			{"kind": "chunky_tank", "count": 4, "gap": 0.8, "lane": "alt"},
+			{"kind": "swarm_splitter", "count": 4, "gap": 0.95, "lane": "alt"},
+			{"kind": "chunky_tank", "count": 3, "gap": 0.95, "lane": "alt"},
+		],
+	},
+	{
+		"title": "Mixed Yard",
+		"preview": "3 Chunky Tanks, 3 Shielded, 6 Skitters",
+		"entries": [
+			{"kind": "chunky_tank", "count": 3, "gap": 0.9, "lane": "alt"},
+			{"kind": "shielded", "count": 3, "gap": 0.75, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 6, "gap": 0.55, "lane": "alt"},
 		],
 	},
 	{
 		"title": "Soft Crowd",
-		"preview": "6 Shielded, 5 Swarm-Splitters, 8 Fast Skitters",
+		"preview": "4 Swarm-Splitters, 4 Shielded, 4 Skitters",
 		"entries": [
-			{"kind": "shielded", "count": 6, "gap": 0.5, "lane": "alt"},
-			{"kind": "swarm_splitter", "count": 5, "gap": 0.6, "lane": "alt"},
-			{"kind": "fast_skitter", "count": 8, "gap": 0.36, "lane": "alt"},
+			{"kind": "swarm_splitter", "count": 4, "gap": 0.9, "lane": "alt"},
+			{"kind": "shielded", "count": 4, "gap": 0.7, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 4, "gap": 0.55, "lane": "alt"},
 		],
 	},
 	{
 		"title": "Heavy Nap",
-		"preview": "7 Chunky Tanks & 5 Shielded",
+		"preview": "5 Chunky Tanks & 4 Shielded",
 		"entries": [
-			{"kind": "chunky_tank", "count": 7, "gap": 0.62, "lane": "alt"},
-			{"kind": "shielded", "count": 5, "gap": 0.55, "lane": "alt"},
+			{"kind": "chunky_tank", "count": 5, "gap": 0.8, "lane": "alt"},
+			{"kind": "shielded", "count": 4, "gap": 0.7, "lane": "alt"},
+		],
+	},
+	{
+		"title": "Busy Lanes",
+		"preview": "5 Swarm-Splitters, 3 Tanks, 6 Skitters",
+		"entries": [
+			{"kind": "swarm_splitter", "count": 5, "gap": 0.85, "lane": "alt"},
+			{"kind": "chunky_tank", "count": 3, "gap": 0.8, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 6, "gap": 0.5, "lane": "alt"},
+		],
+	},
+	{
+		"title": "Bubble Swarm",
+		"preview": "6 Shielded, 4 Swarm-Splitters, 6 Skitters",
+		"entries": [
+			{"kind": "shielded", "count": 6, "gap": 0.65, "lane": "alt"},
+			{"kind": "swarm_splitter", "count": 4, "gap": 0.8, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 6, "gap": 0.48, "lane": "alt"},
+		],
+	},
+	{
+		"title": "Armored Lane",
+		"preview": "6 Chunky Tanks & 5 Shielded",
+		"entries": [
+			{"kind": "chunky_tank", "count": 6, "gap": 0.7, "lane": "alt"},
+			{"kind": "shielded", "count": 5, "gap": 0.6, "lane": "alt"},
 		],
 	},
 	{
 		"title": "Before the Nap",
-		"preview": "10 Fast Skitters, 4 Chunky Tanks, 4 Shielded, 3 Swarm-Splitters",
+		"preview": "8 Skitters, 4 Tanks, 4 Shielded, 3 Splitters",
 		"entries": [
-			{"kind": "fast_skitter", "count": 10, "gap": 0.34, "lane": "alt"},
-			{"kind": "chunky_tank", "count": 4, "gap": 0.55, "lane": "alt"},
-			{"kind": "shielded", "count": 4, "gap": 0.5, "lane": "alt"},
-			{"kind": "swarm_splitter", "count": 3, "gap": 0.7, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 8, "gap": 0.45, "lane": "alt"},
+			{"kind": "chunky_tank", "count": 4, "gap": 0.65, "lane": "alt"},
+			{"kind": "shielded", "count": 4, "gap": 0.6, "lane": "alt"},
+			{"kind": "swarm_splitter", "count": 3, "gap": 0.8, "lane": "alt"},
+		],
+	},
+	{
+		"title": "Last Leak",
+		"preview": "6 Tanks, 5 Shielded, 4 Splitters, 6 Skitters",
+		"entries": [
+			{"kind": "chunky_tank", "count": 6, "gap": 0.6, "lane": "alt"},
+			{"kind": "shielded", "count": 5, "gap": 0.55, "lane": "alt"},
+			{"kind": "swarm_splitter", "count": 4, "gap": 0.7, "lane": "alt"},
+			{"kind": "fast_skitter", "count": 6, "gap": 0.42, "lane": "alt"},
 		],
 	},
 	{
 		"title": "Big Cute Boss",
-		"preview": "Big Cute Boss, plus Fast Skitters & Swarm-Splitters",
+		"preview": "Big Cute Boss, plus Skitters & Splitters",
 		"boss": true,
 		"entries": [
 			{"kind": "big_cute_boss", "count": 1, "gap": 1.2, "lane": "a"},
-			{"kind": "fast_skitter", "count": 8, "gap": 0.48, "lane": "alt"},
-			{"kind": "swarm_splitter", "count": 2, "gap": 1.0, "lane": "b"},
+			{"kind": "fast_skitter", "count": 6, "gap": 0.55, "lane": "alt"},
+			{"kind": "swarm_splitter", "count": 2, "gap": 1.1, "lane": "b"},
 		],
 	},
 ]

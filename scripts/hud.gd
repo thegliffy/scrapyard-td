@@ -119,7 +119,7 @@ func _build() -> void:
 	title.position = Vector2(18, 8)
 	title.size = Vector2(220, 30)
 	top.add_child(title)
-	wave_label = _text("WAVE  1 / 13", 26, Color("#fff6e4"))
+	wave_label = _text("WAVE  1 / 21", 26, Color("#fff6e4"))
 	wave_label.position = Vector2(280, 6)
 	wave_label.size = Vector2(560, 34)
 	wave_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -207,15 +207,15 @@ func _build() -> void:
 		button.pressed.connect(_on_chip.bind(kind))
 		var icon := TextureRect.new()
 		icon.texture = Art.tower_tex(kind)
-		icon.position = Vector2(34, 2)
-		icon.size = Vector2(60, 58)
+		icon.position = Vector2(44, 8)
+		icon.size = Vector2(40, 40)
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(icon)
 		var caption := Label.new()
 		caption.text = "%d  %s   %d" % [index + 1, Balance.TOWERS[kind]["short"], Balance.cost(kind)]
-		caption.position = Vector2(4, 62)
+		caption.position = Vector2(4, 58)
 		caption.size = Vector2(120, 22)
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
