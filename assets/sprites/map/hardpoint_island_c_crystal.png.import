@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cgmt1lt6afx31"
-path="res://.godot/imported/island.png-eea4b49f4c6f44578ee267f9f24a7d4e.ctex"
+uid="uid://dicuo3jw8a0ih"
+path="res://.godot/imported/hardpoint_island_c_crystal.png-1f4688c5f0987cab8ad4dbc180a54fd1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/map/island.png"
-dest_files=["res://.godot/imported/island.png-eea4b49f4c6f44578ee267f9f24a7d4e.ctex"]
+source_file="res://assets/sprites/map/hardpoint_island_c_crystal.png"
+dest_files=["res://.godot/imported/hardpoint_island_c_crystal.png-1f4688c5f0987cab8ad4dbc180a54fd1.ctex"]
 
 [params]
 

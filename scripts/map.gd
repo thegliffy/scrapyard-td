@@ -3,8 +3,8 @@ extends Node2D
 var highlight_set := {}
 var stains: Array = []
 var hurt := 0.0
-var _twinkles: Array = []
 var _space_tex: Texture2D
+var _path_tex: Texture2D
 var _core_island_tex: Texture2D
 var _core_tex: Texture2D
 var _rift_tex: Texture2D
@@ -14,16 +14,10 @@ func _ready() -> void:
 	add_to_group("map")
 	Board.ensure()
 	_space_tex = Art.map_tex("space")
+	_path_tex = Art.map_tex("path_tile")
 	_core_island_tex = Art.map_tex("core_island")
 	_core_tex = Art.map_tex("core")
 	_rift_tex = Art.map_tex("rift")
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 11
-	for _i in 28:
-		_twinkles.append({
-			"p": Vector2(rng.randf_range(8, 1272), rng.randf_range(8, 700)),
-			"phase": rng.randf_range(0.0, TAU),
-		})
 	if Game.has_signal("core_hit"):
 		Game.core_hit.connect(func(_amount): hurt = 0.4)
 
@@ -76,28 +70,12 @@ func _draw_space() -> void:
 	if _space_tex:
 		draw_texture_rect(_space_tex, view, false, mod)
 	else:
-		draw_rect(view, Color("#7a58b8"))
-	var time := Time.get_ticks_msec() * 0.001
-	for star in _twinkles:
-		var alpha := 0.25 + 0.55 * (0.5 + 0.5 * sin(time * 2.2 + float(star["phase"])))
-		draw_circle(star["p"], 1.6, Color(1, 0.98, 0.92, alpha))
+		draw_rect(view, Color("#241448"))
 
 
 func _draw_cell(cell: Vector2i) -> void:
 	var rect := Board.cell_rect(cell)
-	var lane := str(Board.path_info.get(cell, {}).get("lane", ""))
-	draw_rect(rect, Color(1, 1, 1, 0.05))
-	draw_rect(rect, Color(1, 1, 1, 0.14), false, 1.0)
-	if lane == "":
-		return
-	var wash := Color("#7ad8ff")
-	match lane:
-		"b":
-			wash = Color("#ff9ec8")
-		"both", "core":
-			wash = Color("#e4c4ff")
-	wash.a = 0.16
-	draw_rect(rect, wash)
+	draw_rect(rect, Color(1, 1, 1, 0.07), false, 1.0)
 
 
 func _draw_cell_overlay(cell: Vector2i) -> void:
@@ -114,20 +92,17 @@ func _draw_cell_overlay(cell: Vector2i) -> void:
 		var tint := Color(1, 0.9, 0.45, 0.28 if lane == "" else 0.2)
 		draw_rect(rect, tint)
 		draw_rect(rect, Color("#fff1a8"), false, 2.0)
-	if lane != "" and lane != "core" and (cell.x + cell.y) % 2 == 0:
-		_draw_arrow(cell, info.get("dir", Vector2i.ZERO))
 
 
 func _draw_roads() -> void:
+	if _path_tex == null:
+		return
 	var shared := _shared_count()
-	var north: Array = Board.lane_a
-	var south: Array = Board.lane_b
-	var join_a := north.size() - shared
-	var join_b := south.size() - shared
-	_ribbon(_centers(north, 0, join_a), Color("#3ecfff"))
-	_ribbon(_centers(south, 0, join_b), Color("#ff86c4"))
-	if shared > 0:
-		_ribbon(_centers(north, join_a, north.size() - 1), Color("#e7c6ff"))
+	_stamp_lane(Board.lane_a, Board.lane_a.size() - 1)
+	var south_end := Board.lane_b.size() - 1 - shared
+	if south_end < 1:
+		south_end = Board.lane_b.size() - 1
+	_stamp_lane(Board.lane_b, south_end)
 
 
 func _shared_count() -> int:
@@ -141,56 +116,46 @@ func _shared_count() -> int:
 	return count
 
 
-func _centers(cells: Array, start: int, end_inclusive: int) -> PackedVector2Array:
-	var points := PackedVector2Array()
-	var last := mini(end_inclusive, cells.size() - 1)
-	for i in range(maxi(start, 0), last + 1):
-		points.append(Board.cell_center(cells[i]))
-	return points
+func _stamp_lane(cells: Array, last_index: int) -> void:
+	var last := mini(last_index, cells.size() - 1)
+	for i in range(last):
+		_stamp_segment(Board.cell_center(cells[i]), Board.cell_center(cells[i + 1]))
+		if i + 1 < last:
+			var into: Vector2i = cells[i + 1] - cells[i]
+			var out: Vector2i = cells[i + 2] - cells[i + 1]
+			if into != out:
+				_stamp_joint(Board.cell_center(cells[i + 1]))
 
 
-func _ribbon(points: PackedVector2Array, color: Color) -> void:
-	if points.size() < 2:
+func _stamp_joint(center: Vector2) -> void:
+	var size := 100.0
+	for angle in [0.0, PI * 0.5]:
+		draw_set_transform(center, angle, Vector2.ONE)
+		draw_texture_rect(_path_tex, Rect2(-size * 0.5, -size * 0.5, size, size), false)
+		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+
+
+## The tile is a horizontal neon capsule. Stretch it along each hop so the
+## glow follows the grid, with a little overlap so corners stay connected.
+func _stamp_segment(a: Vector2, b: Vector2) -> void:
+	var delta := b - a
+	var length := delta.length()
+	if length < 1.0:
 		return
-	var edge := Color("#3a2460")
-	edge.a = 0.55
-	_stroke(points, edge, 26.0)
-	var body := color
-	body.a = 0.95
-	_stroke(points, body, 16.0)
-	_stroke(points, Color(1, 1, 1, 0.82), 5.0)
-
-
-func _stroke(points: PackedVector2Array, color: Color, width: float) -> void:
-	var radius := width * 0.5
-	for point in points:
-		draw_circle(point, radius, color)
-	draw_polyline(points, color, width, true)
-
-
-func _draw_arrow(cell: Vector2i, dir: Vector2i) -> void:
-	if dir == Vector2i.ZERO:
-		return
-	var center := Board.cell_center(cell)
-	var forward := Vector2(dir)
-	var side := Vector2(-forward.y, forward.x)
-	var tip := center + forward * 11.0
-	var left := center - forward * 4.0 + side * 6.0
-	var right := center - forward * 4.0 - side * 6.0
-	draw_colored_polygon(PackedVector2Array([
-		center + forward * 13.0,
-		center - forward * 6.0 + side * 8.0,
-		center - forward * 6.0 - side * 8.0,
-	]), Color(0.25, 0.12, 0.4, 0.45))
-	draw_colored_polygon(PackedVector2Array([tip, left, right]), Color("#fffaf4"))
+	var mid := (a + b) * 0.5
+	var width := (length + 36.0) * (128.0 / 115.0)
+	var height := 88.0
+	draw_set_transform(mid, delta.angle(), Vector2.ONE)
+	draw_texture_rect(_path_tex, Rect2(-width * 0.5, -height * 0.5, width, height), false)
+	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 
 
 func _draw_core() -> void:
 	var rect := Board.cell_rect(Board.CORE)
 	var center := Board.cell_center(Board.CORE)
 	if _core_island_tex:
-		var isle := 78.0
-		draw_texture_rect(_core_island_tex, Rect2(center.x - isle * 0.5, center.y - isle * 0.42, isle, isle), false)
+		var isle := 112.0
+		draw_texture_rect(_core_island_tex, Rect2(center.x - isle * 0.5, center.y - isle * 0.46, isle, isle), false)
 	if hurt > 0.0:
 		draw_rect(rect, Color(1, 0.35, 0.5, hurt * 0.7))
 	elif Game.core_hp < Game.core_max * 0.35:

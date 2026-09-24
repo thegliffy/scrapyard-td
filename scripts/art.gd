@@ -32,14 +32,19 @@ const TOWER := {
 	"orbit": "res://assets/sprites/towers/orbit_drone.png",
 }
 
-## Swap these PNGs when the art director's map set arrives.
 const MAP := {
-	"space": "res://assets/sprites/map/space_backdrop.png",
-	"island": "res://assets/sprites/map/island.png",
+	"space": "res://assets/sprites/map/backdrop_space.png",
+	"path_tile": "res://assets/sprites/map/path_tile_128.png",
+	"path_strip": "res://assets/sprites/map/path_strip.png",
+	"island_a": "res://assets/sprites/map/hardpoint_island_a_pink.png",
+	"island_b": "res://assets/sprites/map/hardpoint_island_b_teal.png",
+	"island_c": "res://assets/sprites/map/hardpoint_island_c_crystal.png",
 	"core_island": "res://assets/sprites/map/core_island.png",
 	"core": "res://assets/sprites/map/core.png",
 	"rift": "res://assets/sprites/map/rift.png",
 }
+
+const ISLANDS := ["island_a", "island_b", "island_c"]
 
 const PROJECTILE := {
 	"pea": "res://assets/sprites/projectiles/pea.png",

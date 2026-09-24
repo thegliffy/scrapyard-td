@@ -8,20 +8,20 @@ var ghost: Texture2D
 var _island: Texture2D
 
 
-func _ready() -> void:
-	_island = Art.map_tex("island")
-
-
 func setup(next_cell: Vector2i) -> void:
 	cell = next_cell
 	position = Board.cell_center(cell)
+	var index := Board.SLOTS.find(next_cell)
+	if index < 0:
+		index = 0
+	_island = Art.map_tex(Art.ISLANDS[index % Art.ISLANDS.size()])
 	queue_redraw()
 
 
 func _draw() -> void:
-	var size := 60.0
+	var size := 54.0
 	if hovered or selected:
-		size = 64.0
+		size = 58.0
 	var tint := Color.WHITE
 	if tower != null:
 		tint = Color(0.92, 0.86, 0.8)

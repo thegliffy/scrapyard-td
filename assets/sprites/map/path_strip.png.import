@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dticny46tooa7"
-path="res://.godot/imported/space_backdrop.png-b9b386d6432f664525306bc9a3b35c6e.ctex"
+uid="uid://djdrqlamgqs2y"
+path="res://.godot/imported/path_strip.png-5a9da6565ed6c617a96c499fcd32e70b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/map/space_backdrop.png"
-dest_files=["res://.godot/imported/space_backdrop.png-b9b386d6432f664525306bc9a3b35c6e.ctex"]
+source_file="res://assets/sprites/map/path_strip.png"
+dest_files=["res://.godot/imported/path_strip.png-5a9da6565ed6c617a96c499fcd32e70b.ctex"]
 
 [params]
 
