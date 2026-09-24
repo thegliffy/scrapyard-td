@@ -79,7 +79,7 @@ Waves still name lanes `a`, `b`, or `alt`. `a` and `b` are the first two lanes (
 
 ## Scrap
 
-Built-in yards still pay scrap (a win is 2 per wave cleared, a loss is 1).
+Built-in yards still pay scrap (a win is 2 per wave cleared, a loss is 1 per wave cleared).
 
 A **playtest** from the editor, and a **custom yard** started from the Battle picker, pay **no scrap**. The profile file is not rewritten for that reward. A playtest also forces the starter loadout (Pea, Glue) in memory only. It does not save over the loadout.
 

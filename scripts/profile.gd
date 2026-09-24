@@ -21,7 +21,6 @@ const GUN_COST := {
 	"nova": 110,
 }
 const MAP_COST := {"side_dock": 50, "deep_yard": 100}
-const LOSE_SCRAP := 1
 const LOADOUT_SIZE := 5
 const FREE_SLOTS := 3
 const SLOT_COST := {3: 30, 4: 50}
@@ -346,10 +345,10 @@ func _active_yard() -> MapData:
 	return MapLibrary.load_builtin(battle_map)
 
 
+## A win pays 2 scrap per wave cleared. A loss pays 1 per wave cleared.
+## The count is waves fully finished. The wave that darkens the core does not count.
 func battle_scrap(won: bool, waves_cleared: int) -> int:
-	if not won:
-		return LOSE_SCRAP
-	return maxi(0, waves_cleared) * 2
+	return maxi(0, waves_cleared) * (2 if won else 1)
 
 
 func award_battle(won: bool, waves_cleared: int) -> int:

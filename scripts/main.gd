@@ -430,9 +430,19 @@ func _run_smoke() -> void:
 	if Profile.open_slots != 5 or Profile.scrap != 0 or Profile.loadout_at(3) != "glue":
 		push_error("smoke: slot unlock did not persist")
 		failed = true
-	if Profile.battle_scrap(false, 99) != 1 or Profile.battle_scrap(false, 0) != 1:
-		push_error("smoke: loss scrap is not flat 1")
+	if Profile.battle_scrap(false, 99) != 99 or Profile.battle_scrap(false, 4) != 4 or Profile.battle_scrap(false, 0) != 0:
+		push_error("smoke: loss scrap is not 1 per wave cleared")
 		failed = true
+	var saved_wave := Game.wave_index
+	Game.wave_index = 9
+	if Game.waves_cleared(false) != 9 or Game.waves_cleared(true) != 10:
+		push_error("smoke: waves cleared count drifted")
+		failed = true
+	Game.wave_index = -1
+	if Game.waves_cleared(false) != 0 or Game.waves_cleared(true) != 0:
+		push_error("smoke: a battle with no wave paid scrap waves")
+		failed = true
+	Game.wave_index = saved_wave
 	if Profile.battle_scrap(true, 21) != 42 or Profile.battle_scrap(true, 100) != 200 or Profile.battle_scrap(true, 0) != 0:
 		push_error("smoke: win scrap is not 2 per wave cleared")
 		failed = true

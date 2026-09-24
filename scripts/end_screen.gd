@@ -100,13 +100,16 @@ func _show(won: bool) -> void:
 		again_button.text = "Battle again"
 		if MapSession.blocks_scrap():
 			note = "\nCustom yard. No scrap."
-	stats_label.text = "Wave %d / %d\nPops %d    Leaks %d    Gold %d\nScrap +%d%s" % [
+	var scrap_line := "Scrap +%d" % Game.meta_awarded
+	if note == "":
+		scrap_line += "   ·   %d per wave cleared" % (2 if won else 1)
+	stats_label.text = "Wave %d / %d\nPops %d    Leaks %d    Gold %d\n%s%s" % [
 		clampi(Game.display_wave(), 1, Game.wave_total),
 		Game.wave_total,
 		Game.kills,
 		Game.leaks,
 		Game.earned,
-		Game.meta_awarded,
+		scrap_line,
 		note,
 	]
 

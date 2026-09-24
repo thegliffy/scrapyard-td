@@ -101,11 +101,10 @@ func finish(won: bool) -> void:
 	speed = 1.0
 	Engine.time_scale = 1.0
 	if not autoplay:
-		var cleared := maxi(0, wave_index + 1) if won else 0
 		if MapSession.blocks_scrap():
 			meta_awarded = 0
 		else:
-			meta_awarded = Profile.award_battle(won, cleared)
+			meta_awarded = Profile.award_battle(won, waves_cleared(won))
 	changed.emit()
 	game_over.emit(won)
 
@@ -116,6 +115,14 @@ func toggle_speed() -> void:
 	speed = 1.0 if speed > 1.5 else 2.0
 	Engine.time_scale = speed
 	changed.emit()
+
+
+## Waves fully finished. A win includes the wave just cleared.
+## A loss stops on the wave in progress, so that wave does not count.
+func waves_cleared(won: bool) -> int:
+	if wave_index < 0:
+		return 0
+	return wave_index + 1 if won else wave_index
 
 
 func display_wave() -> int:

@@ -8,12 +8,14 @@ Desktop only, true top-down. **Battle** is the mode you can play. **Adventure** 
 
 ## Download
 
-**[v0.4.3](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.3)** is the current build. You do not need Godot.
+**[v0.4.4](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.4)** is the current build. You do not need Godot.
 
-- Windows: [ScrapyardTD-v0.4.3-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.3/ScrapyardTD-v0.4.3-windows-x86_64.zip). Unzip it and double-click `ScrapyardTD.exe`.
-- Linux x86_64: [ScrapyardTD-v0.4.3-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.3/ScrapyardTD-v0.4.3-linux-x86_64.zip). Unzip, then `chmod +x ScrapyardTD.x86_64` and `./ScrapyardTD.x86_64`.
+- Windows: [ScrapyardTD-v0.4.4-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.4/ScrapyardTD-v0.4.4-windows-x86_64.zip). Unzip it and double-click `ScrapyardTD.exe`.
+- Linux x86_64: [ScrapyardTD-v0.4.4-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.4/ScrapyardTD-v0.4.4-linux-x86_64.zip). Unzip, then `chmod +x ScrapyardTD.x86_64` and `./ScrapyardTD.x86_64`.
 
-Older builds stay up: [v0.4.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.2), [v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1), [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0), [v0.3.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.3.0).
+**v0.4.4** — A loss pays 1 scrap for each wave cleared. A win is still 2.
+
+Older builds stay up: [v0.4.3](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.3), [v0.4.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.2), [v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1), [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0).
 
 ## How to play
 
@@ -35,7 +37,7 @@ After wave 1, each prep lasts **9 seconds**. **Call** sends the next wave early 
 
 **Pause** (top right), `P`, or `Esc` freezes the battle. The overlay covers the board and the HUD, and clicks underneath do nothing. **Resume**, `P`, or `Esc` continues from the same moment, including 1× or 2×. Custom yards and editor playtests pause the same way.
 
-**Scrap** is the other currency. It is not spent during a Battle. A win pays **2 scrap for each wave cleared** (200 if you finish all 100). A loss pays a flat **1 scrap**. Scrap is saved on this machine (`user://profile.cfg`).
+**Scrap** is the other currency. It is not spent during a Battle. A win pays **2 scrap for each wave cleared** (200 if you finish all 100). A loss pays **1 scrap for each wave cleared**. The wave that puts the core out does not count. Scrap is saved on this machine (`user://profile.cfg`).
 
 <img src="docs/images/unlocks.webp" alt="The Unlocks shop and a five-slot loadout holding Pea, Glue, Stomper, Fizz, and Nova." width="880">
 
