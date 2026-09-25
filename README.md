@@ -1,10 +1,10 @@
 # Scrapyard TD
 
-Pop cute eldritch critters before they hop the neon lanes and reach the Station Core.
+A cozy cartoon tower defense in deep space. Cute eldritch critters hop a glowing cyan road toward your Station Core. You build only on floating islands, in fixed pods of four, and a run is **100 waves**.
 
-<img src="docs/images/battle.webp" alt="A mid-wave battle on the deep-space yard. Stomper, Fizz Cloud, and Nova are firing while critters follow the neon road." width="880">
+<img src="docs/images/battle.webp" alt="Yard Approach mid-wave. Towers sit on the islands, critters follow the solid cyan road, and Stomper, Fizz Cloud, and Nova are firing." width="880">
 
-Desktop only, true top-down. **Battle** is the mode you can play. **Adventure** is a menu button that says it is coming soon.
+**Battle** is the game you can play. **Adventure** is on the menu and coming soon.
 
 ## Download
 
@@ -13,39 +13,43 @@ Desktop only, true top-down. **Battle** is the mode you can play. **Adventure** 
 - Windows: [ScrapyardTD-v0.4.6-windows-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.6/ScrapyardTD-v0.4.6-windows-x86_64.zip). Unzip it and double-click `ScrapyardTD.exe`.
 - Linux x86_64: [ScrapyardTD-v0.4.6-linux-x86_64.zip](https://github.com/thegliffy/scrapyard-td/releases/download/v0.4.6/ScrapyardTD-v0.4.6-linux-x86_64.zip). Unzip, then `chmod +x ScrapyardTD.x86_64` and `./ScrapyardTD.x86_64`.
 
-**v0.4.6** — The road is solid glowing cyan.
-
-Older builds stay up: [v0.4.5](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.5), [v0.4.4](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.4), [v0.4.3](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.3), [v0.4.2](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.2), [v0.4.1](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.1), [v0.4.0](https://github.com/thegliffy/scrapyard-td/releases/tag/v0.4.0).
-
 ## How to play
 
-<img src="docs/images/menu.webp" alt="The main menu on the new splash. The buttons stack in the gap between the two islands." width="880">
+<img src="docs/images/menu.webp" alt="The main menu. The buttons stack in the gap between the two islands, with scrap under the title." width="880">
 
-The menu opens on the splash. The title and buttons fade in over about a second, and the buttons stack in the dark gap between the two islands. Your saved **scrap** sits under the title.
+The menu opens on the splash. The buttons sit in the dark gap between the two islands, and your saved **scrap** is under the title.
 
-<img src="docs/images/start.webp" alt="Wave 1 waiting on Start. The preview reads 6 Fast Skitters, with no countdown." width="880">
+You start a fight with **170 gold**, a **Pea Blaster**, and **Glue Goo**. Gold pays for placing and upgrading during the run, and it resets when the run ends. Scrap is the other wallet. You spend it on Unlocks, between fights, and it stays on this machine.
 
-Wave 1 does not count down and does not start by itself. Build as long as you like, then press **Start** (or `Space`). That first wave pays no early bonus.
+A win pays **2 scrap for each wave cleared** (200 if you finish all 100). A loss pays **1 scrap for each wave cleared**. The wave that knocks the core out does not count. Custom yards and editor playtests pay no scrap.
 
-You place guns on the floating islands. Slots come in **pods of four** (a 2×2). Each empty cell in a pod holds one tower. There is no free placement. Click a gold **+**, or press `1`–`5` and then click. You start with **Pea Blaster** and **Glue Goo** on the bar.
+Wave 1 waits until you press **Start**. Nothing starts it for you, and it pays no bonus. After that, each prep lasts **9 seconds**. **Call** sends the next wave early and pays the seconds left as gold, so a fresh prep pays **9**. **Auto**, under Call, does that for you from the second prep on. It never starts wave 1.
 
-**Gold** pays for placing and upgrading. A Battle starts with **170 gold**, and gold resets when the run ends. Popping critters, the Scrap Magnet, and calling a later wave early all pay gold. Click a tower to see its range. Upgrade with `U` (three tiers) or sell with `Backspace` for 60% of the gold you spent, rounded down.
+**Pause** (the button, `P`, or `Esc`) freezes the board and the HUD. Resume continues from the same moment, including 1× or 2×.
 
-After wave 1, each prep lasts **9 seconds**. **Call** sends the next wave early and pays the seconds left as gold, so a fresh prep pays **9 gold** and waiting pays less. If you let the clock run out, the wave starts on its own. **Auto**, under Call, does that call for you from the second prep on. It never starts wave 1, and the choice is saved. `F` toggles **2×** speed.
+The core has **22** health. At 0, you lose. Clear all 100 waves to win.
 
-<img src="docs/images/pause.webp" alt="The pause card, with Paused, Resume, and the P and Esc hint, over a dimmed battle." width="880">
+## Yards
 
-**Pause** (top right), `P`, or `Esc` freezes the battle. The overlay covers the board and the HUD, and clicks underneath do nothing. **Resume**, `P`, or `Esc` continues from the same moment, including 1× or 2×. Custom yards and editor playtests pause the same way.
+Three built-in yards. The picture at the top is **Yard Approach**. The other two are unlocks.
 
-**Scrap** is the other currency. It is not spent during a Battle. A win pays **2 scrap for each wave cleared** (200 if you finish all 100). A loss pays **1 scrap for each wave cleared**. The wave that puts the core out does not count. Scrap is saved on this machine (`user://profile.cfg`).
+| Yard | Scrap | What is different |
+| --- | --- | --- |
+| Yard Approach | Starter | Two lanes, nine island pods. Health and speed at their base. |
+| Side Dock | 50 | A long pier and a short slip that share a dock. Eight pods. Critters have **1.1×** health. |
+| Deep Yard | 100 | Three lanes that merge late, with open ground between the pods. Critters have **1.18×** health and **1.06×** speed. |
 
-<img src="docs/images/unlocks.webp" alt="The Unlocks shop and a five-slot loadout holding Pea, Glue, Stomper, Fizz, and Nova." width="880">
+<img src="docs/images/side_dock.webp" alt="Side Dock mid-wave. The cyan pier snakes in an S, a short slip joins it, and towers cover the bends." width="880">
 
-On **Unlocks**, click a gun you own, then a loadout slot. Click a filled slot to clear it. The loadout has **5 slots**. Slots **1–3 are free**. Slot **4 costs 30 scrap** and slot **5 costs 50 scrap**. Slot 5 cannot be bought before slot 4. The Battle bar shows only the guns in those slots.
+<img src="docs/images/deep_yard.webp" alt="Deep Yard mid-wave. Three cyan lanes merge late, with towers on some islands and open ground on others." width="880">
 
-Clear **100 waves** to win. The core has **22** health. If it hits 0, you lose. The end screen offers **Battle again** (`R`) or the main menu. A playtest's button says **Editor** instead.
+On a two-lane yard the hint says to cover **both** rifts. On Deep Yard it says **all three**. A one-lane yard says to cover **the** rift.
 
-## Guns
+Waves send critters on lane `a`, lane `b`, or `alt`. `a` is the first lane, `b` is the second (or the only lane), and `alt` cycles every lane. On Deep Yard, Cut takes every third alternating spawn. Bosses still walk the first lane.
+
+## Guns and the loadout
+
+<img src="docs/images/unlocks.webp" alt="Unlocks, with buy prices in scrap, and a five-slot loadout holding Pea, Glue, Stomper, Fizz, and Nova." width="880">
 
 Every gun hits **Ground**, **Air**, or **Both**. Scrap Magnet does not shoot. Its label is **Yard**. Starters are already owned. The scrap column is the unlock price. Gold costs show on the Battle chips.
 
@@ -65,13 +69,17 @@ Every gun hits **Ground**, **Air**, or **Both**. Scrap Magnet does not shoot. It
 | <img src="docs/images/guns/orbit.png" width="48" alt="Orbit Drone"> | Orbit Drone | Both | Slow and heavy, with a little splash on either layer. | 90 |
 | <img src="docs/images/guns/nova.png" width="48" alt="Nova"> | Nova | Both | A slow pulse. Hits every critter in range, ground and air. | 110 |
 
-Boom and Flak are projectile splash. Stomper, Fizz Cloud, and Nova are not: a slam, a lingering cloud, and a heavy pulse.
+Boom and Flak are projectile splash. Stomper, Fizz Cloud, and Nova are not: a slam, a lingering cloud, and a heavy pulse. Each of those has three upgrade tiers.
+
+The Battle bar has **5 slots**. Slots **1–3 are free**. Slot **4 costs 30 scrap** and slot **5 costs 50**. Slot 5 cannot be bought before slot 4. On Unlocks, click a gun you own, then a slot. Click a filled slot to clear it. The bar shows only the guns you equipped.
+
+Click a tower to see its range. `U` upgrades it. `Backspace` sells it for 60% of the gold you spent, rounded down.
 
 ## Critters
 
-They hop cell to cell along the lane. Flyers use that same path, drawn a little above the tiles. Unseen critters stay a dark silhouette in the Bestiary until you meet them in Battle.
+They hop cell to cell. Flyers use the same road, drawn a little above the tiles. In the Bestiary, a critter stays a dark silhouette until you meet it in Battle.
 
-<img src="docs/images/bestiary.webp" alt="The Bestiary, with Fast Skitter, Chunky Tank, and the other ground critters revealed." width="880">
+<img src="docs/images/bestiary.webp" alt="The Bestiary, with Fast Skitter and the other critters revealed after a fight." width="880">
 
 ### Ground
 
@@ -105,39 +113,15 @@ Tanklet and Elite Tank use the Chunky Tank drawing. Open Shell uses the Shielded
 
 Popping a splitter is not always safer than letting it walk. Swarmlings are faster than the blob, and a Chunky Tank leaves three Tanklets behind. The chain stops at the smallest tier.
 
-## Battle
-
-A run is **100 waves**. The first 21 are hand-built, including the first flight of Small Flyers on **wave 14**. After that, waves are generated: more critters, tighter gaps, flyers mixed in, and a health multiplier that keeps climbing.
-
-Ground bosses are at **21, 40, 60, 80, and 100**. Sky Nap is at **50 and 90**.
-
-Three yards, three layouts. Waves still say `a`, `b`, or `alt`. `a` is the first lane, `b` is the second (or the only lane, on a one-lane yard), and `alt` cycles every lane. On Deep Yard that third lane, Cut, takes every third alternating spawn. Bosses still walk the first lane.
-
-| Yard | Scrap | Lanes | Difference |
-| --- | --- | --- | --- |
-| Yard Approach | Starter | 2 | North and south ribbons, nine pods, merge beside the core. Health and speed at their base. |
-| Side Dock | 50 | 2 | Pier is a long S. Slip is a short spur that joins it. Eight pods on the bends and the shared dock. Cooler light. Critters have **1.1×** health. |
-| Deep Yard | 100 | 3 | High and Low coil the long way. Cut is shorter and merges late. Seven pods, with open ground between them. Deeper dusk. Critters have **1.18×** health and **1.06×** speed. |
-
-<img src="docs/images/yard_approach.webp" alt="Yard Approach at wave 1. Two neon ribbons, north and south, meet beside the core." width="880">
-
-<img src="docs/images/side_dock.webp" alt="Side Dock at wave 1. The pier snakes in an S, and a short slip joins the last run." width="880">
-
-<img src="docs/images/deep_yard.webp" alt="Deep Yard at wave 1. Three lanes coil and merge late, with open ground between the islands." width="880">
-
-The picture at the top is a fight on Yard Approach: the deep-space plate, the smooth neon road, and the island pods.
+The first 21 waves are hand-built. After that, waves are generated: more critters, tighter gaps, flyers mixed in, and a health multiplier that keeps climbing.
 
 ## Map Editor
 
-<img src="docs/images/editor.webp" alt="The map editor open on Yard Approach, with the neon lanes, islands, and the tool bar." width="880">
+<img src="docs/images/editor.webp" alt="The map editor open on Yard Approach. The lanes are one solid cyan road, with islands and the tool bar." width="880">
 
-**Map Editor** on the menu is a beta yard tool. Paint and erase a lane (it stays orthogonal and draws as the same neon line as Battle), move that lane's spawn, set the Station Core, and place or remove a 2×2 hardpoint. Islands can be pink, teal, or crystal. The backdrop is **Night** (deep space) or **Dusk** (the older brighter field), with a Yard, Dock, or Deep tint. You can resize the grid, undo, redo, and clear. Up to four lanes.
+**Map Editor** on the menu is a beta yard tool. Paint and erase a lane (it stays orthogonal and draws as the same cyan road as Battle), move that lane's spawn, set the Station Core, and place or remove a 2×2 hardpoint. Islands can be pink, teal, or crystal. The backdrop is **Night** (deep space) or **Dusk** (the older brighter field), with a Yard, Dock, or Deep tint. You can resize the grid, undo, redo, and clear. Up to four lanes.
 
-Built-in yards live in `res://maps/`. Custom yards save to `user://maps/` on this machine. A built-in can be opened and saved as a copy. It cannot be overwritten or deleted. Save and Playtest stay off until every lane reaches the core, nothing sits on the path, and there is at least one hardpoint.
-
-**Playtest** runs a Battle on the draft with Pea and Glue, then **Editor** on the end screen comes back. Playtests and custom yards award **no scrap**. Built-in yards still do. The saved profile is left alone either way.
-
-The file format is written up in [docs/MAP_FORMAT.md](docs/MAP_FORMAT.md).
+**Playtest** runs a Battle on the draft with Pea and Glue, then **Editor** on the end screen comes back. Playtests and custom yards award **no scrap**. Built-in yards still do.
 
 ## Controls
 
@@ -154,17 +138,11 @@ The file format is written up in [docs/MAP_FORMAT.md](docs/MAP_FORMAT.md).
 
 ## Building from source
 
-The project is **Godot 4.7**. Open `project.godot` and press **F5**. The game starts on `scenes/main_menu.tscn`.
-
-Export presets are in `export_presets.cfg`. Use the matching 4.7 export templates. Each export is one file with the game packed inside.
+The project is **Godot 4.7**. Open `project.godot` and press **F5**. The game starts on `scenes/main_menu.tscn`. Export presets are in `export_presets.cfg`.
 
 ```bash
 godot --headless --path . --export-release "Linux" export/linux/ScrapyardTD.x86_64
 godot --headless --path . --export-release "Windows Desktop" export/windows/ScrapyardTD.exe
 ```
 
-UI type is [Nunito](https://fonts.google.com/specimen/Nunito), SIL Open Font License (`assets/fonts/OFL-Nunito.txt`).
-
-## Roadmap
-
-**Adventure** is on the main menu and is not playable yet. The button says "Adventure is coming soon" and does not start a run. Yards are already JSON so a later mode can reuse the same maps. See [docs/MAP_FORMAT.md](docs/MAP_FORMAT.md).
+Yards are JSON. The format, and what a later Adventure mode can reuse, is in [docs/MAP_FORMAT.md](docs/MAP_FORMAT.md). UI type is [Nunito](https://fonts.google.com/specimen/Nunito), SIL Open Font License (`assets/fonts/OFL-Nunito.txt`).
