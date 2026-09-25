@@ -1,0 +1,31 @@
+; Engine configuration file.
+; Scrapyard TD — Godot 4 desktop prototype.
+
+config_version=5
+
+[application]
+
+config/name="Scrapyard TD"
+config/description="Cozy top-down scrapyard tower defense. Cute eldritch things leak along a grid toward the Station Core."
+run/main_scene="res://scenes/main_menu.tscn"
+config/features=PackedStringArray("4.7")
+config/icon="res://icon.png"
+
+[autoload]
+
+Game="*res://scripts/game.gd"
+Sfx="*res://scripts/sfx.gd"
+Profile="*res://scripts/profile.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+textures/canvas_textures/default_texture_filter=1
+environment/defaults/default_clear_color=Color(0.956863, 0.913725, 1, 1)

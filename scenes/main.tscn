@@ -1,0 +1,37 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/map/map.tscn" id="2_map"]
+[ext_resource type="Script" path="res://scripts/vfx.gd" id="3_vfx"]
+[ext_resource type="Script" path="res://scripts/wave_director.gd" id="4_wave"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="5_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/end_screen.tscn" id="6_end"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="Map" parent="World" instance=ExtResource("2_map")]
+
+[node name="Slots" type="Node2D" parent="World"]
+
+[node name="Entities" type="Node2D" parent="World"]
+
+[node name="Projectiles" type="Node2D" parent="World"]
+
+[node name="Vfx" type="Node2D" parent="World"]
+z_index = 400
+script = ExtResource("3_vfx")
+
+[node name="WaveDirector" type="Node" parent="."]
+script = ExtResource("4_wave")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="UI" instance=ExtResource("5_hud")]
+
+[node name="EndScreen" parent="UI" instance=ExtResource("6_end")]
