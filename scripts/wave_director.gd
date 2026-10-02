@@ -1,5 +1,30 @@
 extends Node
 
+
+## Cached group lookups: the group contents only change when nodes are
+## added/removed, so we refresh at most twice a second instead of per call.
+var _grp_cache := {}
+var _grp_cache_age := 999.0
+
+
+func _group_first(name: String):
+	if _grp_cache_age > 0.5:
+		_grp_cache.clear()
+		_grp_cache_age = 0.0
+	if not _grp_cache.has(name):
+		_grp_cache[name] = get_tree().get_first_node_in_group(name)
+	return _grp_cache[name]
+
+
+func _group_all(name: String) -> Array:
+	if _grp_cache_age > 0.5:
+		_grp_cache.clear()
+		_grp_cache_age = 0.0
+	if not _grp_cache.has(name):
+		_grp_cache[name] = get_tree().get_nodes_in_group(name)
+	return _grp_cache[name]
+
+
 var queue: Array = []
 var spawn_wait := 0.0
 var lane_flip := 0
@@ -15,7 +40,7 @@ func call_early() -> void:
 	var bonus := Game.early_bonus()
 	if bonus > 0:
 		Game.add_gold(bonus)
-		var fx = get_tree().get_first_node_in_group("vfx")
+		var fx = _group_first("vfx")
 		if fx:
 			fx.float_text(Board.cell_center(Vector2i(11, 5)), "+%d early" % bonus, Color("#ffe08a"))
 		Sfx.play("scrap")
@@ -53,7 +78,7 @@ func _begin_combat() -> void:
 	if Game.autoplay:
 		print("WAVE %d %s hp=%d gold=%d" % [index + 1, wave["title"], Game.core_hp, Game.gold])
 		if wave.get("boss", false):
-			for tower in get_tree().get_nodes_in_group("towers"):
+			for tower in _group_all("towers"):
 				print("  TOWER %s T%d %s" % [tower.kind, tower.tier, tower.cell])
 
 
@@ -87,6 +112,7 @@ func _build_queue(wave: Dictionary) -> Array:
 
 
 func _process(delta: float) -> void:
+	_grp_cache_age += delta
 	if Game.ended:
 		return
 	if Game.phase == "prep":
@@ -121,7 +147,7 @@ func _spawn_item(item: Dictionary) -> void:
 
 func _living() -> int:
 	var count := 0
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in _group_all("enemies"):
 		if is_instance_valid(enemy) and not enemy.is_queued_for_deletion() and enemy.alive:
 			count += 1
 	return count

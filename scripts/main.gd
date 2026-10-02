@@ -32,6 +32,8 @@ var shake_left := 0.0
 var shake_mag := 0.0
 var auto_timer := 0.0
 var auto_clock := 0.0
+var auto_build_idx := 0
+var auto_min_wave := 0
 
 
 func _ready() -> void:
@@ -48,10 +50,10 @@ func _ready() -> void:
 	for err in Board.validate():
 		push_error(err)
 	Game.autoplay = OS.get_environment("SCRAPYARD_AUTOPLAY") == "1"
+	auto_min_wave = maxi(0, int(OS.get_environment("SCRAPYARD_MIN_WAVE")))
 	Game.boot()
 	if Game.autoplay:
-		Engine.time_scale = 12.0
-		Game.speed = 12.0
+		Game.set_speed(12.0)
 	for cell in Board.SLOTS:
 		var slot = SLOT_SCENE.instantiate()
 		slots_root.add_child(slot)
@@ -111,7 +113,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func restart() -> void:
 	get_tree().paused = false
-	Engine.time_scale = 1.0
+	Game.reset_speed()
 	get_tree().reload_current_scene()
 
 
@@ -283,20 +285,33 @@ func _on_core_hit(_amount: int) -> void:
 
 func _autoplay(delta: float) -> void:
 	if Game.ended:
+		var reached := Game.waves_cleared(Game.phase == "win")
 		print("AUTOPLAY %s wave=%d hp=%d gold=%d kills=%d leaks=%d" % [
 			Game.phase, Game.display_wave(), Game.core_hp, Game.gold, Game.kills, Game.leaks
 		])
+		if auto_min_wave > 0 and reached < auto_min_wave:
+			print("AUTOPLAY floor fail: cleared %d waves, floor is %d" % [reached, auto_min_wave])
+			get_tree().quit(5)
+			return
 		get_tree().quit(0 if Game.phase == "win" else 3)
 		return
 	auto_clock += delta
 	if auto_clock > 520.0:
 		print("AUTOPLAY timeout wave=%d hp=%d gold=%d" % [Game.display_wave(), Game.core_hp, Game.gold])
+		if auto_min_wave > 0 and Game.wave_index >= auto_min_wave:
+			# The bot was still alive past the floor when the clock ran out.
+			print("AUTOPLAY floor ok at timeout (wave %d)" % Game.display_wave())
+			get_tree().quit(0)
+			return
 		get_tree().quit(4)
 		return
 	auto_timer -= delta
 	if auto_timer > 0.0:
 		return
 	auto_timer = 0.35
+	if OS.get_environment("SCRAPYARD_AUTOBUILD") == "1":
+		_autobuild_step()
+		return
 	for step in AUTOPLAY_PLAN:
 		var cell: Vector2i = step[0]
 		var kind: String = step[1]
@@ -320,6 +335,14 @@ func _autoplay(delta: float) -> void:
 		upgrade_selected()
 		return
 	_auto_call()
+
+
+func _tower_count() -> int:
+	var n := 0
+	for cell in slots.keys():
+		if slots[cell].tower != null:
+			n += 1
+	return n
 
 
 func _auto_upgrade():
@@ -806,6 +829,42 @@ func _auto_call() -> void:
 		return
 	if not Game.is_first_prep() and Game.prep_left < 1.2:
 		return
-	if tower_at(Vector2i(1, 2)) == null or tower_at(Vector2i(1, 8)) == null:
-		return
+	if OS.get_environment("SCRAPYARD_AUTOBUILD") != "1":
+		if tower_at(Vector2i(1, 2)) == null or tower_at(Vector2i(1, 8)) == null:
+			return
 	wave.call_early()
+
+
+## Reference build used by CI (SCRAPYARD_AUTOBUILD=1) as a balance floor.
+## It fills slots with a fixed kit, upgrades the cheapest towers first, and
+## SCRAPYARD_MIN_WAVE asserts how deep it must get. Balance regressions
+## show up as a floor fail (exit 5) instead of a silent loss.
+func _autobuild_step() -> void:
+	var kit := ["pea", "pea", "glue", "spark", "boom", "needle", "flak", "dual", "magnet", "orbit", "nova", "spark"]
+	# Fill slots from the kit, then cycle the two staples for late-game spares.
+	var empty: Array = []
+	for cell in Board.SLOTS:
+		if tower_at(cell) == null:
+			empty.append(cell)
+	if not empty.is_empty():
+		# Spread placements across pods: one slot per pod per pass.
+		var stride := maxi(1, int(ceil(float(empty.size()) / 4.0)))
+		var pass_n := auto_build_idx / stride
+		var offset := auto_build_idx % stride
+		var cell: Vector2i = empty[min(offset + pass_n * stride, empty.size() - 1)]
+		var kind: String = kit[auto_build_idx] if auto_build_idx < kit.size() else "pea"
+		if Game.gold >= Balance.cost(kind) and place_tower(cell, kind):
+			auto_build_idx += 1
+			return
+		if auto_build_idx < kit.size():
+			# Kit item out of reach: skip it, keep the plan moving.
+			auto_build_idx += 1
+			return
+	var up = _auto_upgrade()
+	if up != null:
+		selected_cell = up.cell
+		upgrade_selected()
+		return
+	if OS.get_environment("SCRAPYARD_AUTOBUILD_DEBUG") == "1":
+		print("AUTOBUILD step wave=%d hp=%d gold=%d towers=%d" % [Game.display_wave(), Game.core_hp, Game.gold, _tower_count()])
+	_auto_call()

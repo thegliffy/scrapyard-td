@@ -1,5 +1,30 @@
 extends Node2D
 
+
+## Cached group lookups: the group contents only change when nodes are
+## added/removed, so we refresh at most twice a second instead of per call.
+var _grp_cache := {}
+var _grp_cache_age := 999.0
+
+
+func _group_first(name: String):
+	if _grp_cache_age > 0.5:
+		_grp_cache.clear()
+		_grp_cache_age = 0.0
+	if not _grp_cache.has(name):
+		_grp_cache[name] = get_tree().get_first_node_in_group(name)
+	return _grp_cache[name]
+
+
+func _group_all(name: String) -> Array:
+	if _grp_cache_age > 0.5:
+		_grp_cache.clear()
+		_grp_cache_age = 0.0
+	if not _grp_cache.has(name):
+		_grp_cache[name] = get_tree().get_nodes_in_group(name)
+	return _grp_cache[name]
+
+
 var velocity := Vector2.ZERO
 var speed_px := 400.0
 var damage := 0.0
@@ -40,6 +65,7 @@ func launch(data: Dictionary) -> void:
 
 
 func _process(delta: float) -> void:
+	_grp_cache_age += delta
 	if impacted or Game.ended:
 		queue_free()
 		return
@@ -66,12 +92,12 @@ func _impact() -> void:
 	if impacted:
 		return
 	impacted = true
-	var fx = get_tree().get_first_node_in_group("vfx")
+	var fx = _group_first("vfx")
 	var hit_pos := global_position
 	if is_instance_valid(target) and target.alive:
 		hit_pos = target.global_position
 	if splash > 0.0:
-		for enemy in get_tree().get_nodes_in_group("enemies"):
+		for enemy in _group_all("enemies"):
 			if not _matches(enemy, layer):
 				continue
 			var dist: float = hit_pos.distance_to(enemy.global_position) / float(Board.TILE)
@@ -91,7 +117,7 @@ func _impact() -> void:
 				fx.burst(hit_pos, color, 6)
 				fx.stain(target.current_cell(), Color(color.r, color.g, color.b, 0.4), slow_time if slow_time > 0.0 else 0.18)
 		if slow_splash > 0.05:
-			for enemy in get_tree().get_nodes_in_group("enemies"):
+			for enemy in _group_all("enemies"):
 				if enemy == target or not _matches(enemy, slow_layer):
 					continue
 				var dist: float = hit_pos.distance_to(enemy.global_position) / float(Board.TILE)

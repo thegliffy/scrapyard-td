@@ -9,6 +9,7 @@ var status_label: Label
 var banner_label: Label
 var info_label: Label
 var boss_label: Label
+var _boss_tick := 0.0
 var upgrade_button: Button
 var sell_button: Button
 var call_button: Button
@@ -50,12 +51,17 @@ func _ready() -> void:
 	refresh_all()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	_refresh_live()
 	if flash and flash.color.a > 0.0:
 		var color := flash.color
-		color.a = max(0.0, color.a - _delta * 1.3)
+		color.a = max(0.0, color.a - delta * 1.3)
 		flash.color = color
+	_boss_tick += delta
+	if _boss_tick < 0.1:
+		return
+	_boss_tick = 0.0
+	_refresh_boss()
 
 
 func pulse_hurt() -> void:
@@ -105,6 +111,11 @@ func _refresh_live() -> void:
 	banner_label.visible = show_banner
 	banner_label.text = Game.banner
 	banner_label.modulate.a = clampf(Game.banner_t, 0.0, 1.0)
+	_refresh_boss()
+
+
+## The boss group scan is throttled to 10 Hz from _process.
+func _refresh_boss() -> void:
 	var boss = _boss()
 	var show_boss := boss != null
 	boss_label.visible = show_boss

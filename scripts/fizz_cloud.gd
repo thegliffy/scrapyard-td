@@ -1,5 +1,30 @@
 extends Node2D
 
+
+## Cached group lookups: the group contents only change when nodes are
+## added/removed, so we refresh at most twice a second instead of per call.
+var _grp_cache := {}
+var _grp_cache_age := 999.0
+
+
+func _group_first(name: String):
+	if _grp_cache_age > 0.5:
+		_grp_cache.clear()
+		_grp_cache_age = 0.0
+	if not _grp_cache.has(name):
+		_grp_cache[name] = get_tree().get_first_node_in_group(name)
+	return _grp_cache[name]
+
+
+func _group_all(name: String) -> Array:
+	if _grp_cache_age > 0.5:
+		_grp_cache.clear()
+		_grp_cache_age = 0.0
+	if not _grp_cache.has(name):
+		_grp_cache[name] = get_tree().get_nodes_in_group(name)
+	return _grp_cache[name]
+
+
 ## A lobbed cloud. It sits on a flyer cluster and ticks air-only damage.
 
 var radius := 1.5
@@ -26,6 +51,7 @@ func setup(at: Vector2, data: Dictionary) -> void:
 
 
 func _process(delta: float) -> void:
+	_grp_cache_age += delta
 	if Game.ended:
 		queue_free()
 		return
@@ -42,7 +68,7 @@ func _process(delta: float) -> void:
 
 
 func _tick() -> void:
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in _group_all("enemies"):
 		if not is_instance_valid(enemy) or enemy.is_queued_for_deletion() or not enemy.alive:
 			continue
 		if not bool(enemy.flying):

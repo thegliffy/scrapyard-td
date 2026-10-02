@@ -1,5 +1,30 @@
 extends Node2D
 
+
+## Cached group lookups: the group contents only change when nodes are
+## added/removed, so we refresh at most twice a second instead of per call.
+var _grp_cache := {}
+var _grp_cache_age := 999.0
+
+
+func _group_first(name: String):
+	if _grp_cache_age > 0.5:
+		_grp_cache.clear()
+		_grp_cache_age = 0.0
+	if not _grp_cache.has(name):
+		_grp_cache[name] = get_tree().get_first_node_in_group(name)
+	return _grp_cache[name]
+
+
+func _group_all(name: String) -> Array:
+	if _grp_cache_age > 0.5:
+		_grp_cache.clear()
+		_grp_cache_age = 0.0
+	if not _grp_cache.has(name):
+		_grp_cache[name] = get_tree().get_nodes_in_group(name)
+	return _grp_cache[name]
+
+
 const PROJECTILE_SCENE := preload("res://scenes/projectiles/projectile.tscn")
 
 var kind := ""
@@ -46,13 +71,15 @@ func notify_kill(at: Vector2) -> void:
 	if bonus <= 0:
 		return
 	Game.add_gold(bonus)
-	var fx = get_tree().get_first_node_in_group("vfx")
+	var fx = _group_first("vfx")
 	if fx:
 		fx.float_text(global_position + Vector2(8, -16), "+%d" % bonus, Color("#fff1b0"))
 
 
 func _process(delta: float) -> void:
+	_grp_cache_age += delta
 	if Game.ended:
+		set_process(false)
 		return
 	anim += delta
 	if recoil > 0.0:
@@ -63,7 +90,7 @@ func _process(delta: float) -> void:
 			magnet_wait = Balance.tier_value(kind, "income_every", tier)
 			var gain := int(Balance.tier_value(kind, "income", tier))
 			Game.add_gold(gain)
-			var fx = get_tree().get_first_node_in_group("vfx")
+			var fx = _group_first("vfx")
 			if fx:
 				fx.float_text(global_position + Vector2(0, -18), "+%d" % gain, Color("#ffe08a"))
 			Sfx.play("scrap", randf_range(0.96, 1.04))
@@ -83,7 +110,7 @@ func _pick_target():
 	var best_left := 100000.0
 	var boss = null
 	var reach := range_tiles()
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in _group_all("enemies"):
 		if not _living(enemy) or not _can_hit(enemy):
 			continue
 		var dist: float = global_position.distance_to(enemy.global_position) / float(Board.TILE)
@@ -112,7 +139,7 @@ func _shoot(target) -> void:
 	if kind == "fizz":
 		_lob_fizz()
 		return
-	var fx_parent := get_tree().get_first_node_in_group("projectiles")
+	var fx_parent = _group_first("projectiles")
 	if fx_parent == null:
 		fx_parent = get_parent()
 	var shot = PROJECTILE_SCENE.instantiate()
@@ -161,13 +188,13 @@ func _pulse(_target) -> void:
 	var radius := range_tiles()
 	var layer := Balance.tower_target(kind)
 	var amount := Balance.tier_value(kind, "damage", tier)
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in _group_all("enemies"):
 		if not _living(enemy) or not Balance.layer_matches(layer, bool(enemy.flying)):
 			continue
 		var dist: float = global_position.distance_to(enemy.global_position) / float(Board.TILE)
 		if dist <= radius + 0.05:
 			enemy.take_damage(amount)
-	var fx = get_tree().get_first_node_in_group("vfx")
+	var fx = _group_first("vfx")
 	if kind == "stomper":
 		if fx:
 			fx.stomp_ring(global_position, radius)
@@ -181,7 +208,7 @@ func _pulse(_target) -> void:
 func _lob_fizz() -> void:
 	var reach := range_tiles()
 	var cluster: Array = []
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in _group_all("enemies"):
 		if not _living(enemy) or not bool(enemy.flying):
 			continue
 		var dist: float = global_position.distance_to(enemy.global_position) / float(Board.TILE)
@@ -195,7 +222,7 @@ func _lob_fizz() -> void:
 	aim /= float(cluster.size())
 	var cloud := Node2D.new()
 	cloud.set_script(load("res://scripts/fizz_cloud.gd"))
-	var parent := get_tree().get_first_node_in_group("projectiles")
+	var parent = _group_first("projectiles")
 	if parent == null:
 		parent = get_parent()
 	parent.add_child(cloud)
@@ -223,7 +250,7 @@ func _shoot_spark(first) -> void:
 	points.append(global_position)
 	var amount := Balance.tier_value(kind, "damage", tier)
 	var falloff := Balance.tier_value(kind, "falloff", tier)
-	var fx = get_tree().get_first_node_in_group("vfx")
+	var fx = _group_first("vfx")
 	for enemy in hits:
 		if _living(enemy):
 			points.append(enemy.global_position)
@@ -239,7 +266,7 @@ func _shoot_spark(first) -> void:
 func _nearest(from_enemy, excluded: Array, reach: float):
 	var best = null
 	var best_dist := reach
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in _group_all("enemies"):
 		if enemy in excluded or not _living(enemy) or not _can_hit(enemy):
 			continue
 		var dist: float = from_enemy.global_position.distance_to(enemy.global_position) / float(Board.TILE)

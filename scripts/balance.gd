@@ -846,7 +846,13 @@ static func blurb(enemy_id: String) -> String:
 
 
 static func tier_value(id: String, key: String, tier: int) -> float:
-	var value = TOWERS[id][key]
+	if not TOWERS.has(id):
+		push_error("Balance.tier_value: unknown tower '%s'" % id)
+		return 0.0
+	var value = TOWERS[id].get(key)
+	if value == null:
+		push_error("Balance.tier_value: tower '%s' has no stat '%s'" % [id, key])
+		return 0.0
 	if typeof(value) == TYPE_ARRAY:
 		var idx := clampi(tier - 1, 0, value.size() - 1)
 		return float(value[idx])
