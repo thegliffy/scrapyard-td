@@ -140,14 +140,14 @@ func _restart() -> void:
 	get_tree().paused = false
 	Sfx.play("ui")
 	if MapSession.playtest:
-		Engine.time_scale = 1.0
+		Game.reset_speed()
 		get_tree().change_scene_to_file("res://scenes/map_editor.tscn")
 		return
 	var root := get_tree().get_first_node_in_group("game_root")
 	if root and root.has_method("restart"):
 		root.restart()
 	else:
-		Engine.time_scale = 1.0
+		Game.reset_speed()
 		get_tree().reload_current_scene()
 
 
@@ -155,5 +155,5 @@ func _main_menu() -> void:
 	get_tree().paused = false
 	Sfx.play("ui")
 	MapSession.clear_override()
-	Engine.time_scale = 1.0
+	Game.reset_speed()
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

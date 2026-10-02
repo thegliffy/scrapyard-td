@@ -25,6 +25,20 @@ var speed: float = 1.0
 var autoplay: bool = false
 
 
+## The only place that touches Engine.time_scale. Every speed change goes
+## through here so no screen can leave the engine stuck at 2x or 12x.
+## Autoplay pins the speed: set_speed is ignored while autoplay is on.
+func set_speed(next: float) -> void:
+	if autoplay:
+		next = 12.0
+	speed = next
+	Engine.time_scale = next
+
+
+func reset_speed() -> void:
+	set_speed(1.0)
+
+
 func boot() -> void:
 	gold = Balance.START_GOLD
 	meta_awarded = 0
@@ -45,7 +59,7 @@ func boot() -> void:
 	ended = false
 	speed = 1.0
 	if not autoplay:
-		Engine.time_scale = 1.0
+		reset_speed()
 	changed.emit()
 
 
@@ -98,8 +112,7 @@ func finish(won: bool) -> void:
 		return
 	ended = true
 	phase = "win" if won else "lose"
-	speed = 1.0
-	Engine.time_scale = 1.0
+	reset_speed()
 	if not autoplay:
 		if MapSession.blocks_scrap():
 			meta_awarded = 0
@@ -112,8 +125,7 @@ func finish(won: bool) -> void:
 func toggle_speed() -> void:
 	if ended:
 		return
-	speed = 1.0 if speed > 1.5 else 2.0
-	Engine.time_scale = speed
+	set_speed(1.0 if speed > 1.5 else 2.0)
 	changed.emit()
 
 

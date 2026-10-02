@@ -762,14 +762,14 @@ func _playtest() -> void:
 		return
 	Sfx.play("ui")
 	MapSession.begin_playtest(data)
-	Engine.time_scale = 1.0
+	Game.reset_speed()
 	get_tree().change_scene_to_file(RUN)
 
 
 func _back() -> void:
 	Sfx.play("ui")
 	MapSession.clear_override()
-	Engine.time_scale = 1.0
+	Game.reset_speed()
 	get_tree().change_scene_to_file(MENU)
 
 

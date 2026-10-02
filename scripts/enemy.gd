@@ -1,5 +1,30 @@
 extends Node2D
 
+
+## Cached group lookups: the group contents only change when nodes are
+## added/removed, so we refresh at most twice a second instead of per call.
+var _grp_cache := {}
+var _grp_cache_age := 999.0
+
+
+func _group_first(name: String):
+	if _grp_cache_age > 0.5:
+		_grp_cache.clear()
+		_grp_cache_age = 0.0
+	if not _grp_cache.has(name):
+		_grp_cache[name] = get_tree().get_first_node_in_group(name)
+	return _grp_cache[name]
+
+
+func _group_all(name: String) -> Array:
+	if _grp_cache_age > 0.5:
+		_grp_cache.clear()
+		_grp_cache_age = 0.0
+	if not _grp_cache.has(name):
+		_grp_cache[name] = get_tree().get_nodes_in_group(name)
+	return _grp_cache[name]
+
+
 var kind := ""
 var display_name := ""
 var path: Array = []
@@ -136,7 +161,7 @@ func die() -> void:
 		fx.float_text(global_position + Vector2(0, -20), "+%d" % gold, Color("#ffe08a"))
 		fx.stain(current_cell(), Color(body_color.r, body_color.g, body_color.b, 0.45), 0.25)
 	Sfx.play("pop", randf_range(0.9, 1.15) if not is_boss else 0.75)
-	for tower in get_tree().get_nodes_in_group("towers"):
+	for tower in _group_all("towers"):
 		if is_instance_valid(tower) and tower.has_method("notify_kill"):
 			tower.notify_kill(global_position)
 	_spawn_splits()
@@ -158,7 +183,9 @@ func leak() -> void:
 
 
 func _process(delta: float) -> void:
+	_grp_cache_age += delta
 	if not alive or Game.ended:
+		set_process(false)
 		return
 	anim += delta
 	if hit_flash > 0.0:
@@ -224,22 +251,27 @@ func _cell_index() -> int:
 func _spawn_splits() -> void:
 	if split_into <= 0 or split_kind == "":
 		return
-	var root := get_tree().get_first_node_in_group("game_root")
+	var root = _group_first("game_root")
 	if root == null:
 		return
 	var origin := _cell_index()
 	var tints := [Color("#ffffff"), Color("#ffe7b0"), Color("#fff4d0")]
+	# Spread splits over distinct cells so they do not stack on one hop.
+	var used := {}
+	var back := origin
 	for i in split_into:
-		var back := maxi(0, origin - i)
+		while used.has(back) and back > 0:
+			back -= 1
 		if back >= path.size() - 1:
 			continue
+		used[back] = true
 		root.spawn_enemy(split_kind, "", path, back, 0.12 * i, tints[i % tints.size()])
 
 
 func _spawn_minions() -> void:
 	if minion_kind == "":
 		return
-	var root := get_tree().get_first_node_in_group("game_root")
+	var root = _group_first("game_root")
 	if root == null:
 		return
 	var origin := _cell_index()
@@ -258,7 +290,7 @@ func _break_shield() -> void:
 
 
 func _fx():
-	return get_tree().get_first_node_in_group("vfx")
+	return _group_first("vfx")
 
 
 func _draw() -> void:

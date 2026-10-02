@@ -18,7 +18,7 @@ var _fade := 0.0
 
 
 func _ready() -> void:
-	Engine.time_scale = 1.0
+	Game.reset_speed()
 	if OS.get_environment("SCRAPYARD_SMOKE") == "1" or OS.get_environment("SCRAPYARD_AUTOPLAY") == "1":
 		get_tree().call_deferred("change_scene_to_file", RUN)
 		return
@@ -159,7 +159,7 @@ func _button(font: Font, text: String, bg: Color, font_size: int) -> Button:
 
 func _battle() -> void:
 	Sfx.play("ui")
-	Engine.time_scale = 1.0
+	Game.reset_speed()
 	get_tree().change_scene_to_file(MAP_SELECT)
 
 
@@ -183,7 +183,7 @@ func _editor() -> void:
 	Sfx.play("ui")
 	if MapSession.editor_json == "":
 		MapSession.clear_override()
-	Engine.time_scale = 1.0
+	Game.reset_speed()
 	get_tree().change_scene_to_file(EDITOR)
 
 

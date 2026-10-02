@@ -116,7 +116,7 @@ func _start(id: String) -> void:
 	MapSession.clear_override()
 	Profile.choose_map(id)
 	Sfx.play("ui")
-	Engine.time_scale = 1.0
+	Game.reset_speed()
 	get_tree().change_scene_to_file(RUN)
 
 
@@ -127,7 +127,7 @@ func _start_custom(id: String) -> void:
 		return
 	MapSession.begin_custom_battle(loaded)
 	Sfx.play("ui")
-	Engine.time_scale = 1.0
+	Game.reset_speed()
 	get_tree().change_scene_to_file(RUN)
 
 
