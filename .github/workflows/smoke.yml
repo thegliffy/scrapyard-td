@@ -1,0 +1,50 @@
+name: Smoke
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  headless-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot binary
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-4.4.1-stable-linux-x86_64
+
+      - name: Install Godot 4.4.1
+        run: |
+          GODOT_DIR="$HOME/godot"
+          mkdir -p "$GODOT_DIR"
+          BIN="$GODOT_DIR/Godot_v4.4.1-stable_linux.x86_64"
+          if [ ! -x "$BIN" ]; then
+            curl -sSL -o /tmp/godot.zip \
+              "https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip"
+            unzip -q -o /tmp/godot.zip -d "$GODOT_DIR"
+          fi
+          echo "$GODOT_DIR" >> "$GITHUB_PATH"
+
+      - name: Import project
+        run: Godot_v4.4.1-stable_linux.x86_64 --headless --path . --import
+
+      - name: Grid contract smoke
+        run: Godot_v4.4.1-stable_linux.x86_64 --headless --path . --script tests/smoke.gd
+
+      - name: Gameplay smoke
+        env:
+          SCRAPYARD_SMOKE: "1"
+        run: |
+          timeout 120 Godot_v4.4.1-stable_linux.x86_64 --headless --path . scenes/main.tscn
+
+      - name: Reference-build autoplay (balance floor)
+        env:
+          SCRAPYARD_AUTOPLAY: "1"
+          SCRAPYARD_AUTOBUILD: "1"
+          SCRAPYARD_MIN_WAVE: "15"
+        run: |
+          timeout 300 Godot_v4.4.1-stable_linux.x86_64 --headless --path . scenes/main.tscn
